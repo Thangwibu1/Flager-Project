@@ -1,19 +1,11 @@
 /**
- * =====================================================
- * ENVIRONMENT CONFIGURATION
- * =====================================================
- * File này quản lý tất cả các biến môi trường (environment variables)
- * từ file .env và export ra để sử dụng trong toàn bộ ứng dụng
+ * Phần cấu hình, mọi người không cần ận tâm về phần này, nó sẽ được cấu hình sẵn các db để moiij ngời làm
  */
 
 import dotenv from "dotenv";
 import path from "path";
 
-// =====================================================
-// BƯỚC 1: LOAD FILE .ENV
-// =====================================================
-// Đọc file .env tương ứng với môi trường hiện tại
-// VD: .env.development hoặc .env.production
+
 dotenv.config({
   path: path.resolve(
     __dirname,
@@ -44,21 +36,21 @@ interface Config {
   // Cấu hình Redis
   redis: {
     host: string; // Địa chỉ Redis server
-    port: number; // Port Redis (thường là 6379)
+    port: number; // Port Redis 
     password: string; // Password để kết nối
   };
 
   // Cấu hình Neo4j
   neo4j: {
     uri: string; // URI kết nối Neo4j
-    user: string; // Username (thường là 'neo4j')
+    user: string; // Username 
     password: string; // Password Neo4j
   };
 
   // Cấu hình JWT (JSON Web Token)
   jwt: {
     secret: string; // Khóa bí mật để mã hóa token
-    expiresIn: string; // Thời gian hết hạn access token (VD: '7d' = 7 ngày)
+    expiresIn: string; // Thời gian hết hạn access token 
     refreshSecret: string; // Khóa bí mật cho refresh token
     refreshExpiresIn: string; // Thời gian hết hạn refresh token
   };
@@ -173,17 +165,3 @@ for (const envVar of requiredEnvVars) {
     console.warn(`    Vui lòng thêm ${envVar} vào file .env.development`);
   }
 }
-
-// =====================================================
-// CÁCH SỬ DỤNG
-// =====================================================
-/**
- * Import vào file khác:
- *
- * import { config } from '@config/env.config';
- *
- * Sử dụng:
- * console.log(config.port);           // 5000
- * console.log(config.mongodb.uri);    // mongodb+s://...
- * console.log(config.jwt.secret);     // your-secret-key
- */

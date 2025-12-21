@@ -1,44 +1,76 @@
-import express, { Application } from "express";
-import cors from "cors";
-import helmet from "helmet";
-import compression from "compression";
-import morgan from "morgan";
-import { Server } from "socket.io";
-import { createServer } from "http";
-import { config } from "./config/env.config";
+import express, { Application } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
+import { config } from './config/env.config';
 
+// Tạo Express application
 const app: Application = express();
+
+// Tạo HTTP server từ Express app (cần cho Socket.IO)
 const httpServer = createServer(app);
 
-// Socket.IO setup
+
 export const io = new Server(httpServer, {
-  cors: {
-    origin: config.cors.origin,
-    credentials: true,
-  },
+    cors: {
+        origin: config.cors.origin, // Cho phép frontend kết nối
+        credentials: true, // Cho phép gửi cookies
+    },
 });
 
-// Middlewares
+/**
+ * 1. HELMET - Bảo mật HTTP headers
+ * - Bảo vệ app khỏi các lỗ hổng web phổ biến
+ * - Tự động set các HTTP headers an toàn
+ * - VD: X-Content-Type-Options, X-Frame-Options, etc.
+ */
 app.use(helmet());
+
+/**
+ * 2. CORS - Cross-Origin Resource Sharing
+ * - Cho phép frontend (localhost:3000) gọi API từ backend (localhost:5000)
+ * - origin: URL của frontend được phép truy cập
+ * - credentials: true -> cho phép gửi cookies/authentication headers
+ */
 app.use(cors({ origin: config.cors.origin, credentials: true }));
+
+/**
+ * 3. COMPRESSION - Nén response
+ * - Tự động nén response trước khi gửi về client
+ * - Giảm kích thước data transfer -> tăng tốc độ
+ * - Đặc biệt hữu ích cho JSON responses lớn
+ */
 app.use(compression());
-app.use(morgan("dev"));
+
+/**
+ * 4. MORGAN - HTTP request logger
+ * - Log mọi HTTP request vào console
+ * - Format 'dev': hiển thị method, url, status, response time
+ * - VD: GET /api/users 200 15.234 ms
+ * - Giúp debug và monitor API
+ */
+app.use(morgan('dev'));
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 
-// Health check
-app.get("/health", (req, res) => {
-  res.json({ status: "OK", message: "Flager API is running" });
+
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', message: 'Flager API is running' });
 });
 
-// API routes
+
 app.use(`/api/${config.apiVersion}`, (req, res) => {
-  res.json({ message: "Flager API v1" });
+    res.json({ message: 'Flager API v1' });
 });
 
-// 404 handler
+
 app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+    res.status(404).json({ error: 'Route not found' });
 });
 
 export { app, httpServer };
