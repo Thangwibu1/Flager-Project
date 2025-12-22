@@ -1,13 +1,15 @@
 import { z } from 'zod';
 
 export const IUser = z.object({
-    username: z.string(),
+    email: z.string().email(),
     password: z.string(),
 });
 
+export const loginUser = IUser.extend({});
+
 export const registerUser = IUser.extend({
     phone: z.string(),
-    email: z.string().email(),
+    username: z.string(),
 });
 
 export const fullUser = registerUser.extend({
@@ -17,5 +19,8 @@ export const fullUser = registerUser.extend({
     deletedAt: z.date().nullable(),
 });
 
-export type User = z.infer<typeof IUser> | z.infer<typeof registerUser>;
+export type User =
+    | z.infer<typeof IUser>
+    | z.infer<typeof registerUser>
+    | z.infer<typeof loginUser>;
 export type FullUser = z.infer<typeof fullUser>;
