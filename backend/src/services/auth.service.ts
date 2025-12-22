@@ -10,7 +10,7 @@ class AuthService {
         if(!foundUser){
             throw new UnauthorizedRequestError('Email or password are wrong');
         }
-        const isPasswordEqual = comparePassword(user.password, foundUser.password);
+        const isPasswordEqual = await comparePassword(user.password, foundUser.password);
         if (!isPasswordEqual) {
             throw new UnauthorizedRequestError('Email or password are wrong');
         }
