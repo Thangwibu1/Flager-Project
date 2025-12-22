@@ -13,6 +13,7 @@ const authenticateUserMiddleware = async (req: Request, res: Response, next: Nex
     req.user = {
       id: userId
     }
+    next();
   } catch (error) {
     next(error);
   }
