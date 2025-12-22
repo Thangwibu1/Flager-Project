@@ -3,26 +3,19 @@ import { z } from 'zod';
 
 export const IPost = z.object({
     content: z.string().nullable(),
-    media: z.array(z.string().nonempty()).min(0),
+    media: z.array(z.string().nonempty()).nullable(),
 });
 
-export const postCreate = IPost.extend({
-    userId: z.string().nonempty()
-        .refine(value => Types.ObjectId.isValid(value), {
-            error: 'UserId is not valid',
-        }),
-})
-    .refine(
-        value =>
-            (value.content != null && value.content != '') ||
-            (value.media != null && value.media.length > 0),
-        {
-            error: 'You need to send a none empty content or media in order to post',
-        }
-    )
-    .strict();
+export const postCreate = IPost.refine(
+    value =>
+        (value.content != null && value.content != '') ||
+        (value.media != null && value.media.length > 0),
+    {
+        error: 'You need to send a none empty content or media in order to post',
+    }
+).strict();
 
-export const fullPost = postCreate.extend({
+export const fullPost = IPost.extend({
     _id: z.instanceof(Types.ObjectId),
     totalReact: z.number(),
     totalComment: z.number(),
