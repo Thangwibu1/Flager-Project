@@ -1,7 +1,7 @@
-import { LoginUserDTO } from '../types/user/User';
+import { LoginUserDTO, RegisterUserDTO } from '../types/user/User';
 import userService from './user.service';
-import { UnauthorizedRequestError } from '../errors/api/ApiError';
-import { comparePassword } from '../utils/bcrypt.util';
+import { ConflictRequestError, UnauthorizedRequestError } from '../errors/api/ApiError';
+import { comparePassword, hashPassword } from '../utils/bcrypt.util';
 import tokenService from './token.service';
 class AuthService {
     login = async (user: LoginUserDTO) => {
@@ -10,7 +10,7 @@ class AuthService {
         if(!foundUser){
             throw new UnauthorizedRequestError('Email or password are wrong');
         }
-        const isPasswordEqual = comparePassword(user.password, foundUser.password);
+        const isPasswordEqual = await comparePassword(user.password, foundUser.password);
         if (!isPasswordEqual) {
             throw new UnauthorizedRequestError('Email or password are wrong');
         }
@@ -30,5 +30,17 @@ class AuthService {
         };
         return dataFinal;
     };
+    // tạm thời tạo để có thể test tạm phần create user, nếu tương lai cần kiểm tra otp trong mail thì sẽ sửa lại sau
+    register = async (payload: RegisterUserDTO) => {
+        // check email exist
+        const foundUser = await userService.getUserByEmail(payload.email, ['_id']);
+        if(foundUser){
+            throw new ConflictRequestError('Another user has already registered by this email!');
+        }
+        // hash password 
+        payload.password = await hashPassword(payload.password);
+        // create user
+        await userService.createRegularUser(payload);
+    }
 }
 export default new AuthService();
