@@ -1,5 +1,6 @@
 import { redisPrefix } from '../config/constant.config';
 import { config } from '../config/env.config';
+import { UnauthorizedRequestError } from '../errors/api/ApiError';
 import * as jwtUtil from '../utils/jwt.util';
 import redisService from './redis.service';
 class TokenService {
@@ -14,6 +15,10 @@ class TokenService {
     // store refreshToken in redis
     await redisService.setDataWithExpiredTime(`${redisPrefix.refreshToken}:${payload.userId}:${refreshToken}`, 1, config.jwt.refreshExpiresInSecond);
     return refreshToken;
+  }
+  isInBlackList = async (token: string) => {
+    const data = await redisService.getDataByKey<number>(`${redisPrefix.blacklist}:${token}`);
+    return !(data == null);
   }
 }
 export default new TokenService();
