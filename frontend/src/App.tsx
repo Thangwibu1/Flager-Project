@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '@store/slices/authSlice';
+// import { Input } from './components/Input/Input';
+// import { Button } from './components/Button/Button';
 
 function App() {
     const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -9,7 +11,10 @@ function App() {
             <Routes>
                 <Route path="/" element={<div>Home Page</div>} />
                 <Route path="/login" element={<div>Login Page</div>} />
-                <Route path="/register" element={<div>Register Page</div>} />
+                <Route
+                    path="/register"
+                    element={<div>Regisisisiis Page</div>}
+                />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>

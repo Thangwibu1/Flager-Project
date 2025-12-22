@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+@theme {
+    /* Colors */
+    --color-primary: #ec1313;
+    --color-background-light: #f8f6f6;
+    --color-background-dark: #181111;
+    --color-surface-dark: #271c1c;
+    --color-border-dark: #543b3b;
+    --color-text-muted: #b99d9d;
+
+    /* Font Family */
+    --font-display: 'Inter', sans-serif;
+
+    /* Border Radius */
+    --radius-DEFAULT: 0.25rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-full: 9999px;
+}
+
+/* Dark mode setup */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+    }
+}
