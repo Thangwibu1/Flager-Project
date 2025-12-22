@@ -10,5 +10,9 @@ class UserRepository {
             .lean();
         return foundUser;
     };
+
+    createOne = async (data: any) => {
+        return User.create(data);
+    }
 }
 export default new UserRepository();
