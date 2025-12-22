@@ -1,23 +1,36 @@
 import { LoginUserDTO, RegisterUserDTO } from '../types/user/User';
 import userService from './user.service';
-import { ConflictRequestError, UnauthorizedRequestError } from '../errors/api/ApiError';
+import {
+    ConflictRequestError,
+    UnauthorizedRequestError,
+} from '../errors/api/ApiError';
 import { comparePassword, hashPassword } from '../utils/bcrypt.util';
 import tokenService from './token.service';
+import { verifyAccessToken } from '../utils/jwt.util';
 class AuthService {
     login = async (user: LoginUserDTO) => {
         // check email exist
-        const foundUser = await userService.getUserByEmail(user.email, ['_id', 'email', 'password', "phone", "username"]);
-        if(!foundUser){
+        const foundUser = await userService.getUserByEmail(user.email, [
+            '_id',
+            'email',
+            'password',
+            'phone',
+            'username',
+        ]);
+        if (!foundUser) {
             throw new UnauthorizedRequestError('Email or password are wrong');
         }
-        const isPasswordEqual = await comparePassword(user.password, foundUser.password);
+        const isPasswordEqual = await comparePassword(
+            user.password,
+            foundUser.password
+        );
         if (!isPasswordEqual) {
             throw new UnauthorizedRequestError('Email or password are wrong');
         }
         // generate accessToken and RefreshToken
         const userId = foundUser._id.toString();
-        const accessToken = tokenService.getNewAccessToken({userId});
-        const refreshToken = await tokenService.getNewRefreshToken({userId});
+        const accessToken = tokenService.getNewAccessToken({ userId });
+        const refreshToken = await tokenService.getNewRefreshToken({ userId });
         // create response data
         const userResponse = {
             email: foundUser.email,
@@ -33,14 +46,28 @@ class AuthService {
     // tạm thời tạo để có thể test tạm phần create user, nếu tương lai cần kiểm tra otp trong mail thì sẽ sửa lại sau
     register = async (payload: RegisterUserDTO) => {
         // check email exist
-        const foundUser = await userService.getUserByEmail(payload.email, ['_id']);
-        if(foundUser){
-            throw new ConflictRequestError('Another user has already registered by this email!');
+        const foundUser = await userService.getUserByEmail(payload.email, [
+            '_id',
+        ]);
+        if (foundUser) {
+            throw new ConflictRequestError(
+                'Another user has already registered by this email!'
+            );
         }
-        // hash password 
+        // hash password
         payload.password = await hashPassword(payload.password);
         // create user
         await userService.createRegularUser(payload);
-    }
+    };
+    verifyUser = async (token: string) => {
+        // check in blacklist
+        if (await tokenService.isInBlackList(token)) {
+            throw new UnauthorizedRequestError('You do not have permission to get resources');
+        }
+        // decode token
+        const payload = verifyAccessToken(token);
+        return {userId: payload.userId}
+
+    };
 }
 export default new AuthService();
