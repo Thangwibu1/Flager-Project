@@ -1,13 +1,10 @@
-import { UnauthorizedRequestError } from "../errors/api/ApiError";
 import userRepository from "../repositories/user.repository";
+import { FullUser } from "../types/user/User";
 
 class UserService {
-    getUserByEmail = async (email: string) => {
-        const existUser = await userRepository.findByEmail(email, ['_id', 'email', 'username', 'password']);
-        if (!existUser) {
-            throw new UnauthorizedRequestError('Email or password are wrong');
-        }
-        return existUser;
+    getUserByEmail = async (email: string, select: (keyof FullUser)[] = ["_id", "email", "phone", "username"]) => {
+        const user = await userRepository.findByEmail(email, select);
+        return user;
     };
 }
 export default new UserService();

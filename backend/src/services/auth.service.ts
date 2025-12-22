@@ -6,7 +6,10 @@ import tokenService from './token.service';
 class AuthService {
     login = async (user: LoginUserDTO) => {
         // check email exist
-        const foundUser = await userService.getUserByEmail(user.email);
+        const foundUser = await userService.getUserByEmail(user.email, ['_id', 'email', 'password', "phone", "username"]);
+        if(!foundUser){
+            throw new UnauthorizedRequestError('Email or password are wrong');
+        }
         const isPasswordEqual = comparePassword(user.password, foundUser.password);
         if (!isPasswordEqual) {
             throw new UnauthorizedRequestError('Email or password are wrong');

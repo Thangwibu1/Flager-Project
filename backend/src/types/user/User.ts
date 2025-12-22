@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { z } from 'zod';
 
 export const IUser = z.object({
@@ -19,10 +20,10 @@ export const registerUser = IUser.extend({
 });
 
 export const fullUser = registerUser.extend({
-    _id: z.string(),
+    _id: z.instanceof(Types.ObjectId),
     createdAt: z.date(),
     updatedAt: z.date(),
-    deletedAt: z.date().nullable(),
+    deletedAt: z.date().nullable().optional(),
 });
 
 export type User = z.infer<typeof IUser>;
