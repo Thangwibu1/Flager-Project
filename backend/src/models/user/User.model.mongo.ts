@@ -6,14 +6,14 @@ export type IUserDocument = FullUser & Document;
 // Tạo Mongoose Schema
 const UserSchema = new Schema<IUserDocument>(
     {
-        username: { type: String, required: true, unique: true },
+        email: { type: String, required: true, unique: true },
+        username: { type: String },
         password: { type: String, required: true },
         phone: { type: String, required: true },
-        email: { type: String, required: true, unique: true },
         deletedAt: { type: Date, default: null },
     },
     {
-        timestamps: true, // Tự động tạo createdAt và updatedAt
+        timestamps: true,
     }
 );
 export const User = mongoose.model<IUserDocument>('User', UserSchema);
