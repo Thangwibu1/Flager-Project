@@ -6,6 +6,8 @@ import morgan from 'morgan';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { config } from './config/env.config';
+import { errorHandler } from './middlewares/error.middleware';
+import { NotFoundRequestError } from './errors/api/ApiError';
 
 // Tạo Express application
 const app: Application = express();
@@ -68,9 +70,10 @@ app.use(`/api/${config.apiVersion}`, (req, res) => {
     res.json({ message: 'Flager API v1' });
 });
 
-
 app.use((req, res) => {
-    res.status(404).json({ error: 'Route not found' });
+    throw new NotFoundRequestError("Route is not found");
 });
+
+app.use(errorHandler);
 
 export { app, httpServer };
