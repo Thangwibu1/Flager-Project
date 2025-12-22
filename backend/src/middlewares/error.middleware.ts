@@ -1,32 +1,19 @@
 import { Request, Response, NextFunction } from "express";
-
-export class AppError extends Error {
-  constructor(
-    public statusCode: number,
-    public message: string,
-    public isOperational = true
-  ) {
-    super(message);
-    Object.setPrototypeOf(this, AppError.prototype);
-  }
-}
-
+import { JwtError } from "../errors/jwt/JwtError";
+import { ApiError } from "../errors/api/ApiError";
+import { ApiResponse } from "../utils/api-response.util";
 export const errorHandler = (
-  err: Error | AppError,
+  err: Error  | JwtError | ApiError,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
-      status: "error",
-      message: err.message,
-    });
+  if(err instanceof ApiError){
+    return res.status(err.statusCode).json(ApiResponse.error(err.message));
   }
-
+  else if(err instanceof JwtError){
+    return res.status(err.statusCode).json(ApiResponse.error(err.message, err.code))
+  }
   console.error("ERROR:", err);
-  res.status(500).json({
-    status: "error",
-    message: "Internal server error",
-  });
+  res.status(500).json(ApiResponse.error("Internal server error"));
 };

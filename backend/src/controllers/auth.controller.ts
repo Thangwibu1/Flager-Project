@@ -1,0 +1,19 @@
+import { NextFunction, Request, Response } from 'express';
+import authService from '../services/auth.service';
+import { ApiResponse } from '../utils/api-response.util';
+
+class AuthController {
+    login = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const data = await authService.login(req.body);
+            res.json(ApiResponse.success('Login successfully', data));
+        } catch (error) {
+            next(error);
+        }
+    };
+}
+export default new AuthController();
