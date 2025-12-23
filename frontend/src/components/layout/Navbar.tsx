@@ -7,7 +7,7 @@ import { NavIcons } from '../common/NavigationBar/NavIcons';
 import { UserActionMenu } from '../common/NavigationBar/UserActionMenu';
 
 // Import dữ liệu
-import { NAV_ITEMS } from '../../constants/navigation';
+import { NAV_ITEMS } from '../../utils/navigation';
 
 export const Navbar = () => {
     const [activeTab, setActiveTab] = useState('home');

@@ -1,5 +1,3 @@
-// src/App.tsx
-// LƯU Ý: Hãy kiểm tra đường dẫn import này có đúng với cấu trúc máy bạn không nhé
 import { Navbar } from './components/Layout/Navbar';
 
 function App() {
