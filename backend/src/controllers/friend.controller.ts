@@ -1,10 +1,28 @@
-import { NextFunction, Request, Response } from "express";
-import { ApiResponse } from "../utils/api-response.util";
+import e, { NextFunction, Request, Response } from 'express';
+import { ApiResponse } from '../utils/api-response.util';
+import friendService from '../services/friend.service';
 
 class FriendController {
-  sendFriendRequest = async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.user!.id;
-    res.json(ApiResponse.success("Create new post successfully", null));
-  }
+    sendFriendRequest = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const userId = req.user!.id;
+            req.body.senderId = userId;
+            const friendRequestData = await friendService.sendAddFriendRequest(
+                req.body
+            );
+            const dataFinal = {
+                friendRequestData,
+            };
+            res.json(
+                ApiResponse.success('Create new post successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 export default new FriendController();

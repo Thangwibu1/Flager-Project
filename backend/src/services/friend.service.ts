@@ -1,7 +1,12 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
 import { SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
+import friendRequestRelationRepo from "../repositories/friend-request-relation.repo.graph";
 class UserService {
+  isSenderHaveRelationshipWithReceiver = async (senderId: string, receiverId: string): Promise<boolean> => {
+    const isTrue = await friendRequestRelationRepo.isHaveRelationWith(senderId, receiverId);
+    return isTrue;
+  }
 
   sendAddFriendRequest = async (payload: SendFriendRequestDTO & {senderId: string}) => {
     // check 2 id không trùng
@@ -15,12 +20,22 @@ class UserService {
     }
     const existReceiver = await userService.getUserById(payload.senderId);
     if(!existReceiver){
-      throw new NotFoundRequestError("Not found receiver"); 
-    } 
+      throw new NotFoundRequestError("Not found receiver");
+    }
     // check cả 2 đã từng gửi request cho người còn lại
-    
+    const senderHaveRelationWithReceiver = await this.isSenderHaveRelationshipWithReceiver(payload.senderId, payload.receiverId);
+    const receiverHaveRelationWithSender = await this.isSenderHaveRelationshipWithReceiver(payload.receiverId, payload.senderId);
+    if(senderHaveRelationWithReceiver || receiverHaveRelationWithSender){
+      throw new ConflictRequestError("You or your requested friend has already sent a request before");
+    }
     // check cả 2 đã là bạn của nhau
     
+    // create friend request
+    const dataFriendRequest = {
+      createdAt: new Date(),
+    }
+    const newFriendRequest = await friendRequestRelationRepo.create(payload.senderId, payload.receiverId, dataFriendRequest);
+    return newFriendRequest;
   }
 
 }
