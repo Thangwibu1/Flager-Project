@@ -32,8 +32,10 @@ class Neo4jClient {
     return Neo4jClient.instance;
   }
 
-  public getSession(): Session {
-    return this.driver.session();
+  public getSession(accessMode: 'READ' | 'WRITE'): Session {
+    return this.driver.session({
+      defaultAccessMode: accessMode
+    });
   }
 
   public async close(): Promise<void> {
