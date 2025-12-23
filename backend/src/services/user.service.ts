@@ -13,7 +13,6 @@ class UserService {
     };
     createRegularUser = async (payload: RegisterUserDTO) => {
         const user = await userRepository.createOne(payload);
-        console.log(">>>user::", user);
         await userGraphRepository.createNode({
             id: user._id.toString(),
             username: user.username
