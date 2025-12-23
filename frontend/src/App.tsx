@@ -1,13 +1,10 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import IconBar from './components/Layout/IconBar/IconBar';
-import UserActionMenu from './components/Layout/UserActionMenu/UserActionMenu';
+import { BrowserRouter } from 'react-router-dom';
+import Navbar from './components/Layout/Navbar/Navbar';
 
 function App() {
     return (
         <BrowserRouter>
-            <IconBar />
-            <br />
-            <UserActionMenu />
+            <Navbar />
         </BrowserRouter>
     );
 }
