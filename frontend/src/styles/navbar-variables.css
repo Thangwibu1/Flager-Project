@@ -29,4 +29,12 @@
     
     /* Transitions */
     --navbar-transition: all 0.2s ease-in-out;
+
+    /* Search Tokens mới dựa trên hình ảnh */
+    --search-bg: #121212;              
+    --search-bg-focus: #1a1a1a;        
+    --search-border: #262626;         
+    --search-focus-border: #333333;    
+    --search-icon: #737373;            
+    --search-placeholder: #737373;     
 }
