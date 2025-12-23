@@ -1,17 +1,17 @@
 import { BaseGraphRepo } from "./base.repo.graph";
 import { UserGraph } from "../models/user/user.model.neo4j";
 
-export class UserRepository extends BaseGraphRepo {
+class UserGraphRepository extends BaseGraphRepo {
   /**
    * Hàm giúp tạo 1 node User vào db
    * @param user 
    * @returns
    */
-  async createUser(user: { id: string; username: string }) {
+  async createNode(user: { id: string; username: string }) {
     const cypher = `
       CREATE (u:User {
         id: $id,
-        username: $username,
+        username: $username
       })
       RETURN u
     `;
@@ -39,3 +39,4 @@ export class UserRepository extends BaseGraphRepo {
     })
   }
 }
+export default new UserGraphRepository();

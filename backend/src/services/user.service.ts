@@ -1,4 +1,5 @@
 import userRepository from "../repositories/user.repository";
+import userGraphRepository from '../repositories/user.repo.graph';
 import { FullUser, RegisterUserDTO } from "../types/user/User";
 
 class UserService {
@@ -11,7 +12,12 @@ class UserService {
         return user;
     };
     createRegularUser = async (payload: RegisterUserDTO) => {
-        await userRepository.createOne(payload);
+        const user = await userRepository.createOne(payload);
+        console.log(">>>user::", user);
+        await userGraphRepository.createNode({
+            id: user._id.toString(),
+            username: user.username
+        });
     }
 }
 export default new UserService();
