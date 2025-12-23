@@ -3,11 +3,21 @@ import { SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
 import friendRequestRelationRepo from "../repositories/friend-request-relation.repo.graph";
 class UserService {
+  /**
+   * Hàm giúp kiểm trả sender có gửi lời mới kết bạn với receiver từ trước chưa
+   * @param senderId 
+   * @param receiverId 
+   * @returns 
+   */
   isSenderHaveRelationshipWithReceiver = async (senderId: string, receiverId: string): Promise<boolean> => {
     const isTrue = await friendRequestRelationRepo.isHaveRelationWith(senderId, receiverId);
     return isTrue;
   }
-
+  /**
+   * Hàm này giúp xử lí logic yêu cầu kết bạn (logic nghiệp vụ)
+   * @param payload 
+   * @returns 
+   */
   sendAddFriendRequest = async (payload: SendFriendRequestDTO & {senderId: string}) => {
     // check 2 id không trùng
     if(payload.receiverId == payload.senderId){

@@ -32,7 +32,12 @@ class FriendRequestRelationRepo extends BaseGraphRepo {
       return record ? FriendRequestRelationGraph.fromNeo4j(record, {fromNode: this.from, relation: this.rel, toNode: this.to}) : null;
     });
   };
-
+  /**
+   * Hàm giúp query kiểm tra userA(checkId) có quan hệ REQUEST_FRIEND với userB(withId) không 
+   * @param checkId 
+   * @param withId 
+   * @returns 
+   */
   isHaveRelationWith = async (checkId: string, withId: string) => {
     const cypher = `
       MATCH (${this.from}:User) -[${this.rel}:REQUEST_FRIEND]-> (${this.to}:User)
