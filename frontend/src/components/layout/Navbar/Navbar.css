@@ -1,0 +1,61 @@
+@import 'tailwindcss';
+@import '../../../styles/navbar-variables.css';
+
+/* Navbar Container - Dùng Flexbox */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--navbar-z-index);
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+    border-bottom: 1px solid var(--navbar-border);
+    
+    padding: var(--navbar-padding-y) var(--navbar-padding-x);
+}
+
+/* Left Section */
+.navbar__left {
+    display: flex;
+    align-items: center;
+    gap: var(--navbar-gap);
+    color: var(--navbar-text);
+}
+
+/* Center Section */
+.navbar__center {
+    display: flex;
+    align-items: center;
+    gap: var(--navbar-gap);
+    flex: 1;
+    justify-content: center;
+    color: var(--navbar-text);
+}
+
+/* Right Section */
+.navbar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--navbar-gap);
+    color: var(--navbar-text);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        padding: var(--navbar-padding-y-mobile) var(--navbar-padding-x-mobile);
+    }
+    
+    .navbar__left,
+    .navbar__center,
+    .navbar__right {
+        gap: var(--navbar-gap-mobile);
+    }
+}
