@@ -1,5 +1,5 @@
 // src/components/common/Logo/Logo.tsx
-import logoFlager from './logoFlager.jpg';
+import logoFlager from '../../../assets/img/logo.png';
 import './Logo.css';
 
 
