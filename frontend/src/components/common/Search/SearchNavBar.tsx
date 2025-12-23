@@ -6,11 +6,17 @@ import './SearchNavBar.css';
 interface SearchNavBarProps extends ComponentPropsWithoutRef<'div'> {
     text?: string;
     widthSearch?: string;
+    value?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // lấy data theo ký tự gõ á
+    name?: string;
 }
 
 export default function SearchNavBar({
     text = 'Search',
     widthSearch = '250px',
+    value,
+    onChange,
+    name,
     style,
     className,
     ...restProps
@@ -29,6 +35,9 @@ export default function SearchNavBar({
                 <div className="search-navbar__input-wrapper">
                     <input
                         type="text"
+                        name={name}
+                        value={value}
+                        onChange={onChange}
                         placeholder={text}
                         className="search-navbar__input"
                     />
