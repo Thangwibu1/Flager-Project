@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+/* IconBar Container */
+.icon-bar {
+    @apply fixed left-0 top-0 z-[1000];
+    @apply flex h-screen w-20 flex-col items-center;
+    @apply border-r border-gray-800 bg-gray-900;
+    @apply px-2 py-4;
+}
+
+/* Icon List */
+.icon-bar__list {
+    @apply flex w-full flex-col gap-4;
+    @apply list-none p-0 m-0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .icon-bar {
+        @apply w-16 px-1 py-3;
+    }
+
+    .icon-bar__list {
+        @apply gap-3;
+    }
+}
