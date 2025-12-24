@@ -66,7 +66,7 @@ class IsFriendRelationRepository extends BaseGraphRepo{
     }
     deleteByFromIdAndToId = async (fromId: string, toId: string) => {
         const cypher = `
-            MATCH (${this.from} {id: $fromId})-[${this.rel}:${neo4jInfo.rel.user.isFriend}]->(${this.to} {id: $toId})
+            MATCH (${this.from}:${neo4jInfo.node.user} {id: $fromId})-[${this.rel}:${neo4jInfo.rel.user.isFriend}]->(${this.to}:${neo4jInfo.node.user} {id: $toId})
             DELETE ${this.rel}
         `
         return this.write(async (tx) => {
@@ -74,6 +74,17 @@ class IsFriendRelationRepository extends BaseGraphRepo{
             const cntDelete = result.summary.counters.updates().relationshipsDeleted;
             return cntDelete == 0 ? false : true;
         });
+    }
+    countByUserId = async (userId: string): Promise<number> => {
+        const cypher = `
+            MATCH (${this.from}:${neo4jInfo.node.user} {id: $userId})-[${this.rel}:${neo4jInfo.rel.user.isFriend}]->(${this.to}:${neo4jInfo.node.user})
+            RETURN COUNT(${this.rel}) as total_friends
+        `;
+        return this.read(async (tx) => {
+            const result = await tx.run(cypher, {userId});
+            const record = result.records[0];
+            return neo4jConverter.toPureNumber(record.get('total_friends'));
+        })
     }
 }
 

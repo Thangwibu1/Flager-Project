@@ -1,5 +1,5 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
-import { FriendAcceptDTO, FriendUnfriendDTO, SendFriendRequestDTO } from "../types/friend/Friend";
+import { FriendAcceptDTO, FriendUnfriendDTO, FriendRequestDTO, FriendCountDTO } from "../types/friend/Friend";
 import userService from "./user.service";
 import friendRequestRelationRepository from "../repositories/user/friend-request-relation.repository.graph";
 import isFriendRelationRepository from "../repositories/user/is-friend-relation.repository.graph";
@@ -21,7 +21,7 @@ class FriendService {
    * @param payload 
    * @returns 
    */
-  sendAddFriendRequest = async (payload: SendFriendRequestDTO) => {
+  sendAddFriendRequest = async (payload: FriendRequestDTO) => {
     // check 2 id không trùng
     if(payload.receiverId == payload.senderId){
       throw new ConflictRequestError("You can not add friend with yourself");
@@ -142,6 +142,21 @@ class FriendService {
     }
     // delete friend relation between 2 user
     await this.deleteIsFriendRelation(payload.receiverId, payload.senderId);
+  }
+  /**
+   * Xử lí logic nghiệp vụ (đếm số lượng bạn bè) của 1 user
+   * @param payload 
+   * @returns 
+   */
+  countFriendsOfUser = async (payload: FriendCountDTO): Promise<number> => {
+    const {userId} = payload;
+    // check userId 
+    const foundUser = await userService.getUserById(userId);
+    if(!foundUser){
+      throw new NotFoundRequestError("Not found user");
+    }
+    const totalFriend = await isFriendRelationRepository.countByUserId(userId);
+    return totalFriend;
   }
 }
 export default new FriendService();

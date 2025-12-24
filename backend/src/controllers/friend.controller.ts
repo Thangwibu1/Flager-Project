@@ -1,6 +1,7 @@
 import e, { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../utils/api-response.util';
 import friendService from '../services/friend.service';
+import { FriendCountDTO } from '../types/friend/Friend';
 
 class FriendController {
     sendFriendRequest = async (
@@ -40,6 +41,19 @@ class FriendController {
             await friendService.unfriendUser(req.body);
             return res.json(
                 ApiResponse.success('Unfriend successfully', null)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+    countFriends = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const totalFriends = await friendService.countFriendsOfUser(req.query as FriendCountDTO);
+            const dataFinal = {
+                totalFriends: totalFriends
+            }
+            return res.json(
+                ApiResponse.success('Get total friend successfully', dataFinal)
             );
         } catch (error) {
             next(error);
