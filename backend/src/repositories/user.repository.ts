@@ -1,4 +1,4 @@
-import { IUserDocument, User } from '../models/user/User.model.mongo';
+import { IUserDocument, User } from '../models/user/user.model.mongo';
 import { FullUser } from '../types/user/User';
 
 class UserRepository {

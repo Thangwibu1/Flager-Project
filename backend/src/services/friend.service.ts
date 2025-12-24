@@ -1,7 +1,7 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
 import { FriendAcceptDTO, SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
-import friendRequestRelationRepo from "../repositories/friend-request-relation.repo.graph";
+import friendRequestRelationRepo from "../repositories/friend-request-relation.repository.graph";
 class UserService {
   /**
    * Hàm giúp kiểm trả sender có gửi lời mới kết bạn với receiver từ trước chưa

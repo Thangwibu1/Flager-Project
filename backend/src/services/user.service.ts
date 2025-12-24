@@ -1,5 +1,5 @@
 import userRepository from "../repositories/user.repository";
-import userGraphRepository from '../repositories/user.repo.graph';
+import userGraphRepository from '../repositories/user.repository.graph';
 import { FullUser, RegisterUserDTO } from "../types/user/User";
 
 class UserService {

@@ -1,5 +1,5 @@
-import { FriendRequestRelationGraph } from "../models/user/friend-request-relation.model.neo4j"; 
-import { BaseGraphRepo } from "./base.repo.graph";
+import { FriendRequestRelation } from "../models/user/friend-request-relation.model.neo4j"; 
+import { BaseGraphRepo } from "./base.repository.graph";
 
 class FriendRequestRelationRepo extends BaseGraphRepo {
   private from = "n1";
@@ -29,7 +29,7 @@ class FriendRequestRelationRepo extends BaseGraphRepo {
     return this.write(async (tx) => {
       const result = await tx.run(cypher, {fromId, toId, createdAt: data.createdAt.getDate()});
       const record = result.records[0];
-      return record ? FriendRequestRelationGraph.fromNeo4j(record, {fromNode: this.from, relation: this.rel, toNode: this.to}) : null;
+      return record ? FriendRequestRelation.formatRaw(record, {fromNode: this.from, relation: this.rel, toNode: this.to}) : null;
     });
   };
   /**

@@ -1,5 +1,5 @@
-import { BaseGraphRepo } from "./base.repo.graph";
-import { UserGraph } from "../models/user/user.model.neo4j";
+import { BaseGraphRepo } from "./base.repository.graph";
+import { UserNode } from "../models/user/user.model.neo4j";
 
 class UserGraphRepository extends BaseGraphRepo {
   /**
@@ -35,7 +35,7 @@ class UserGraphRepository extends BaseGraphRepo {
     return this.read(async (tx) => {
       const result = await tx.run(cypher, {id});
       const records = result.records;
-      return records.length > 0 ? UserGraph.fromNeo4j(records[0].get('u')) : null;
+      return records.length > 0 ? UserNode.formatRaw(records[0].get('u')) : null;
     })
   }
 }
