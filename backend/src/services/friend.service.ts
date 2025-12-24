@@ -1,5 +1,5 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
-import { FriendAcceptDTO, SendFriendRequestDTO } from "../types/friend/Friend";
+import { FriendAcceptDTO, FriendUnfriendDTO, SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
 import friendRequestRelationRepository from "../repositories/user/friend-request-relation.repository.graph";
 import isFriendRelationRepository from "../repositories/user/is-friend-relation.repository.graph";
@@ -107,6 +107,43 @@ class FriendService {
       createdAt: new Date()
     }
     await this.createIsFriendRelation(payload.senderId, payload.receiverId, dataIsFriendRelation);
+  }
+  /**
+   * Xóa quan hệ bạn bè của user and bạn của user
+   * @param userId 
+   * @param friendId 
+   */
+  deleteIsFriendRelation = async (userId: string, friendId: string) => {
+    // xóa quan hệ phía user
+    await isFriendRelationRepository.deleteByFromIdAndToId(userId, friendId);
+    // xóa cả quan hệ phía friend
+    await isFriendRelationRepository.deleteByFromIdAndToId(friendId, userId);
+  }
+  /**
+   * Xử lí logic nghiệp vụ hủy kết bạn giữa 2 user
+   * @param payload 
+   */
+  unfriendUser = async (payload: FriendUnfriendDTO): Promise<void> => {
+    // check 2 id not the same
+    if(payload.receiverId == payload.senderId){
+      throw new ConflictRequestError("You can not add friend with yourself");
+    }
+    // check senderId and receiverId exist
+    const existSender = await userService.getUserById(payload.receiverId);
+    if(!existSender){
+      throw new NotFoundRequestError("Not found sender");
+    }
+    const existReceiver = await userService.getUserById(payload.senderId);
+    if(!existReceiver){
+      throw new NotFoundRequestError("Not found receiver");
+    }
+    // check 2 user have already been friend
+    const isFriend = await this.isSenderAndReceiverIsFriend(payload.senderId, payload.receiverId);
+    if(!isFriend){
+      throw new ConflictRequestError("You and your friend are not friend of each other");
+    }
+    // delete friend relation between 2 user
+    await this.deleteIsFriendRelation(payload.receiverId, payload.senderId);
   }
 }
 export default new FriendService();

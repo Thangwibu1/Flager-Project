@@ -26,7 +26,21 @@ class FriendController {
             const userId = req.user!.id;
             req.body.senderId = userId;
             await friendService.acceptFriendRequest(req.body);
-            return res.json(ApiResponse.success('Accept friend successfully', null));
+            return res.json(
+                ApiResponse.success('Accept friend successfully', null)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+    unfriendUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = req.user!.id;
+            req.body.senderId = userId;
+            await friendService.unfriendUser(req.body);
+            return res.json(
+                ApiResponse.success('Accept friend successfully', null)
+            );
         } catch (error) {
             next(error);
         }

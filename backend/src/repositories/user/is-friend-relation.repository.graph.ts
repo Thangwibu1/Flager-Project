@@ -64,6 +64,17 @@ class IsFriendRelationRepository extends BaseGraphRepo{
             return record ? record.get('isExist') as boolean : false; 
         });
     }
+    deleteByFromIdAndToId = async (fromId: string, toId: string) => {
+        const cypher = `
+            MATCH (${this.from} {id: $fromId})-[${this.rel}:${neo4jInfo.rel.user.isFriend}]->(${this.to} {id: $toId})
+            DELETE ${this.rel}
+        `
+        return this.write(async (tx) => {
+            const result = await tx.run(cypher, {fromId, toId});
+            const cntDelete = result.summary.counters.updates().relationshipsDeleted;
+            return cntDelete == 0 ? false : true;
+        });
+    }
 }
 
 export default new IsFriendRelationRepository();
