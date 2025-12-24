@@ -1,8 +1,9 @@
-.logo-wrapper{
-    width: 80px;
+.logo-wrapper {
+    /* width đã được xử lý qua inline style trong file .tsx rồi á */
     padding-right: 5px;
 }
-.logo-wrapper img{
+
+.logo-wrapper img {
     display: block;
     width: 100%;
 }
