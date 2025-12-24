@@ -5,14 +5,20 @@
     border-radius: 999px; 
     padding: 6px 16px; 
     width: 100%;
-    transition: var(--navbar-transition);
-    border: 1px solid var(--search-border);
+    transition: all 0.3s ease;
+    border: 2px solid var(--search-border, transparent);
+}
+
+.search-navbar__container:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .search-navbar__container:focus-within {
     background-color: var(--search-bg-focus);
     border-color: var(--search-focus-border);
-    box-shadow: 0 0 0 1px var(--search-focus-border); 
+    box-shadow: 0 0 12px var(--search-focus-border); 
 }
 
 .search-navbar__icon {
