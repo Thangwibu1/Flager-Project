@@ -1,5 +1,5 @@
-import { IUserDocument, User } from '../models/user/User.model.mongo';
-import { FullUser } from '../types/user/User';
+import { User } from '../../models/user/user.model.mongo';
+import { FullUser } from '../../types/user/User';
 
 class UserRepository {
     findById = async (id: string, select: (keyof FullUser)[] = []) => {

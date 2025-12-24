@@ -24,5 +24,19 @@ class FriendController {
             next(error);
         }
     };
+    acceptFriendRequest = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const userId = req.user!.id;
+            req.body.senderId = userId;
+            await friendService.acceptFriendRequest(req.body);
+            res.json(ApiResponse.success("Accept friend successfully", null));
+        } catch (error) {
+            next();
+        }
+    };
 }
 export default new FriendController();
