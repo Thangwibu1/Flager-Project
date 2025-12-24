@@ -39,7 +39,7 @@ class FriendController {
             req.body.senderId = userId;
             await friendService.unfriendUser(req.body);
             return res.json(
-                ApiResponse.success('Accept friend successfully', null)
+                ApiResponse.success('Unfriend successfully', null)
             );
         } catch (error) {
             next(error);
