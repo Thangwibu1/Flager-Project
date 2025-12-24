@@ -2,6 +2,7 @@ import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiErr
 import { FriendAcceptDTO, SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
 import friendRequestRelationRepository from "../repositories/user/friend-request-relation.repository.graph";
+import isFriendRelationRepository from "../repositories/user/is-friend-relation.repository.graph";
 class FriendService {
   /**
    * Hàm giúp kiểm trả sender có gửi lời mới kết bạn với receiver từ trước chưa
@@ -18,6 +19,10 @@ class FriendService {
    * @param payload 
    * @returns 
    */
+  isSenderAndReceiverIsFriend = async (senderId: string, receiverId: string) => {
+    const  isFriend = await isFriendRelationRepository.isHaveRelationWith(senderId, receiverId);
+    return isFriend;
+  }
   sendAddFriendRequest = async (payload: SendFriendRequestDTO) => {
     // check 2 id không trùng
     if(payload.receiverId == payload.senderId){
@@ -39,7 +44,10 @@ class FriendService {
       throw new ConflictRequestError("You or your requested friend has already sent a request before");
     }
     // check cả 2 đã là bạn của nhau
-    
+    const isFriend = await this.isSenderAndReceiverIsFriend(payload.senderId, payload.receiverId);
+    if(isFriend){
+      throw new ConflictRequestError("Receiver and sender are already friend of each other!");
+    } 
     // create friend request
     const dataFriendRequest = {
       createdAt: new Date(),
@@ -47,11 +55,28 @@ class FriendService {
     const newFriendRequest = await friendRequestRelationRepository.create(payload.senderId, payload.receiverId, dataFriendRequest);
     return newFriendRequest;
   }
-  deleteFriendRequest = async (senderId: string, receiverId: string) => {
-    const isDelete = await friendRequestRelationRepository.deleteByFromIdAndToId(senderId, receiverId);
-    return isDelete;
+  /**
+   * Xóa lời mời kết bạn phía sender cho receiver trước đó
+   * @param senderId 
+   * @param receiverId 
+   */
+  deleteFriendRequest = async (senderId: string, receiverId: string): Promise<void> => {
+    await friendRequestRelationRepository.deleteByFromIdAndToId(senderId, receiverId);
   }
-  acceptFriendRequest = async (payload: FriendAcceptDTO) => {
+  /**
+   * Tạo quan hệ bạn bè giữa sender và receiver
+   * @param senderId 
+   * @param receiverId 
+   * @param data 
+   */
+  createIsFriendRelation = async (senderId: string, receiverId: string, data: {createdAt: Date}) => {
+    await isFriendRelationRepository.createTwoEdge(senderId, receiverId, data);
+  }
+  /**
+   * Logic nghiệp vụ kết bạn giữa sender và receiver
+   * @param payload 
+   */
+  acceptFriendRequest = async (payload: FriendAcceptDTO):  Promise<void> => {
     // check 2 id not the same
     if(payload.receiverId == payload.senderId){
       throw new ConflictRequestError("You can not add friend with yourself");
@@ -70,10 +95,18 @@ class FriendService {
     if(!isReceiverSentRequest){
       throw new ConflictRequestError("Receiver has not sent you a friend request!");
     }
+    // check sender and receiver isFriend of each other
+    const isFriend = await this.isSenderAndReceiverIsFriend(payload.senderId, payload.receiverId);
+    if(isFriend){
+      throw new ConflictRequestError("Receiver and sender are already friend of each other!");
+    }
     // delete FRIEND_REQUEST relation from receiver side
     await this.deleteFriendRequest(payload.receiverId, payload.senderId);
-    // create friend relationship
-    
+    // create IS_FRIEND relationship
+    const dataIsFriendRelation = {
+      createdAt: new Date()
+    }
+    await this.createIsFriendRelation(payload.senderId, payload.receiverId, dataIsFriendRelation);
   }
 }
 export default new FriendService();

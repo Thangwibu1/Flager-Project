@@ -11,15 +11,8 @@ class FriendController {
         try {
             const userId = req.user!.id;
             req.body.senderId = userId;
-            const friendRequestData = await friendService.sendAddFriendRequest(
-                req.body
-            );
-            const dataFinal = {
-                friendRequestData,
-            };
-            res.json(
-                ApiResponse.success('Create new post successfully', dataFinal)
-            );
+            await friendService.sendAddFriendRequest(req.body);
+            res.json(ApiResponse.success('Create new post successfully', null));
         } catch (error) {
             next(error);
         }
@@ -33,9 +26,9 @@ class FriendController {
             const userId = req.user!.id;
             req.body.senderId = userId;
             await friendService.acceptFriendRequest(req.body);
-            res.json(ApiResponse.success("Accept friend successfully", null));
+            return res.json(ApiResponse.success('Accept friend successfully', null));
         } catch (error) {
-            next();
+            next(error);
         }
     };
 }
