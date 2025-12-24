@@ -1,24 +1,25 @@
-import { ReactNode } from 'react';
+import { ReactNode, ComponentPropsWithoutRef } from 'react';
 import './Navbar.css';
 
-interface NavbarProps {
-    leftContent?: ReactNode;
-    centerContent?: ReactNode;
-    rightContent?: ReactNode;
+interface NavbarProps extends ComponentPropsWithoutRef<'nav'> {
+    components?: {
+        [key: string]: ReactNode;
+    };
 }
 
 export default function Navbar({
-    leftContent,
-    centerContent,
-    rightContent,
+    components = {},
+    className,
+    ...restProps
 }: NavbarProps) {
+    const { left, center, right, ...extra } = components;
+
     return (
-        <nav className="navbar">
-            <div className="navbar__logobar">{leftContent}</div>
-
-            <div className="navbar__center">{centerContent}</div>
-
-            <div className="navbar__right">{rightContent}</div>
+        <nav className={`navbar ${className || ''}`} {...restProps}>
+            <div className="navbar__logobar">{left}</div>
+            <div className="navbar__center">{center}</div>
+            <div className="navbar__right">{right}</div>
+            {Object.values(extra)}
         </nav>
     );
 }
