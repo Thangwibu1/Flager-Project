@@ -27,5 +27,12 @@ class AuthController {
             next(error);
         }
     }
+    refreshAccessToken = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+
+    }
 }
 export default new AuthController();

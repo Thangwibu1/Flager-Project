@@ -9,7 +9,7 @@ const authenticateUserMiddleware = async (req: Request, res: Response, next: Nex
       throw new UnauthorizedRequestError("Please login to get resources");
     }
     const accessToken = authorization[1].trim();
-    const {userId} = await authService.verifyUser(accessToken);
+    const {userId} = await authService.verifyAccessToken(accessToken);
     req.user = {
       id: userId
     }
@@ -18,4 +18,20 @@ const authenticateUserMiddleware = async (req: Request, res: Response, next: Nex
     next(error);
   }
 }
-export {authenticateUserMiddleware}
+const verifyRefreshTokenMiddleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const authorization = req.headers.authorization?.split(' ');
+        if (!authorization || authorization.length != 2) {
+            throw new UnauthorizedRequestError('Invalid refresh token');
+        }
+        const refreshToken = authorization[1].trim();
+        next();
+    } catch (error) {
+        next(error);
+    }
+};
+export {authenticateUserMiddleware, verifyRefreshTokenMiddleware}

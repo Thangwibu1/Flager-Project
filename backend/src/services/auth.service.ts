@@ -59,7 +59,7 @@ class AuthService {
         // create user
         await userService.createRegularUser(payload);
     };
-    verifyUser = async (token: string) => {
+    verifyAccessToken = async (token: string) => {
         // check in blacklist
         if (await tokenService.isInBlackList(token)) {
             throw new UnauthorizedRequestError('You do not have permission to get resources');
@@ -69,5 +69,10 @@ class AuthService {
         return {userId: payload.userId}
 
     };
+    verifyRefreshToken = async (token: string) => {
+        
+    }
+    refreshAccessToken = async (refreshToken: string) => {
+    }
 }
 export default new AuthService();
