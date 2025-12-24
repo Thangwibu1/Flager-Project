@@ -1,4 +1,4 @@
-import { User } from '../../models/user/user.model.mongo';
+import { User } from '../../models/user/User.model.mongo';
 import { FullUser } from '../../types/user/User';
 
 class UserRepository {
@@ -9,7 +9,7 @@ class UserRepository {
             .select(select)
             .lean();
         return foundUser;
-    }
+    };
     findByEmail = async (email: string, select: (keyof FullUser)[] = []) => {
         const foundUser = await User.findOne({
             email: email,
@@ -21,6 +21,6 @@ class UserRepository {
 
     createOne = async (data: any) => {
         return User.create(data);
-    }
+    };
 }
 export default new UserRepository();

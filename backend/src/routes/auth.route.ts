@@ -6,5 +6,5 @@ import { verifyRefreshTokenMiddleware } from '../middlewares/auth.middleware';
 const router = Router();
 router.post('/login', validateBody(loginUser), authController.login);
 router.post('/register', validateBody(registerUser), authController.registerUser);
-router.post('/refresh-token', verifyRefreshTokenMiddleware, authController.refreshAccessToken);
+router.get('/refresh-token', verifyRefreshTokenMiddleware, authController.refreshAccessToken);
 export default router;

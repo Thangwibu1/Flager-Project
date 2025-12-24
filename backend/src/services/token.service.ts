@@ -20,5 +20,12 @@ class TokenService {
     const data = await redisService.getDataByKey<number>(`${redisPrefix.blacklist}:${token}`);
     return !(data == null);
   }
+  isExistRefreshToken = async (token: string) => {
+    const data = await redisService.getDataByKey<number>(`${redisPrefix.refreshToken}:${token}`);
+    return !(data == null);
+  }
+  getRefreshTokenByDeviceIdAndUserId = async (userId: string, deviceId: string) => {
+    return await redisService.getDataByKey<string>(`${redisPrefix.device_user}:${deviceId}:${userId}`);
+  }
 }
 export default new TokenService();

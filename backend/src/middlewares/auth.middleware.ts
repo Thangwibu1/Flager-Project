@@ -24,11 +24,21 @@ const verifyRefreshTokenMiddleware = async (
     next: NextFunction
 ) => {
     try {
+        // check token and device id in headers
         const authorization = req.headers.authorization?.split(' ');
         if (!authorization || authorization.length != 2) {
             throw new UnauthorizedRequestError('Invalid refresh token');
         }
+        const deviceId = req.headers['x-device-id'] as string;
+        if(!deviceId || typeof deviceId != 'string'){
+          throw new UnauthorizedRequestError("Invalid deviceId");
+        }
         const refreshToken = authorization[1].trim();
+        // get payload
+        const {userId} = await authService.verifyRefreshToken(refreshToken, deviceId);
+        req.user = {
+          id: userId,
+        }
         next();
     } catch (error) {
         next(error);

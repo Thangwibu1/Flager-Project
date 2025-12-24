@@ -32,7 +32,7 @@ class AuthController {
         res: Response,
         next: NextFunction
     ): Promise<void> => {
-
+        res.json(ApiResponse.success('Get new refresh token successfully', null));
     }
 }
 export default new AuthController();
