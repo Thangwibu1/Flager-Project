@@ -1,0 +1,37 @@
+.sidebar {
+    width: 280px;
+    padding: 15px;
+    background-color: transparent;
+}
+
+/* Quan trọng: CSS này để NavIcon hiển thị ngang */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Khoảng cách giữa icon và chữ */
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-item.active {
+    background-color: #18191a;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background-color: #3e4042;
+    margin: 15px 0;
+}
+
+.shortcuts-title {
+    font-size: 13px;
+    color: #8a8d91;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}

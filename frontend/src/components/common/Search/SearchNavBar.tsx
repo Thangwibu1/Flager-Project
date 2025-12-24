@@ -12,8 +12,8 @@ interface SearchNavBarProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 export default function SearchNavBar({
-    text = 'Search',
-    widthSearch = '250px',
+    text = 'Search for friends, groups or post ...',
+    widthSearch = '25rem',
     value,
     onChange,
     name,
