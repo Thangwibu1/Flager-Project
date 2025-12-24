@@ -1,7 +1,7 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
 import { FriendAcceptDTO, SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
-import friendRequestRelationRepo from "../repositories/friend-request-relation.repository.graph";
+import friendRequestRelationRepository from "../repositories/user/friend-request-relation.repository.graph";
 class UserService {
   /**
    * Hàm giúp kiểm trả sender có gửi lời mới kết bạn với receiver từ trước chưa
@@ -10,7 +10,7 @@ class UserService {
    * @returns 
    */
   isSenderHaveRelationshipWithReceiver = async (senderId: string, receiverId: string): Promise<boolean> => {
-    const isTrue = await friendRequestRelationRepo.isHaveRelationWith(senderId, receiverId);
+    const isTrue = await friendRequestRelationRepository.isHaveRelationWith(senderId, receiverId);
     return isTrue;
   }
   /**
@@ -44,11 +44,17 @@ class UserService {
     const dataFriendRequest = {
       createdAt: new Date(),
     }
-    const newFriendRequest = await friendRequestRelationRepo.create(payload.senderId, payload.receiverId, dataFriendRequest);
+    const newFriendRequest = await friendRequestRelationRepository.create(payload.senderId, payload.receiverId, dataFriendRequest);
     return newFriendRequest;
   }
   acceptFriendRequest = async (payload: FriendAcceptDTO) => {
-    
+    // check senderId and receiverId exist
+
+    // check receiverId have already sent a request to senderId (thằng được chấp nhận lời mời kết bạn phải gửi lời mời từ trước rồi)
+
+    // delete FRIEND_REQUEST RELATION FROM receiver side
+
+    // create friend relationship
   }
 }
 export default new UserService();

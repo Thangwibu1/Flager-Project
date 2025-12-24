@@ -1,7 +1,7 @@
-import { FriendRequestRelation } from "../models/user/friend-request-relation.model.neo4j"; 
-import { BaseGraphRepo } from "./base.repository.graph";
+import { FriendRequestRelation } from "../../models/user/friend-request-relation.model.neo4j"; 
+import { BaseGraphRepo } from "../base.repository.graph"; 
 
-class FriendRequestRelationRepo extends BaseGraphRepo {
+class FriendRequestRelationRepository extends BaseGraphRepo {
   private from = "n1";
   private to = "n2";
   private rel = "r";
@@ -52,4 +52,4 @@ class FriendRequestRelationRepo extends BaseGraphRepo {
   }
 }
 
-export default new FriendRequestRelationRepo();
+export default new FriendRequestRelationRepository();

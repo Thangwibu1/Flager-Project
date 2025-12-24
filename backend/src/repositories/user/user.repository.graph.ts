@@ -1,7 +1,7 @@
-import { BaseGraphRepo } from "./base.repository.graph";
-import { UserNode } from "../models/user/user.model.neo4j";
+import { BaseGraphRepo } from "../base.repository.graph"; 
+import { UserNode } from "../../models/user/user.model.neo4j"; 
 
-class UserGraphRepository extends BaseGraphRepo {
+class UserNodeRepository extends BaseGraphRepo {
   /**
    * Hàm giúp tạo 1 node User vào db
    * @param user 
@@ -39,4 +39,4 @@ class UserGraphRepository extends BaseGraphRepo {
     })
   }
 }
-export default new UserGraphRepository();
+export default new UserNodeRepository();
