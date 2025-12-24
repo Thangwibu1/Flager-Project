@@ -1,5 +1,5 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
-import { SendFriendRequestDTO } from "../types/friend/Friend";
+import { FriendAcceptDTO, SendFriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
 import friendRequestRelationRepo from "../repositories/friend-request-relation.repo.graph";
 class UserService {
@@ -18,7 +18,7 @@ class UserService {
    * @param payload 
    * @returns 
    */
-  sendAddFriendRequest = async (payload: SendFriendRequestDTO & {senderId: string}) => {
+  sendAddFriendRequest = async (payload: SendFriendRequestDTO) => {
     // check 2 id không trùng
     if(payload.receiverId == payload.senderId){
       throw new ConflictRequestError("You can not add friend with yourself");
@@ -47,6 +47,8 @@ class UserService {
     const newFriendRequest = await friendRequestRelationRepo.create(payload.senderId, payload.receiverId, dataFriendRequest);
     return newFriendRequest;
   }
-
+  acceptFriendRequest = async (payload: FriendAcceptDTO) => {
+    
+  }
 }
 export default new UserService();
