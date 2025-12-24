@@ -1,25 +1,24 @@
-
-import SearchNavBar from '@/components/common/Search/SearchNavBar';
-import IconBar from '../IconBar/IconBar';
-import UserActionMenu from '../UserActionMenu/UserActionMenu';
+import { ReactNode } from 'react';
 import './Navbar.css';
-import Logo from '@/components/common/Logo/Logo';
 
-export default function Navbar() {
+interface NavbarProps {
+    leftContent?: ReactNode;
+    centerContent?: ReactNode;
+    rightContent?: ReactNode;
+}
+
+export default function Navbar({
+    leftContent,
+    centerContent,
+    rightContent,
+}: NavbarProps) {
     return (
         <nav className="navbar">
-            <div className="navbar__logobar">
-                <Logo />
-                <SearchNavBar />
-            </div>
+            <div className="navbar__logobar">{leftContent}</div>
 
-            {/* <div className="navbar__center">
-                <IconBar />
-            </div> */}
+            <div className="navbar__center">{centerContent}</div>
 
-            <div className="navbar__right">
-                <UserActionMenu />
-            </div>
+            <div className="navbar__right">{rightContent}</div>
         </nav>
     );
 }
