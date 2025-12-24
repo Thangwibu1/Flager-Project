@@ -1,6 +1,6 @@
-import IconBar from '@/components/Layout/IconBar/IconBar';
-import UserActionMenu from '@/components/Layout/UserActionMenu/UserActionMenu';
-import LogoBar from '@/components/Layout/LogoBar/LogoBar';
+import IconBar from '../IconBar/IconBar';
+import LogoBar from '../LogoBar/LogoBar';
+import UserActionMenu from '../UserActionMenu/UserActionMenu';
 import './Navbar.css';
 
 export default function Navbar() {

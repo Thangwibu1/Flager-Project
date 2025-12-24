@@ -1,11 +1,12 @@
 import { BrowserRouter } from 'react-router-dom';
-import Navbar from './components/layout/Navbar/Navbar';
+// import Navbar from './components/layout/Navbar/Navbar';
+import { HomePost } from './pages/homepost/HomePost';
 
 function App() {
     return (
         <BrowserRouter>
-            <Navbar />
-            {/* <Abc /> Component Abc sẽ nằm dưới Navbar */}
+            <HomePost />
+            {/* Nghĩa thêm component của Nghĩa vô nha ví dụ PersonalProfile á, chứu ko phải NMavBar */}
         </BrowserRouter>
     );
 }
