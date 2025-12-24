@@ -33,7 +33,7 @@ class FriendController {
             const userId = req.user!.id;
             req.body.senderId = userId;
             await friendService.acceptFriendRequest(req.body);
-            res.json({});
+            res.json(ApiResponse.success("Accept friend successfully", null));
         } catch (error) {
             next();
         }

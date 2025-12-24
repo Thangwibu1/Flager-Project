@@ -1,6 +1,6 @@
 import type { Record, Relationship } from "neo4j-driver";
 import { UserNode } from "./user.model.neo4j";
-
+import * as neo4jConverter from '../../utils/converters/neo4j.converter.util';
 export class FriendRequestRelation {
   readonly fromUser: UserNode;
   readonly toUser: UserNode;
@@ -20,7 +20,7 @@ export class FriendRequestRelation {
     return new FriendRequestRelation({
       fromUser: UserNode.formatRaw(fromNode),
       toUser: UserNode.formatRaw(toNode),
-      createdAt: new Date(p.createdAt)
+      createdAt: neo4jConverter.toPureDate(p.createdAt)
     });
   }
 }

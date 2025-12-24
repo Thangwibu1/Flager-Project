@@ -1,4 +1,4 @@
-import { Post } from "../models/post/post.model.mongo"; 
+import { Post } from "../../models/post/post.model.mongo";  
 
 class PostRepository {
     createOne = async (data: any) => {
