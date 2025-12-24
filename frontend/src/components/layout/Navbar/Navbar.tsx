@@ -1,27 +1,21 @@
-import SearchNavBar from '@/components/common/Search/SearchNavBar';
-import IconBar from '../IconBar/IconBar';
-import UserActionMenu from '../UserActionMenu/UserActionMenu';
+import IconBar from '@/components/Layout/IconBar/IconBar';
+import UserActionMenu from '@/components/Layout/UserActionMenu/UserActionMenu';
+import LogoBar from '@/components/Layout/LogoBar/LogoBar';
 import './Navbar.css';
-import Logo from '@/components/common/Logo/Logo';
+
 export default function Navbar() {
     return (
         <nav className="navbar">
-            <div className="navbar__logo">
-                <Logo />
-            </div>
-            <div className="navbar__search">
-                <SearchNavBar />
-            </div>
-            <div className="navbar__left">
-                <IconBar />
+            <div className="navbar__logobar">
+                <LogoBar />
             </div>
 
             <div className="navbar__center">
-                <UserActionMenu />
+                <IconBar />
             </div>
 
             <div className="navbar__right">
-                {/* Có thể thêm các component khác ở đây */}
+                <UserActionMenu />
             </div>
         </nav>
     );

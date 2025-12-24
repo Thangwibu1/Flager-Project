@@ -1,0 +1,26 @@
+/* LogoBar Container */
+.logobar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Logo Section */
+.logobar__logo {
+    display: flex;
+    align-items: center;
+}
+
+/* Search Section */
+.logobar__search {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logobar {
+        gap: 12px;
+    }
+}

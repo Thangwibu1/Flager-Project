@@ -11,7 +11,7 @@
     
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     
     background-color: var(--navbar-bg);
@@ -19,41 +19,45 @@
     border-bottom: 1px solid var(--navbar-border);
     
     padding: var(--navbar-padding-y) var(--navbar-padding-x);
+    gap: 16px;
 }
 
-/* Left Section */
-.navbar__left {
+/* LogoBar Section - Left */
+.navbar__logobar {
     display: flex;
     align-items: center;
-    gap: var(--navbar-gap);
-    color: var(--navbar-text);
+    flex: 1;
+    min-width: 0;
 }
 
-/* Center Section */
+/* Center Section - IconBar */
 .navbar__center {
     display: flex;
     align-items: center;
-    gap: var(--navbar-gap);
-    flex: 1;
     justify-content: center;
+    gap: var(--navbar-gap);
     color: var(--navbar-text);
 }
 
-/* Right Section */
+/* Right Section - UserActionMenu */
 .navbar__right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--navbar-gap);
     color: var(--navbar-text);
+    flex: 1;
+    min-width: 0;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .navbar {
         padding: var(--navbar-padding-y-mobile) var(--navbar-padding-x-mobile);
+        gap: 12px;
     }
     
-    .navbar__left,
+    .navbar__logobar,
     .navbar__center,
     .navbar__right {
         gap: var(--navbar-gap-mobile);
