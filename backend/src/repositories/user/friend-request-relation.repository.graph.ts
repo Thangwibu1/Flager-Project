@@ -80,7 +80,8 @@ class FriendRequestRelationRepository extends BaseGraphRepo {
         return this.write(async tx => {
             const result = await tx.run(cypher, { fromId, toId });
             // thông tin phần update sẽ chứa trong result.summary.counters.updates() khi sài delete phải vào đây để lấy info
-            const cntDelete = result.summary.counters.updates().relationshipsDeleted;
+            const cntDelete =
+                result.summary.counters.updates().relationshipsDeleted;
             return cntDelete == 0 ? false : true;
         });
     };

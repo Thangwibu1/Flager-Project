@@ -29,7 +29,7 @@ const GroupChatSchema = new Schema<GroupChatDocument>(
     }
 );
 
-GroupChatSchema.index({ _id: 1 });
+// GroupChatSchema.index({ _id: 1 });
 
 export const GroupChatModel = mongoose.model<GroupChatDocument>(
     'GroupChat',

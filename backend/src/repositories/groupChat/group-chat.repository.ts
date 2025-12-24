@@ -55,6 +55,10 @@ class GroupChatRepository {
         return GroupChatModel.findByIdAndUpdate(id, data, { new: true }).lean();
     };
 
+    /**
+     * @param id
+     * @returns deleted groupChat
+     */
     deleteById = async (id: string) => {
         return GroupChatModel.findByIdAndUpdate(
             id,
