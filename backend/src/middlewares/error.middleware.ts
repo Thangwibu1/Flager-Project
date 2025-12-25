@@ -8,12 +8,12 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  console.error("ERROR:", err);
   if(err instanceof ApiError){
     return res.status(err.statusCode).json(ApiResponse.error(err.message));
   }
   else if(err instanceof JwtError){
     return res.status(err.statusCode).json(ApiResponse.error(err.message, err.code))
   }
-  console.error("ERROR:", err);
   res.status(500).json(ApiResponse.error("Internal server error"));
 };

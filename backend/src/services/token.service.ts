@@ -9,16 +9,28 @@ class TokenService {
     const accessToken = jwtUtil.generateAccessToken(payload.userId, payload.email);
     return accessToken;
   }
-  getNewRefreshToken = async (payload: {userId: string, email?: string}) => {
+  getNewRefreshToken = async (payload: {userId: string, email?: string}, deviceId: string) => {
     // generate refreshToken from jwtUtil
     const refreshToken = jwtUtil.generateRefreshToken(payload.userId, payload.email);
     // store refreshToken in redis
-    await redisService.setDataWithExpiredTime(`${redisPrefix.refreshToken}:${payload.userId}:${refreshToken}`, 1, config.jwt.refreshExpiresInSecond);
+    await redisService.setDataWithExpiredTime(`${redisPrefix.refreshToken}:${payload.userId}:${refreshToken}`, deviceId, config.jwt.refreshExpiresInSecond);
     return refreshToken;
   }
   isInBlackList = async (token: string) => {
     const data = await redisService.getDataByKey<number>(`${redisPrefix.blacklist}:${token}`);
     return !(data == null);
+  }
+  addAccessTokenToBlackList = async (token: string) => {
+    const payload = jwtUtil.verifyAccessToken(token);
+    const ttlSeconds = payload.exp ? (payload.exp as number) - Math.floor(Date.now() / 1000) : 0;
+    await redisService.setDataWithExpiredTime(`${redisPrefix.blacklist}:${token}`, 1, ttlSeconds);
+  }
+  getDeviceIdByRefreshTokenAndUserId = async (userId: string, token: string): Promise<string | null> => {
+    const deviceId = await redisService.getDataByKey<string>(`${redisPrefix.refreshToken}:${userId}:${token}`);
+    return deviceId;
+  }
+  deleteRefreshToken = async (userId: string, token: string) => {
+    await redisService.deleteDataByKey(`${redisPrefix.refreshToken}:${userId}:${token}`);
   }
 }
 export default new TokenService();
