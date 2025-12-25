@@ -16,12 +16,23 @@ class GroupChatService {
         return groupChat;
     };
 
-    create = async (data: {
-        name: string;
-        avatar?: string;
-        type: 'groupChat' | 'privateChat';
-    }) => {
-        const groupChat = await groupChatRepository.createOne(data);
+    create = async (
+        creatorId: string,
+        data: {
+            name: string;
+            avatar?: string;
+            type: 'groupChat' | 'privateChat';
+        }
+    ) => {
+        // Nếu là groupChat thì cần có admin, nếu là privateChat thì không cần
+        const groupChatData =
+            data.type === 'groupChat' ? { ...data, admin: creatorId } : data;
+
+        const groupChat = await groupChatRepository.createOne(groupChatData);
+
+        // TODO: Tạo quan hệ trong Neo4j giữa user và groupChat
+        // const groupChatRelation = await groupChatRepository.createRelationAdmin(creatorId, groupChat._id);
+
         return groupChat;
     };
 
