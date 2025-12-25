@@ -1,0 +1,61 @@
+/* ============================================
+   PROFILE TABS
+   Styling for profile-specific tabs
+   ============================================ */
+
+.profile-tabs {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.profile-tabs .tabs__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ============================================
+   PROFILE TAB COLORS
+   ============================================ */
+
+.profile-tabs .tabs__tab {
+    color: #666;
+}
+
+.profile-tabs .tabs__tab:hover {
+    color: #1a1a1a;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.profile-tabs .tabs__tab--active {
+    color: #1d9bf0;
+    border-bottom-color: #1d9bf0;
+}
+
+.profile-tabs .tabs__tab--active:hover {
+    background: transparent;
+}
+
+/* ============================================
+   PROFILE COUNT BADGE
+   ============================================ */
+
+.profile-tabs .tabs__count {
+    background: rgba(0, 0, 0, 0.05);
+    color: #666;
+}
+
+.profile-tabs .tabs__tab--active .tabs__count {
+    background: rgba(29, 155, 240, 0.1);
+    color: #1d9bf0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .profile-tabs .tabs__container {
+        padding: 0 16px;
+    }
+}

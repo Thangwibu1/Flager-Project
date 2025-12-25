@@ -1,0 +1,206 @@
+/* ============================================
+   PROFILE INFO COMPONENT
+   ============================================ */
+
+.profile-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+}
+
+/* ============================================
+   CONTENT SECTION
+   ============================================ */
+
+.profile-info__content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.profile-info__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ============================================
+   NAME & BIO
+   ============================================ */
+
+.profile-info__name-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-info__name {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-info__verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #1d9bf0;
+    border-radius: 50%;
+    color: white;
+}
+
+.profile-info__username {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+    color: #666;
+}
+
+.profile-info__bio {
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0;
+    color: #1a1a1a;
+    max-width: 600px;
+}
+
+/* ============================================
+   META INFO (Location, Website)
+   ============================================ */
+
+.profile-info__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.profile-info__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #666;
+}
+
+.profile-info__meta-item a {
+    color: #1d9bf0;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.profile-info__meta-item a:hover {
+    color: #1a8cd8;
+    text-decoration: underline;
+}
+
+/* ============================================
+   STATS
+   ============================================ */
+
+.profile-info__stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-info__stat {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.profile-info__stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.profile-info__stat-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+
+.profile-info__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .profile-info__content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .profile-info__details {
+        align-items: center;
+    }
+
+    .profile-info__name {
+        font-size: 24px;
+    }
+
+    .profile-info__bio {
+        max-width: 100%;
+    }
+
+    .profile-info__meta {
+        justify-content: center;
+    }
+
+    .profile-info__stats {
+        justify-content: center;
+    }
+
+    .profile-info__actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .profile-info__actions > * {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-info__name {
+        font-size: 20px;
+    }
+
+    .profile-info__username {
+        font-size: 14px;
+    }
+
+    .profile-info__bio {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,40 @@
+/* ============================================
+   HEADER COMPONENT
+   ============================================ */
+
+.header {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+}
+
+/* Cover Photo */
+.header__cover {
+    position: relative;
+    width: 100%;
+}
+
+/* Avatar + Info Container*/
+.header__content {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: -80px auto 0; 
+    padding: 0 20px 20px;
+    z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header__content {
+        margin-top: -60px;
+        padding: 0 16px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header__content {
+        margin-top: -50px;
+        padding: 0 12px 12px;
+    }
+}

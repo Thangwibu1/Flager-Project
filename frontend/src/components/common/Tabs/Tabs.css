@@ -1,0 +1,88 @@
+/* ============================================
+   TABS COMPONENT (Common)
+   Base styles - can be customized by parent
+   ============================================ */
+
+.tabs {
+    width: 100%;
+}
+
+.tabs__container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tabs__container::-webkit-scrollbar {
+    display: none;
+}
+
+/* ============================================
+   TAB BUTTON (Base styles)
+   ============================================ */
+
+.tabs__tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+}
+
+/* ============================================
+   TAB ELEMENTS
+   ============================================ */
+
+.tabs__icon {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.tabs__label {
+    font-weight: 600;
+}
+
+.tabs__count {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .tabs__tab {
+        padding: 14px 16px;
+        font-size: 14px;
+    }
+
+    .tabs__count {
+        font-size: 12px;
+        padding: 2px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabs__tab {
+        padding: 12px 12px;
+        font-size: 13px;
+    }
+
+    .tabs__icon {
+        font-size: 16px;
+    }
+}

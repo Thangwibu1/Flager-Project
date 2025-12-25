@@ -1,0 +1,30 @@
+/* ============================================
+   PROFILE PAGE
+   ============================================ */
+
+.profile-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+}
+
+/* Profile content section */
+.profile-page__content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page__content h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+.profile-page__content p {
+    font-size: 16px;
+    color: #666;
+}
