@@ -12,7 +12,7 @@
     box-sizing: border-box;
 }
 
-/* Main Container - prevents overflow with max-width */
+/* Main Container */
 .profile-page__container {
     width: 100%;
     max-width: 1920px;
@@ -23,7 +23,7 @@
     position: relative;
 }
 
-/* Header Section Wrapper - groups Header + ProfileTabs */
+/* Header Section Wrapper */
 .profile-header-section {
     width: 100%;
     max-width: 100%;
@@ -34,7 +34,7 @@
     box-sizing: border-box;
 }
 
-/* Content Wrapper - prevents overflow */
+/* Content Wrapper */
 .profile-content-wrapper {
     width: 100%;
     background: var(--bg-primary);

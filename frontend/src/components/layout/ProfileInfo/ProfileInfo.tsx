@@ -43,8 +43,9 @@ function ProfileInfo({
     onEditProfile,
 }: ProfileInfoProps) {
     return (
-        <div className="profile-info">{/* Info & Actions */}
+        <div className="profile-info">
             <div className="profile-info__content">
+
                 {/* Name & Bio */}
                 <div className="profile-info__details">
                     <div className="profile-info__name-section">
@@ -144,7 +145,6 @@ function ProfileInfo({
     );
 }
 
-// Helper function to format numbers
 function formatNumber(num: number): string {
     if (num >= 1000000) {
         return (num / 1000000).toFixed(1) + 'M';

@@ -13,8 +13,8 @@
 .profile-header-wrapper__avatar {
     position: relative;
     flex-shrink: 0;
-    margin-top: -4.5rem; /* Pull avatar up to overlap cover */
-    padding-left: 1rem; /* Add some spacing from left edge */
+    margin-top: -4.5rem;
+    padding-left: 1rem; 
 }
 
 .profile-avatar-container {
@@ -34,9 +34,9 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: var(--bg-elevated);
+    background: #ffffff;
     border: none;
-    color: var(--text-primary);
+    color: #000000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,14 +46,14 @@
 }
 
 .profile-avatar-edit-btn:hover {
-    background: var(--bg-hover);
+    background: #e6e6e6; 
     transform: scale(1.05);
 }
 
 /* Profile Info Section */
 .profile-header-wrapper__info {
     flex: 1;
-    min-width: 0; /* Prevent overflow */
+    min-width: 0; 
     padding-top: 0.5rem;
 }
 
