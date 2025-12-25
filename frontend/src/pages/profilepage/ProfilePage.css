@@ -7,6 +7,22 @@
 .profile-page {
     min-height: 100vh;
     background: var(--bg-primary);
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Header Section Wrapper - groups Header + ProfileTabs */
+.profile-header-section {
+    width: 100%;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
+}
+
+/* Content Wrapper - prevents overflow */
+.profile-content-wrapper {
+    width: 100%;
+    background: var(--bg-primary);
+    overflow: hidden;
 }
 
 /* Profile content section */
@@ -14,9 +30,7 @@
     padding: 20px;
     max-width: var(--container-max-width);
     margin: 0 auto;
-    background: var(--bg-card);
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
+    background: var(--bg-secondary);
 }
 
 .profile-page__content h2 {

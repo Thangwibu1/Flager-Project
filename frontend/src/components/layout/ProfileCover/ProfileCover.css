@@ -4,11 +4,9 @@
 
 @import '../../../styles/dark-theme-variables.css';
 
-/* Wrapper to contain cover photo within max-width */
+/* Wrapper for full-width cover photo */
 .cover-photo-wrapper {
     width: 100%;
-    max-width: var(--container-max-width);
-    margin: 0 auto;
     overflow: hidden;
 }
 
@@ -16,7 +14,6 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    border-radius: 0 0 12px 12px;
 }
 
 /* IMAGE CONTAINER */
@@ -24,12 +21,20 @@
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+}
+
+.cover-photo__image-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
 .cover-photo__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
 }
 

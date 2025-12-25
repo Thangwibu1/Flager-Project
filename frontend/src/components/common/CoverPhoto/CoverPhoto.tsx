@@ -27,11 +27,13 @@ function CoverPhoto({
                 style={{ height: heightValue }}
             >
                 <div className="cover-photo__image-container">
-                    <img
-                        src={coverImage}
-                        alt={coverAlt}
-                        className="cover-photo__image"
-                    />
+                    <div className="cover-photo__image-wrapper">
+                        <img
+                            src={coverImage}
+                            alt={coverAlt}
+                            className="cover-photo__image"
+                        />
+                    </div>
                     <div className="cover-photo__gradient" />
                 </div>
 

@@ -8,7 +8,8 @@
     position: relative;
     width: 100%;
     background: var(--bg-primary);
-    margin-top: 60px; 
+    margin-top: 60px;
+    overflow: hidden;
 }
 
 /* Cover Photo */
@@ -27,6 +28,7 @@
     margin: -50px auto 0; 
     padding: 0 var(--container-padding) 20px;
     z-index: 10;
+    border-bottom: 1px solid var(--border-primary);
 }
 
 /* Responsive */
