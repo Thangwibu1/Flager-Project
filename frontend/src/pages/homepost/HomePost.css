@@ -1,6 +1,13 @@
 .main-layout {
     display: flex;
+    justify-content: center; 
     padding-top: 70px;
+    background-color: #000;
     min-height: 100vh;
-    background-color: #000000;
+}
+
+.content-container {
+    margin-left: 280px; /* Đẩy qua để không bị Sidebar đè */
+    display: flex;
+    width: calc(100% - 280px);
 }
