@@ -37,7 +37,7 @@ export const Input: React.FC<InputProps> = ({
                 <input
                     id={inputId}
                     type={inputType}
-                    className={`flex h-12 w-full rounded-lg border ${
+                    className={`flex h-12 w-full ml-1.5 rounded-lg border ${
                         error
                             ? 'border-red-500 focus:ring-red-500'
                             : 'border-gray-300 dark:border-border-dark focus:ring-primary'

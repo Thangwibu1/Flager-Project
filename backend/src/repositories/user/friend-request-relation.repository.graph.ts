@@ -26,7 +26,8 @@ class FriendRequestRelationRepository extends BaseGraphRepo {
       MATCH (${this.to}:User) WHERE ${this.to}.id = $toId
       MERGE (${this.from})-[${this.rel}:${
             neo4jInfo.rel.user.requestFriend
-        } {createdAt: $createdAt}]->(${this.to})
+        }]->(${this.to})
+      ON CREATE SET ${this.rel}.createdAt = $createdAt
       RETURN ${this.joinKey()}
     `;
         return this.write(async tx => {

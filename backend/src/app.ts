@@ -9,7 +9,7 @@ import { config } from './config/env.config';
 import { errorHandler } from './middlewares/error.middleware';
 import { NotFoundRequestError } from './errors/api/ApiError';
 import clientRouter from './routes/index.route';
-import { hashPassword } from './utils/bcrypt.util';
+import cookieParser from 'cookie-parser';
 
 // Tạo Express application
 const app: Application = express();
@@ -57,6 +57,11 @@ app.use(compression());
  * - Giúp debug và monitor API
  */
 app.use(morgan('dev'));
+
+/**
+ * Giúp lấy cookie từ client request
+ */
+app.use(cookieParser());
 
 app.use(express.json());
 

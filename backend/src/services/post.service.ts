@@ -6,7 +6,7 @@ import userService from "./user.service";
 class PostService {
   createPostByUser = async (payload: PostCreateDTO & {userId: string}) => {
     // check user exist
-    const foundUser = userService.getUserById(payload.userId);
+    const foundUser = await userService.getUserById(payload.userId);
     if(!foundUser){
       throw new NotFoundRequestError("User is not found");
     }
