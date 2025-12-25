@@ -55,6 +55,19 @@ class GroupChatService {
         return groupChat;
     };
 
+    addMember = async (
+        userId: string,
+        groupChatId: string,
+        adderId?: string
+    ) => {
+        const groupChat = await groupChatRepositoryGraph.addMember(
+            userId,
+            groupChatId,
+            adderId
+        );
+        return groupChat ? true : false;
+    };
+
     updateName = async (id: string, name: string) => {
         const updatedGroupChat = await groupChatRepository.updateById(id, {
             name,

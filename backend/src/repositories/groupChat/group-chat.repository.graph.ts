@@ -63,15 +63,27 @@ class GroupChatNodeRepository extends BaseGraphRepo {
      * @param groupChatId - ID của group chat
      * @returns return node user hoặc null
      */
-    async addMember(userId: string, groupChatId: string) {
+    async addMember(userId: string, groupChatId: string, adderId?: string) {
         const cypher = `
       MATCH (u:${neo4jInfo.node.user} {id: $userId})
       MATCH (g:${neo4jInfo.node.groupChat} {id: $groupChatId})
-      MERGE (u)-[:${neo4jInfo.rel.user.isIn}]->(g)
+      MERGE (u)-[r:${neo4jInfo.rel.user.isIn}]->(g)
+      FOREACH (ignoreMe IN CASE WHEN $adderId IS NOT NULL THEN [1] ELSE [] END |
+        SET r.addBy = $adderId
+      )
       RETURN u, g
     `;
+
         return this.write(async tx => {
-            const result = await tx.run(cypher, { userId, groupChatId });
+            const result = await tx.run(cypher, {
+                userId,
+                groupChatId,
+                adderId: adderId || null, // Chuyển undefined thành null cho Neo4j
+            });
+
+            // Kiểm tra xem có record trả về không trước khi get
+            if (result.records.length === 0) return null;
+
             const record = result.records[0].get('u');
             return record ? UserNode.formatRaw(record) : null;
         });
