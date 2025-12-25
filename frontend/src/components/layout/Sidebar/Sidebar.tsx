@@ -54,7 +54,7 @@ export default function Sidebar() {
                         key={item.id}
                         icon={item.icon}
                         text={item.text}
-                        size={20}
+                        size={17}
                         color="#b0b3b8"
                         className="sidebar-item shortcut-item"
                     />

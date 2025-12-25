@@ -1,37 +1,52 @@
 .sidebar {
     width: 280px;
     padding: 15px;
-    background-color: transparent;
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+    height: calc(100vh - 70px);
+    position: fixed;
 }
 
-/* Quan trọng: CSS này để NavIcon hiển thị ngang */
 .sidebar-item {
     display: flex;
     align-items: center;
-    gap: 15px; /* Khoảng cách giữa icon và chữ */
-    padding: 12px;
+    gap: 12px;
+    padding: 8px 12px;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: var(--navbar-transition);
 }
 
 .sidebar-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #262626;
+    border: 0.1px solid var(--navbar-text);
 }
 
-.sidebar-item.active {
-    background-color: #18191a;
+.sidebar-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    background-color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 20px;
+}
+
+.sidebar-item span {
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .sidebar-divider {
     height: 1px;
-    background-color: #3e4042;
-    margin: 15px 0;
+    background-color: var(--navbar-border);
+    margin: 15px 10px;
 }
 
 .shortcuts-title {
-    font-size: 13px;
-    color: #8a8d91;
-    margin-bottom: 10px;
-    padding-left: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #b0b3b8;
+    margin: 10px 0 10px 12px;
 }

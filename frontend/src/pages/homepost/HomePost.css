@@ -1,7 +1,6 @@
 .main-layout {
-    margin-top: 40px;
     display: flex;
+    padding-top: 70px;
     min-height: 100vh;
-    padding: 20px;
-    background-color: #f0f2f5;
+    background-color: #000000;
 }
