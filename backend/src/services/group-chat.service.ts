@@ -1,4 +1,5 @@
 import groupChatRepository from '../repositories/groupChat/group-chat.repository';
+import groupChatRepositoryGraph from '../repositories/groupChat/group-chat.repository.graph';
 import { GroupChat } from '../types/group/GroupChat';
 
 class GroupChatService {
@@ -16,12 +17,41 @@ class GroupChatService {
         return groupChat;
     };
 
-    create = async (data: {
-        name: string;
-        avatar?: string;
-        type: 'groupChat' | 'privateChat';
-    }) => {
-        const groupChat = await groupChatRepository.createOne(data);
+    create = async (
+        creatorId: string,
+        data: {
+            name: string;
+            avatar?: string;
+            type: 'groupChat' | 'privateChat';
+        },
+        friendId?: string
+    ) => {
+        // Nếu là groupChat thì cần có admin, nếu là privateChat thì không cần
+        const groupChatData =
+            data.type === 'groupChat' ? { ...data, admin: creatorId } : data;
+
+        const groupChat = await groupChatRepository.createOne(groupChatData);
+
+        const groupChatRealtionData = { id: groupChat._id.toString(), ...data };
+
+        // TODO: Tạo quan hệ trong Neo4j giữa user và groupChat
+        const groupChatRelation =
+            await groupChatRepositoryGraph.createNodeWithAdmin(
+                creatorId,
+                groupChatRealtionData
+            );
+
+        //nếu là private chat thì add luôn người kia vào
+        if (data.type === 'privateChat' && friendId) {
+            try {
+                await groupChatRepositoryGraph.addMember(
+                    friendId,
+                    groupChat._id.toString()
+                );
+            } catch (error) {
+                throw new Error("Can't add friend to private chat");
+            }
+        }
         return groupChat;
     };
 

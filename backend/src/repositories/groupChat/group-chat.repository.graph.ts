@@ -11,13 +11,14 @@ class GroupChatNodeRepository extends BaseGraphRepo {
      * - type === 'privateChat': Chỉ tạo edge IS_IN cho creator (KHÔNG có admin)
      * @param creatorId - ID của user tạo group chat
      * @param groupChat - Thông tin group chat
-     * @returns
+     * @returns group chat id hoặc null
      */
     async createNodeWithAdmin(
         creatorId: string,
         groupChat: {
             id: string;
             name: string;
+            avatar?: string;
             type: 'groupChat' | 'privateChat';
             lastMessageAt?: Date;
         }
@@ -27,6 +28,7 @@ class GroupChatNodeRepository extends BaseGraphRepo {
       CREATE (g:${neo4jInfo.node.groupChat} {
         id: $id,
         name: $name,
+        avatar: $avatar,
         type: $type,
         lastMessageAt: $lastMessageAt
       })
@@ -43,14 +45,14 @@ class GroupChatNodeRepository extends BaseGraphRepo {
                 creatorId,
                 id: groupChat.id,
                 name: groupChat.name,
+                avatar: groupChat.avatar || null,
                 type: groupChat.type,
                 lastMessageAt: groupChat.lastMessageAt
                     ? neo4jConverter.toNeo4jDate(groupChat.lastMessageAt)
                     : null,
             });
-            const records = result.records;
-            if (records.length == 0) return false;
-            return true;
+            const record = result.records[0].get('g');
+            return record ? record.id : null;
         });
     }
 
