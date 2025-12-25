@@ -20,6 +20,11 @@ class TokenService {
     const data = await redisService.getDataByKey<number>(`${redisPrefix.blacklist}:${token}`);
     return !(data == null);
   }
+  addAccessTokenToBlackList = async (token: string) => {
+    const payload = jwtUtil.verifyAccessToken(token);
+    const ttlSeconds = payload.exp ? (payload.exp as number) - Math.floor(Date.now() / 1000) : 0;
+    await redisService.setDataWithExpiredTime(`${redisPrefix.blacklist}:${token}`, 1, ttlSeconds);
+  }
   getDeviceIdByRefreshTokenAndUserId = async (userId: string, token: string): Promise<string | null> => {
     const deviceId = await redisService.getDataByKey<string>(`${redisPrefix.refreshToken}:${userId}:${token}`);
     return deviceId;

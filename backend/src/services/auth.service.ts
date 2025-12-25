@@ -80,7 +80,7 @@ class AuthService {
         const userId = payload.userId;
         // check user in payload
         // check userId nonempty và có trong hệ thống không
-        if(!userId || !( userService.getUserById(userId, ['_id']))){
+        if((await userService.getUserById(userId, ['_id']) == null)){
             throw new NotFoundRequestError("Not found user");
         }
         return {userId: payload.userId}
@@ -91,28 +91,41 @@ class AuthService {
      * @param deviceId 
      * @returns 
      */
-    verifyRefreshToken = async (token: string, deviceId: string): Promise<{userId: string}> => {
+    verifyRefreshToken = async (token: string): Promise<{userId: string}> => {
         // check token có trong db ko
         const payload = jwtUtil.verifyRefreshToken(token);
         const userId = payload.userId;
         // check userId nonempty và có trong hệ thống không
-        if(!userId || !( userService.getUserById(userId, ['_id']))){
+        if((await userService.getUserById(userId, ['_id'])) == null){
             throw new NotFoundRequestError("Not found user");
-        }
-        const currentDeviceId = await tokenService.getDeviceIdByRefreshTokenAndUserId(userId, token);
-        if (!currentDeviceId) {
-            throw new UnauthorizedRequestError('You are not allowed to get resources');
-        }
-        // RefreshToken lúc này được dùng ở 2 device chứng tỏ 2 device cùng dùng cho 1 refreshToken (bị lộ)
-        if(deviceId != currentDeviceId){
-            // gọi service để xóa refreshToken trong hệ thống để không ai sài refreshToken này refresh lại được 
-            await tokenService.deleteRefreshToken(userId, token);
-            throw new UnauthorizedRequestError('You are not allowed to get resources');
         }
         return {userId: payload.userId}
     }
-    refreshAccessToken = async (userId: string) => {
+    /**
+     * Logic nghiệp vụ xử lí việc tạo mới accessToken cho user
+     * @param userId 
+     * @param deviceId 
+     * @param refreshToken 
+     * @returns 
+     */
+    refreshAccessToken = async (userId: string, deviceId: string, refreshToken: string): Promise<string> => {
+        const currentDeviceId = await tokenService.getDeviceIdByRefreshTokenAndUserId(userId, refreshToken);
+        if (!currentDeviceId) {
+            throw new UnauthorizedRequestError('You are not allowed to get resources');
+        }
+        // RefreshToken lúc này được dùng ở 2 device chứng tỏ bị lộ
+        if(deviceId != currentDeviceId){
+            // gọi service để xóa refreshToken trong hệ thống để không ai sài refreshToken này refresh lại được 
+            await tokenService.deleteRefreshToken(userId, refreshToken);
+            throw new UnauthorizedRequestError('You are not allowed to get resources');
+        }
         return tokenService.getNewAccessToken({userId});
+    }
+    logout = async (userId: string, accessToken: string, refreshToken: string) => {
+        // lưu accessToken vào blackList
+        await tokenService.addAccessTokenToBlackList(accessToken);
+        // xóa refreshToken hiện tại
+        await tokenService.deleteRefreshToken(userId, refreshToken);
     }
 }
 export default new AuthService();
