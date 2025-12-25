@@ -1,7 +1,6 @@
 const redisPrefix = {
     blacklist: 'blacklist', // `blacklist:${accessToken}` = 1
-    refreshToken: 'refreshToken', // `refreshToken:${refreshToken}`
-    device_user: 'deviceId_userId', // `deviceId_userId:${deviceId}:${userId}`
+    refreshToken: 'refreshToken', // `refreshToken:${userId}:${refreshToken}` = deviceId
 };
 /**
  *

@@ -9,7 +9,8 @@ class AuthController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const data = await authService.login(req.body);
+            const deviceId = req.headers['x-device-id'];
+            const data = await authService.login(req.body, deviceId);
             res.json(ApiResponse.success('Login successfully', data));
         } catch (error) {
             next(error);
@@ -26,13 +27,24 @@ class AuthController {
         } catch (error) {
             next(error);
         }
-    }
+    };
     refreshAccessToken = async (
         req: Request,
         res: Response,
         next: NextFunction
     ): Promise<void> => {
-        res.json(ApiResponse.success('Get new refresh token successfully', null));
-    }
+        try {
+            const userId = req.user!.id;
+            const token = await authService.refreshAccessToken(userId);
+            const dataFinal = {
+                accessToken: token,
+            };
+            res.json(
+                ApiResponse.success('Get new refresh token successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 export default new AuthController();

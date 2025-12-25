@@ -29,7 +29,7 @@ const verifyRefreshTokenMiddleware = async (
         if (!authorization || authorization.length != 2) {
             throw new UnauthorizedRequestError('Invalid refresh token');
         }
-        const deviceId = req.headers['x-device-id'] as string;
+        const deviceId = req.headers['x-device-id'];
         if(!deviceId || typeof deviceId != 'string'){
           throw new UnauthorizedRequestError("Invalid deviceId");
         }

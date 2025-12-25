@@ -9,5 +9,8 @@ class RedisService {
 		const isOk = await redisClient.client.setEx(key, ttl, JSON.stringify(value));
 		return (isOk === "Ok");
 	}
+	async deleteDataByKey(key: string): Promise<void> {
+		await redisClient.client.del(key);
+	}
 }
 export default new RedisService();
