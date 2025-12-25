@@ -1,22 +1,25 @@
-import IconBar from '../IconBar/IconBar';
-import LogoBar from '../LogoBar/LogoBar';
-import UserActionMenu from '../UserActionMenu/UserActionMenu';
+import { ReactNode, ComponentPropsWithoutRef } from 'react';
 import './Navbar.css';
 
-export default function Navbar() {
+interface NavbarProps extends ComponentPropsWithoutRef<'nav'> {
+    components?: {
+        [key: string]: ReactNode;
+    };
+}
+
+export default function Navbar({
+    components = {},
+    className,
+    ...restProps
+}: NavbarProps) {
+    const { left, center, right, ...extra } = components;
+
     return (
-        <nav className="navbar">
-            <div className="navbar__logobar">
-                <LogoBar />
-            </div>
-
-            <div className="navbar__center">
-                <IconBar />
-            </div>
-
-            <div className="navbar__right">
-                <UserActionMenu />
-            </div>
+        <nav className={`navbar ${className || ''}`} {...restProps}>
+            <div className="navbar__left">{left}</div>
+            <div className="navbar__center">{center}</div>
+            <div className="navbar__right">{right}</div>
+            {Object.values(extra)}
         </nav>
     );
 }

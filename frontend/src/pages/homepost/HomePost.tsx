@@ -1,4 +1,4 @@
-import Navbar from '@/components/layout/Navbar/Navbar';
+import Navbar from '@components/Layout/Navbar/Navbar';
 
 export function HomePost() {
     return (

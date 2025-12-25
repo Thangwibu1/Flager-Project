@@ -8,22 +8,22 @@
     left: 0;
     right: 0;
     z-index: var(--navbar-z-index);
-    
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
+
     background-color: var(--navbar-bg);
     color: var(--navbar-text);
     border-bottom: 1px solid var(--navbar-border);
-    
+
     padding: var(--navbar-padding-y) var(--navbar-padding-x);
     gap: 16px;
 }
 
 /* LogoBar Section - Left */
-.navbar__logobar {
+.navbar__left {
     display: flex;
     align-items: center;
     flex: 1;
@@ -56,7 +56,7 @@
         padding: var(--navbar-padding-y-mobile) var(--navbar-padding-x-mobile);
         gap: 12px;
     }
-    
+
     .navbar__logobar,
     .navbar__center,
     .navbar__right {
