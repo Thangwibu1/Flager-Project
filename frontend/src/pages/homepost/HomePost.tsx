@@ -2,8 +2,9 @@ import Navbar from '@/components/layout/Navbar/Navbar';
 import Logo from '@/components/common/Logo/Logo';
 import SearchNavBar from '@/components/common/Search/SearchNavBar';
 import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
-
-export function HomePost() {
+import Sidebar from '@/components/layout/Sidebar/Sidebar';
+import './HomePost.css';
+export default function HomePost() {
     return (
         <>
             <Navbar
@@ -17,7 +18,9 @@ export function HomePost() {
                     right: <UserActionMenu />,
                 }}
             />
-            <main className="main-layout">{/* Thành phân khác... */}</main>
+            <main className="main-layout">
+                <Sidebar />
+            </main>
         </>
     );
 }
