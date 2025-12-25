@@ -13,17 +13,48 @@
 .profile-header-wrapper__avatar {
     position: relative;
     flex-shrink: 0;
+    margin-top: -4.5rem; /* Pull avatar up to overlap cover */
+    padding-left: 1rem; /* Add some spacing from left edge */
+}
+
+.profile-avatar-container {
+    position: relative;
+    display: inline-block;
 }
 
 .profile-avatar {
-    border: 4px solid #1a1a1a;
-    box-shadow: var(--shadow-md);
+    border: 4px solid var(--bg-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.profile-avatar-edit-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: none;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.profile-avatar-edit-btn:hover {
+    background: var(--bg-hover);
+    transform: scale(1.05);
 }
 
 /* Profile Info Section */
 .profile-header-wrapper__info {
     flex: 1;
     min-width: 0; /* Prevent overflow */
+    padding-top: 0.5rem;
 }
 
 /* Responsive Design */

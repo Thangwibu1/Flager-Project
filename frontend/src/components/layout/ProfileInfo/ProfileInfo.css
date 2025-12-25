@@ -140,28 +140,58 @@
 
 .profile-info__actions {
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
     flex-shrink: 0;
-    margin-top: 0;
+    margin-top: 12px; 
 }
 
-.profile-info__actions button {
-    padding: 8px 20px;
-    font-size: 14px;
+/* Base Action Button */
+.profile-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 24px;
+    font-size: 15px;
     font-weight: 600;
-    min-width: 100px;
-    background: transparent;
-    border: 2px solid var(--text-primary);
-    color: var(--text-primary);
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    border: none;
+    outline: none;
+    min-width: 120px;
+    height: 40px;
 }
 
-.profile-info__actions button:hover {
-    background: var(--bg-hover);
+/* Follow Button (White) */
+.profile-action-btn--follow {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.profile-action-btn--follow:hover {
+    background-color: #f2f2f2;
     transform: translateY(-1px);
+}
+
+/* Message Button (Dark) */
+.profile-action-btn--message {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-action-btn--message:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Edit Button */
+.profile-action-btn--edit {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ============================================

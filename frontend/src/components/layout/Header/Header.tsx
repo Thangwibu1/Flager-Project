@@ -1,13 +1,8 @@
 import './Header.css';
 
-/**
- * Header Component
- * Flexible header with proper avatar + info grouping
- */
-
 interface HeaderProps {
     coverPhoto?: React.ReactNode;
-    avatarAndInfo?: React.ReactNode; // Avatar + Info together
+    avatarAndInfo?: React.ReactNode;
     className?: string;
 }
 
@@ -17,9 +12,11 @@ function Header({ coverPhoto, avatarAndInfo, className = '' }: HeaderProps) {
             {/* Cover Photo */}
             {coverPhoto && <div className="header__cover">{coverPhoto}</div>}
             
-            {/* Avatar + Profile Info (grouped together) */}
+            {/* Avatar + Profile Info (grouped together with border) */}
             {avatarAndInfo && (
-                <div className="header__content">{avatarAndInfo}</div>
+                <div className="header__content-wrapper">
+                    <div className="header__content">{avatarAndInfo}</div>
+                </div>
             )}
         </header>
     );

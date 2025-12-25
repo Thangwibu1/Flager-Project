@@ -28,10 +28,27 @@ body {
 }
 
 /* Ensure all containers don't overflow */
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+#root {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
 .container,
 .navbar,
 .header,
 .profile-page {
-    max-width: 100vw;
+    max-width: 100%;
     overflow-x: hidden;
 }

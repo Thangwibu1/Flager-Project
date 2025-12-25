@@ -1,5 +1,4 @@
-import { Button } from '@/components/common/Button/Button';
-import { FiMapPin, FiLink, FiCheck } from 'react-icons/fi';
+import { FiMapPin, FiLink, FiCheck, FiPlus, FiMessageSquare } from 'react-icons/fi';
 import './ProfileInfo.css';
 
 export interface ProfileInfoProps {
@@ -120,20 +119,23 @@ function ProfileInfo({
                 {/* Action Buttons */}
                 <div className="profile-info__actions">
                     {isOwner ? (
-                        <Button variant="secondary" onClick={onEditProfile}>
-                            Edit Profile
-                        </Button>
+                        <button className="profile-action-btn profile-action-btn--edit" onClick={onEditProfile}>
+                            <FiCheck size={18} />
+                            <span>Edit Profile</span>
+                        </button>
                     ) : (
                         <>
-                            <Button
-                                variant={isFollowing ? 'secondary' : 'primary'}
+                            <button
+                                className={`profile-action-btn profile-action-btn--follow ${isFollowing ? 'following' : ''}`}
                                 onClick={onFollow}
                             >
-                                {isFollowing ? 'Following' : 'Follow'}
-                            </Button>
-                            <Button variant="secondary" onClick={onMessage}>
-                                Message
-                            </Button>
+                                <FiPlus size={20} />
+                                <span>{isFollowing ? 'Following' : 'Follow'}</span>
+                            </button>
+                            <button className="profile-action-btn profile-action-btn--message" onClick={onMessage}>
+                                <FiMessageSquare size={18} />
+                                <span>Message</span>
+                            </button>
                         </>
                     )}
                 </div>

@@ -1,0 +1,12 @@
+/* ============================================
+   RIGHT SIDEBAR COMPONENT
+   ============================================ */
+
+@import '../../../styles/dark-theme-variables.css';
+
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}

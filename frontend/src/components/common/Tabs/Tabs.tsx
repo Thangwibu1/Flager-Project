@@ -1,5 +1,3 @@
-import './Tabs.css';
-
 export interface Tab {
     id: string;
     label: string;
