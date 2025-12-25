@@ -6,9 +6,7 @@ import { create } from 'domain';
 // Tạo ra bản mẫu của group chat, mọi gr chat đều có các thuộc tính sau
 export const IGroupChat = z.object({
     _id: z.instanceof(Types.ObjectId),
-    name: z
-        .string()
-        .nonempty({ error: 'Group name is not allowed to be empty' }),
+    name: z.string(), // Cho phép chuỗi rỗng (validation logic ở request và MongoDB schema)
     avatar: z.string().optional(),
     lastMessageAt: z.date().optional(),
     createdAt: z.date(),

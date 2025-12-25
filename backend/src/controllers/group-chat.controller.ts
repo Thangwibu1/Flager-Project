@@ -15,8 +15,14 @@ class GroupChatController {
             // Lấy data từ request body
             const data = req.body;
 
+            const friendId = req.body.friendId ? req.body.friendId : undefined;
+
             // Gọi service với creatorId và data
-            const groupChat = await groupChatService.create(creatorId, data);
+            const groupChat = await groupChatService.create(
+                creatorId,
+                data,
+                friendId
+            );
 
             res.json(
                 ApiResponse.success(
@@ -29,3 +35,5 @@ class GroupChatController {
         }
     };
 }
+
+export default new GroupChatController();

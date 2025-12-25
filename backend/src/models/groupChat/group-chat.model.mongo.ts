@@ -6,7 +6,22 @@ export type GroupChatDocument = GroupChat & Document;
 
 const GroupChatSchema = new Schema<GroupChatDocument>(
     {
-        name: { type: String, required: true },
+        name: {
+            type: String,
+            required: false, // Cho phép undefined
+            default: '', // Mặc định là chuỗi rỗng
+            validate: {
+                validator: function (value: string): boolean {
+                    // Nếu là groupChat thì name không được rỗng
+                    if (this.type === 'groupChat') {
+                        return !!(value && value.trim().length > 0);
+                    }
+                    // Nếu là privateChat thì cho phép rỗng
+                    return true;
+                },
+                message: 'Group chat name cannot be empty',
+            },
+        },
         avatar: { type: String, required: false },
         type: {
             type: String,
