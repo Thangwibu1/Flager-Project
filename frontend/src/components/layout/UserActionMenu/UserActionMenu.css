@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+@import '../../../styles/navbar-variables.css';
+
+/* UserActionMenu Container - Khối ở giữa navbar */
+.user-action-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--navbar-gap);
+    color: var(--navbar-text);
+}
+
+/* Image Container */
+.user-action-menu__image-container {
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-radius: 50%;
+    overflow: hidden;
+    
+    background-color: var(--avatar-bg);
+    border: 2px solid var(--avatar-border);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    transition: var(--navbar-transition);
+    list-style: none;
+}
+
+.user-action-menu__image-container:hover {
+    border-color: var(--navbar-hover-border);
+    transform: scale(1.05);
+}
+
+.user-action-menu__image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Icon List */
+.user-action-menu__list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    gap: var(--navbar-gap);
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: var(--navbar-text);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-action-menu,
+    .user-action-menu__list {
+        gap: var(--navbar-gap-mobile);
+    }
+
+    .user-action-menu__image-container {
+        width: var(--avatar-size-mobile);
+        height: var(--avatar-size-mobile);
+    }
+}

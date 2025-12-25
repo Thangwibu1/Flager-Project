@@ -1,6 +1,6 @@
 import type { Node } from "neo4j-driver";
 
-export class UserGraph {
+export class UserNode {
   readonly username: string;
   readonly id: string;
   // readonly createdAt: Date;
@@ -11,9 +11,9 @@ export class UserGraph {
     this.username = user.username;
     // this.createdAt = props.createdAt;
   }
-  static fromNeo4j(node: Node): UserGraph {
+  static formatRaw(node: Node): UserNode {
     const p = node.properties;
-    return new UserGraph({
+    return new UserNode({
       id: p.id,
       username: p.username,
       // createdAt: new Date(p.createdAt),

@@ -1,5 +1,5 @@
 import { NotFoundRequestError } from "../errors/api/ApiError";
-import postRepository from "../repositories/post.repository";
+import postRepository from "../repositories/post/post.repository";
 import { PostCreateDTO } from "../types/post/Post";
 import userService from "./user.service";
 

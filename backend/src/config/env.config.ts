@@ -121,9 +121,9 @@ export const config: Config = {
     secret: process.env.JWT_SECRET || "your-secret-key",
 
     // Thời gian hết hạn access token (7d = 7 ngày, 1h = 1 giờ)
-    expiresIn: process.env.JWT_EXPIRES_IN || "10m",
+    expiresIn: "1d", //process.env.JWT_EXPIRES_IN || "10m",
     // Thời gian hết hạn của access token tính theo dây
-    expiresInSecond: process.env.JWT_EXPIRES_IN_SECOND ? Number(process.env.JWT_EXPIRES_IN_SECOND) : 600,
+    expiresInSecond: 24 * 60 * 60, //process.env.JWT_EXPIRES_IN_SECOND ? Number(process.env.JWT_EXPIRES_IN_SECOND) : 600,
 
     // Secret key cho refresh token (khác với access token)
     refreshSecret: process.env.JWT_REFRESH_SECRET || "your-refresh-secret",

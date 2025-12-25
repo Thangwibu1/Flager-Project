@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+@import '../../../styles/navbar-variables.css';
+
+/* IconBar Container - Khối bên trái của navbar */
+.icon-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--navbar-gap);
+    color: var(--navbar-text);
+}
+
+/* Icon List */
+.icon-bar__list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    gap: var(--navbar-gap);
+    
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: var(--navbar-text);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .icon-bar,
+    .icon-bar__list {
+        gap: var(--navbar-gap-mobile);
+    }
+}
