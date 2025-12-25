@@ -18,6 +18,7 @@ class GroupChatNodeRepository extends BaseGraphRepo {
         groupChat: {
             id: string;
             name: string;
+            avatar?: string;
             type: 'groupChat' | 'privateChat';
             lastMessageAt?: Date;
         }
@@ -27,6 +28,7 @@ class GroupChatNodeRepository extends BaseGraphRepo {
       CREATE (g:${neo4jInfo.node.groupChat} {
         id: $id,
         name: $name,
+        avatar: $avatar,
         type: $type,
         lastMessageAt: $lastMessageAt
       })
@@ -43,6 +45,7 @@ class GroupChatNodeRepository extends BaseGraphRepo {
                 creatorId,
                 id: groupChat.id,
                 name: groupChat.name,
+                avatar: groupChat.avatar || null,
                 type: groupChat.type,
                 lastMessageAt: groupChat.lastMessageAt
                     ? neo4jConverter.toNeo4jDate(groupChat.lastMessageAt)

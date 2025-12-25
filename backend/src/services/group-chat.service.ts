@@ -1,4 +1,5 @@
 import groupChatRepository from '../repositories/groupChat/group-chat.repository';
+import groupChatRepositoryGraph from '../repositories/groupChat/group-chat.repository.graph';
 import { GroupChat } from '../types/group/GroupChat';
 
 class GroupChatService {
@@ -30,8 +31,13 @@ class GroupChatService {
 
         const groupChat = await groupChatRepository.createOne(groupChatData);
 
+        const groupChatRealtionData = { id: groupChat._id.toString(), ...data };
         // TODO: Tạo quan hệ trong Neo4j giữa user và groupChat
-        // const groupChatRelation = await groupChatRepository.createRelationAdmin(creatorId, groupChat._id);
+        const groupChatRelation =
+            await groupChatRepositoryGraph.createNodeWithAdmin(
+                creatorId,
+                groupChatRealtionData
+            );
 
         return groupChat;
     };
