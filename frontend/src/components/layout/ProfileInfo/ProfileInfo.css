@@ -2,6 +2,8 @@
    PROFILE INFO COMPONENT
    ============================================ */
 
+@import '../../../styles/dark-theme-variables.css';
+
 .profile-info {
     display: flex;
     align-items: flex-start;
@@ -25,7 +27,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 /* ============================================
@@ -39,10 +41,10 @@
 }
 
 .profile-info__name {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     margin: 0;
-    color: #1a1a1a;
+    color: #ffffff;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -60,17 +62,17 @@
 }
 
 .profile-info__username {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     margin: 0;
-    color: #666;
+    color: #b0b0b0;
 }
 
 .profile-info__bio {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.5;
     margin: 0;
-    color: #1a1a1a;
+    color: #c0c0c0;
     max-width: 600px;
 }
 
@@ -89,18 +91,18 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 14px;
-    color: #666;
+    font-size: 13px;
+    color: var(--text-muted);
 }
 
 .profile-info__meta-item a {
-    color: #1d9bf0;
+    color: var(--accent-blue);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .profile-info__meta-item a:hover {
-    color: #1a8cd8;
+    color: var(--accent-blue-hover);
     text-decoration: underline;
 }
 
@@ -121,15 +123,15 @@
 }
 
 .profile-info__stat-value {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--text-primary);
 }
 
 .profile-info__stat-label {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
-    color: #666;
+    color: var(--text-muted);
 }
 
 /* ============================================
@@ -138,16 +140,28 @@
 
 .profile-info__actions {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 8px;
     flex-shrink: 0;
+    margin-top: 0;
 }
 
 .profile-info__actions button {
-    padding: 12px 32px;
-    font-size: 16px;
+    padding: 8px 20px;
+    font-size: 14px;
     font-weight: 600;
-    min-width: 140px;
+    min-width: 100px;
+    background: transparent;
+    border: 2px solid var(--text-primary);
+    color: var(--text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile-info__actions button:hover {
+    background: var(--bg-hover);
+    transform: translateY(-1px);
 }
 
 /* ============================================

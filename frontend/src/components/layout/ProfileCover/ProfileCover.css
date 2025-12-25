@@ -2,6 +2,16 @@
    COVER PHOTO BASE STYLES
    ============================================ */
 
+@import '../../../styles/dark-theme-variables.css';
+
+/* Wrapper to contain cover photo within max-width */
+.cover-photo-wrapper {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
 .cover-photo {
     position: relative;
     width: 100%;
@@ -117,6 +127,10 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .cover-photo-wrapper {
+        padding: 0;
+    }
+
     .cover-photo {
         border-radius: 0;
     }

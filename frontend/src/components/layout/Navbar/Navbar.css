@@ -1,24 +1,31 @@
 @import 'tailwindcss';
 @import '../../../styles/navbar-variables.css';
+@import '../../../styles/dark-theme-variables.css';
 
-/* Navbar Container - Dùng Flexbox */
+/* Navbar Container - Fixed full-width background */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: var(--navbar-z-index);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-primary);
+    padding: var(--navbar-padding-y) 0;
+}
 
+/* Inner container with max-width */
+.navbar__container {
+    max-width: var(--container-max-width);
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+    
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    background-color: var(--navbar-bg);
-    color: var(--navbar-text);
-    border-bottom: 1px solid var(--navbar-border);
-
-    padding: var(--navbar-padding-y) var(--navbar-padding-x);
     gap: 16px;
 }
 
@@ -53,11 +60,14 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .navbar {
-        padding: var(--navbar-padding-y-mobile) var(--navbar-padding-x-mobile);
+        padding: var(--navbar-padding-y-mobile) 0;
+    }
+    
+    .navbar__container {
+        padding: 0 var(--container-padding-mobile);
         gap: 12px;
     }
 
-    .navbar__logobar,
     .navbar__center,
     .navbar__right {
         gap: var(--navbar-gap-mobile);

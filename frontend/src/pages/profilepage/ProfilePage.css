@@ -2,29 +2,31 @@
    PROFILE PAGE
    ============================================ */
 
+@import '../../styles/dark-theme-variables.css';
+
 .profile-page {
     min-height: 100vh;
-    background: #f5f5f5;
+    background: var(--bg-primary);
 }
 
 /* Profile content section */
 .profile-page__content {
     padding: 20px;
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
-    background: white;
+    background: var(--bg-card);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
 }
 
 .profile-page__content h2 {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 12px;
-    color: #1a1a1a;
+    color: var(--text-primary);
 }
 
 .profile-page__content p {
     font-size: 16px;
-    color: #666;
+    color: var(--text-secondary);
 }

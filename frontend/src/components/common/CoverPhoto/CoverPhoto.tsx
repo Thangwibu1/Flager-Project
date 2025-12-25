@@ -21,26 +21,28 @@ function CoverPhoto({
     const heightValue = typeof height === 'number' ? `${height}px` : height;
 
     return (
-        <div
-            className={`cover-photo cover-photo--${variant} ${className}`}
-            style={{ height: heightValue }}
-        >
-            <div className="cover-photo__image-container">
-                <img
-                    src={coverImage}
-                    alt={coverAlt}
-                    className="cover-photo__image"
-                />
-                <div className="cover-photo__gradient" />
+        <div className="cover-photo-wrapper">
+            <div
+                className={`cover-photo cover-photo--${variant} ${className}`}
+                style={{ height: heightValue }}
+            >
+                <div className="cover-photo__image-container">
+                    <img
+                        src={coverImage}
+                        alt={coverAlt}
+                        className="cover-photo__image"
+                    />
+                    <div className="cover-photo__gradient" />
+                </div>
+
+                {actions && (
+                    <div className="cover-photo__actions">{actions}</div>
+                )}
+
+                {overlayContent && (
+                    <div className="cover-photo__overlay">{overlayContent}</div>
+                )}
             </div>
-
-            {actions && (
-                <div className="cover-photo__actions">{actions}</div>
-            )}
-
-            {overlayContent && (
-                <div className="cover-photo__overlay">{overlayContent}</div>
-            )}
         </div>
     );
 }

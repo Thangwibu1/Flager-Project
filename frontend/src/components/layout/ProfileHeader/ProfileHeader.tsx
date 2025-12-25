@@ -14,7 +14,7 @@ function ProfileHeader({ avatar, avatarAlt, children }: ProfileHeaderProps) {
                 <NavIcon
                     src={avatar}
                     alt={avatarAlt}
-                    size={150}
+                    size={100}
                     rounded="full"
                     className="profile-avatar"
                 />

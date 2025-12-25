@@ -2,25 +2,30 @@
    HEADER COMPONENT
    ============================================ */
 
+@import '../../../styles/dark-theme-variables.css';
+
 .header {
     position: relative;
     width: 100%;
-    background: #ffffff;
+    background: var(--bg-primary);
+    margin-top: 60px; 
 }
 
 /* Cover Photo */
 .header__cover {
     position: relative;
     width: 100%;
+    background: var(--bg-primary);
+    overflow: hidden;
 }
 
 /* Avatar + Info Container*/
 .header__content {
     position: relative;
     width: 100%;
-    max-width: 1200px;
-    margin: -80px auto 0; 
-    padding: 0 20px 20px;
+    max-width: var(--container-max-width);
+    margin: -50px auto 0; 
+    padding: 0 var(--container-padding) 20px;
     z-index: 10;
 }
 
@@ -28,7 +33,7 @@
 @media (max-width: 768px) {
     .header__content {
         margin-top: -60px;
-        padding: 0 16px 16px;
+        padding: 0 var(--container-padding-mobile) 16px;
     }
 }
 

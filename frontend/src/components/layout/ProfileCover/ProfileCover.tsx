@@ -10,7 +10,6 @@ interface ProfileCoverProps {
 }
 
 function ProfileCover({
-    userId,
     coverImageUrl = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
     canEdit = false,
     children,
@@ -29,7 +28,7 @@ function ProfileCover({
             coverImage={coverImageUrl}
             coverAlt="Profile cover photo"
             variant="profile"
-            height="320px"
+            height="280px"
             actions={
                 canEdit ? (
                     <button

@@ -1,9 +1,12 @@
 /* Profile Header Container */
+@import '../../../styles/dark-theme-variables.css';
+
 .profile-header-wrapper {
     display: flex;
     align-items: flex-start;
-    gap: 24px;
+    gap: 20px;
     position: relative;
+    padding-top: 0;
 }
 
 /* Avatar Section */
@@ -13,8 +16,8 @@
 }
 
 .profile-avatar {
-    border: 5px solid white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 4px solid #1a1a1a;
+    box-shadow: var(--shadow-md);
 }
 
 /* Profile Info Section */

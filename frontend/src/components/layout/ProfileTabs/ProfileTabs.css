@@ -3,15 +3,17 @@
    Styling for profile-specific tabs
    ============================================ */
 
+@import '../../../styles/dark-theme-variables.css';
+
 .profile-tabs {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e5e5;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
 }
 
 .profile-tabs .tabs__container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 var(--container-padding);
 }
 
 /* ============================================
@@ -19,17 +21,17 @@
    ============================================ */
 
 .profile-tabs .tabs__tab {
-    color: #666;
+    color: var(--text-muted);
 }
 
 .profile-tabs .tabs__tab:hover {
-    color: #1a1a1a;
-    background: rgba(0, 0, 0, 0.03);
+    color: var(--text-secondary);
+    background: var(--bg-hover);
 }
 
 .profile-tabs .tabs__tab--active {
-    color: #1d9bf0;
-    border-bottom-color: #1d9bf0;
+    color: var(--accent-blue);
+    border-bottom-color: var(--accent-blue);
 }
 
 .profile-tabs .tabs__tab--active:hover {
@@ -41,13 +43,13 @@
    ============================================ */
 
 .profile-tabs .tabs__count {
-    background: rgba(0, 0, 0, 0.05);
-    color: #666;
+    background: var(--bg-hover);
+    color: var(--text-muted);
 }
 
 .profile-tabs .tabs__tab--active .tabs__count {
-    background: rgba(29, 155, 240, 0.1);
-    color: #1d9bf0;
+    background: rgba(29, 155, 240, 0.2);
+    color: var(--accent-blue);
 }
 
 /* ============================================
@@ -56,6 +58,6 @@
 
 @media (max-width: 768px) {
     .profile-tabs .tabs__container {
-        padding: 0 16px;
+        padding: 0 var(--container-padding-mobile);
     }
 }
