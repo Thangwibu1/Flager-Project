@@ -8,6 +8,7 @@
 
 /* Avatar Section */
 .profile-header-wrapper__avatar {
+    position: relative;
     flex-shrink: 0;
 }
 
