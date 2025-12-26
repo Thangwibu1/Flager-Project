@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
-import { ViewType } from '../../config/enum/post.enum';
+import { ReactName, ViewType } from '../../config/enum/post.enum';
 
 export const IPost = z.object({
     content: z.string().nonempty({error: "Content is not allowed to be empty"}),
@@ -23,10 +23,15 @@ export const postCreate = IPost.extend({
     )
     .strict();
 
+export const sendReactToPost = z.object({
+    reactName: z.enum(ReactName, {error: "React name is invalid"}),
+    postId: z.string().nonempty().refine(value => Types.ObjectId.isValid(value), {error: "postId is invalid"})
+}).strict();
+
 export const fullPost = IPost.extend({
     _id: z.instanceof(Types.ObjectId),
     authorId: z.instanceof(Types.ObjectId),
-    totalReact: z.object({ Like: z.number(), Love: z.number(), Smile: z.number(), Sad: z.number(), Angry: z.number() }),
+    totalReact: z.array(z.object({name: z.enum(ReactName), count: z.number()})),
     totalComment: z.number(),
     totalShare: z.number(),
     createdAt: z.date(),
@@ -36,6 +41,6 @@ export const fullPost = IPost.extend({
 });
 
 export type Post = z.infer<typeof IPost>;
-export type GetPostListOfUserDTO = z.infer<typeof postListOfUser> & {viewerId: string};
 export type PostCreateDTO = z.infer<typeof postCreate> & {authorId: string};
 export type FullPost = z.infer<typeof fullPost>;
+export type SendReactToPostDTO = z.infer<typeof sendReactToPost>;

@@ -1,6 +1,6 @@
 import { SortOrder } from 'mongoose';
-import { ViewType } from '../../config/enum/post.enum';
-import { Post } from '../../models/post/post.model.mongo';
+import { ReactName, ViewType } from '../../config/enum/post.enum';
+import { Post } from '../../models/post/Post.model.mongo';
 import { FullPost } from '../../types/post/post.request';
 
 class PostRepository {
@@ -57,5 +57,25 @@ class PostRepository {
             .lean();
         return postList;
     };
+
+    findById = async (id: string, select: (keyof FullPost)[] = []) => {
+        return await Post.findOne({
+            _id: id,
+            deletedAt: null
+        }).select(select).lean();
+    }
+
+    modifyReactByPostIdAndReactType = async (filter: {postId: string, reactName: ReactName}, amount: number): Promise<void> => {
+        const {postId, reactName} = filter;
+        await Post.findOneAndUpdate({
+            _id: postId,
+            "totalReact.name": reactName,
+            deletedAt: null,
+        }, {
+            $inc: {
+                "totalReact.$.total": amount,
+            }
+        });
+    }
 }
 export default new PostRepository();

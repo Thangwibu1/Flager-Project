@@ -40,5 +40,17 @@ class PostController {
             next(error);
         }
     };
+    sendReactToPost =  async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            await postService.sendReactToPost(req.user!.id, req.body);
+            res.json(ApiResponse.success("Send react to post successfully", null));
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 export default new PostController();
