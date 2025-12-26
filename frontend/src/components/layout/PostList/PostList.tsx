@@ -1,3 +1,4 @@
+
 import NewPost from '@/components/common/NewPost/NewPost';
 import '../../common/NewPost/NewPost.css';
 //chỗ này sau này cần lấy từ DB xử lý

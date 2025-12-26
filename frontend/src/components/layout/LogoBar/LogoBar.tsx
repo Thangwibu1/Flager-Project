@@ -1,3 +1,4 @@
+import Logo from '@/components/common/Logo/Logo';
 import NavIcon from '@/components/common/NavIcon/NavIcon';
 import SearchNavBar from '@/components/common/Search/SearchNavBar';
 import logoFlager from '@/assets/img/logo.svg';
@@ -14,9 +15,6 @@ export default function LogoBar() {
                     rounded="full"
                     className="logobar__logo-img"
                 />
-            </div>
-            <div className="logobar__search">
-                <SearchNavBar />
             </div>
         </div>
     );
