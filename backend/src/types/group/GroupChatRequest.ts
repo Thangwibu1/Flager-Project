@@ -49,3 +49,13 @@ export const createGroupChatRequest = z
 export type CreateGroupChatDTO = z.infer<typeof createGroupChatRequest> & {
     creatorId: string;
 };
+
+export const addMemberRequest = z
+    .object({
+        userId: z.string().min(1, { message: 'userId is required' }),
+        groupChatId: z.string().min(1, { message: 'groupChatId is required' }),
+        // adderId: z.string().min(1, { message: 'adderId is required' }),
+    })
+    .strict();
+
+export type AddMemberDTO = z.infer<typeof addMemberRequest>;

@@ -34,6 +34,28 @@ class GroupChatController {
             next(error);
         }
     };
+
+    addMember = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const userId = req.body.userId;
+            const groupChatId = req.body.groupChatId;
+            const adderId = req.user!.id;
+
+            const result = await groupChatService.addMember(
+                userId,
+                groupChatId,
+                adderId
+            );
+
+            res.json(ApiResponse.success('Member added successfully', result));
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 export default new GroupChatController();
