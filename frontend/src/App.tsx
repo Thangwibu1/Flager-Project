@@ -7,7 +7,7 @@ function App() {
     return (
         <BrowserRouter>
             <ProfilePage />
-            <HomePost />
+            {/* <HomePost /> */}
             {/* Nghĩa thêm component của Nghĩa vô nha ví dụ PersonalProfile á, chứu ko phải NMavBar */}
         </BrowserRouter>
     );
