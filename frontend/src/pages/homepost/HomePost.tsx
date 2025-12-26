@@ -1,5 +1,5 @@
 import Navbar from '@/components/layout/Navbar/Navbar';
-import Logo from '@/components/common/Logo/Logo';
+// import Logo from '@/components/common/Logo/Logo';
 import SearchNavBar from '@/components/common/Search/SearchNavBar';
 import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
@@ -13,7 +13,7 @@ export default function HomePost() {
                 components={{
                     left: (
                         <>
-                            <Logo />
+                            {/* <Logo /> */}
                             <SearchNavBar />
                         </>
                     ),

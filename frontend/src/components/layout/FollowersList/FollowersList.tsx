@@ -1,6 +1,6 @@
 
 import Follower from '@/components/common/Followers/Follower';
-import './ListFollower.css';
+import './FollowersList.css';
 
 const FOLLOWERS_DATA = [
     {
