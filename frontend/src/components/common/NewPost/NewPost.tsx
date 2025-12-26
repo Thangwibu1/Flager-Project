@@ -56,7 +56,7 @@ export default function NewPost({
             <div className="post-stats">
                 <div className="post-likes-summary">
                     <div className="like-icons">
-                        <Heart size={14} fill="#f3425f" color="#f3425f" />
+                        <Heart size={14} fill="#e4e6eb" color="#e4e6eb" />
                     </div>
                     <span>Liked by Mike and {likes} others</span>
                 </div>
