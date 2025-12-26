@@ -10,6 +10,11 @@ export default function UserActionMenu() {
     return (
         <div className="user-action-menu">
             <ul className="user-action-menu__list">
+                {NAV_ITEMS.slice(5, 7)
+                    .sort((a, b) => a.id.localeCompare(b.id))
+                    .map(item => (
+                        <NavIcon className="" key={item.id} icon={item.icon} />
+                    ))}
                 {NAV_ITEMS.slice(4, 7).map(item => (
                     <NavIcon 
                         className={activeId === item.id ? "active" : ""} 
