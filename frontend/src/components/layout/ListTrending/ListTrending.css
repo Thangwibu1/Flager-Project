@@ -1,0 +1,49 @@
+
+.sidebar-card {
+    background-color: #18191a;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.trend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.trend-item:last-child {
+    margin-bottom: 0;
+}
+
+.trend-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.trend-meta {
+    font-size: 13px;
+    color: #8a8d91; /* Màu xám mờ cho category và số posts */
+}
+
+.trend-topic {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e4e6eb; /* Màu trắng sáng cho hashtag/topic */
+    margin: 2px 0;
+}
+
+.trend-more-btn {
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.trend-more-btn:hover {
+    background-color: #3a3b3c;
+}

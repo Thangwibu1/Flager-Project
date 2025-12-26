@@ -1,12 +1,14 @@
 // import TrendingNow from './TrendingNow'; // Nếu bạn đã tạo
+
 import ListFollowers from '../ListFollowers/ListFollower';
 import './RightSidebar.css';
+import ListTrending from '../ListTrending/ListTrending';
 
 export default function RightSidebar() {
     return (
-        <aside className="right-sidebar">
+        <div className="right-sidebar">
             {/* Phần 1: Xu hướng */}
-            {/* <TrendingNow /> */}
+            <ListTrending />
 
             {/* Phần 2: Gợi ý kết bạn (Sử dụng component ListFollowers bạn đã tách) */}
             <ListFollowers />
@@ -14,6 +16,6 @@ export default function RightSidebar() {
             <footer className="sidebar-footer">
                 Privacy · Terms · Advertising · Cookies · More © 2024 SocialApp
             </footer>
-        </aside>
+        </div>
     );
 }
