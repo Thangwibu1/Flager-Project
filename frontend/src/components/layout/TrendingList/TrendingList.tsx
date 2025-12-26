@@ -1,6 +1,5 @@
-
 import TrendingItem from '@/components/common/TrendingItem/TrendingItem';
-import './ListTrending.css';
+import './TrendingList.css';
 
 const TRENDS_DATA = [
     {
