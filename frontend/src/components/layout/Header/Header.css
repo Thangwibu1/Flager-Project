@@ -1,0 +1,56 @@
+/* ============================================
+   HEADER COMPONENT
+   ============================================ */
+
+@import '../../../styles/dark-theme-variables.css';
+
+.header {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    background: var(--bg-primary);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Cover Photo */
+.header__cover {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    background: var(--bg-primary);
+    overflow: hidden;
+    box-sizing: border-box;
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+/* Content Wrapper */
+.header__content-wrapper {
+    width: 100%;
+    background: var(--bg-primary);
+}
+
+/* Avatar + Info Container*/
+.header__content {
+    position: relative;
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto; 
+    padding: 0 var(--container-padding) 1.25rem;
+    z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header__content {
+        margin-top: 0;
+        padding: 0 var(--container-padding-mobile) 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header__content {
+        margin-top: 0;
+        padding: 0 0.75rem 0.75rem;
+    }
+}

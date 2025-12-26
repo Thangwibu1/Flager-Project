@@ -1,0 +1,49 @@
+/* ============================================
+   PROFILE BODY COMPONENT
+   ============================================ */
+
+@import '../../../styles/dark-theme-variables.css';
+
+.profile-body {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 1.25rem var(--container-padding);
+    display: grid;
+    grid-template-columns: 20rem 1fr 20rem;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.profile-body__left {
+    position: sticky;
+    top: 5rem;
+}
+
+.profile-body__center {
+    min-width: 0;
+}
+
+.profile-body__right {
+    position: sticky;
+    top: 5rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .profile-body {
+        grid-template-columns: 17.5rem 1fr 17.5rem;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .profile-body {
+        grid-template-columns: 1fr;
+        padding: 1rem var(--container-padding-mobile);
+    }
+
+    .profile-body__left,
+    .profile-body__right {
+        display: none;
+    }
+}

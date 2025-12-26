@@ -6,8 +6,9 @@ import { ProfilePage } from './pages/profilepage/ProfilePage';
 function App() {
     return (
         <BrowserRouter>
-            {/* <HomePost /> */}
             <ProfilePage />
+            {/* <HomePost /> */}
+            {/* Nghĩa thêm component của Nghĩa vô nha ví dụ PersonalProfile á, chứu ko phải NMavBar */}
         </BrowserRouter>
     );
 }

@@ -1,12 +1,12 @@
-import Navbar from '@/components/layout/Navbar/Navbar';
-import SearchNavBar from '@/components/common/Search/SearchNavBar';
-import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
-import Sidebar from '@/components/layout/Sidebar/Sidebar';
-import './HomePost.css';
-import HomeFeed from '@/components/layout/HomeFeed/HomeFeed';
-import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
 // import LogoBar from '@/components/layout/LogoBar/LogoBar';
 import Logo from '@/components/common/Logo/Logo';
+import SearchNavBar from '@/components/common/Search/SearchNavBar';
+import HomeFeed from '@/components/Layout/HomeFeed/HomeFeed';
+import Navbar from '@/components/layout/Navbar/Navbar';
+import RightSideBarHomePost from '@/components/Layout/RightSideBarHomePost/RightSideBarHomePost';
+import Sidebar from '@/components/Layout/Sidebar/Sidebar';
+import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
+
 export default function HomePost() {
     return (
         <>
@@ -24,7 +24,7 @@ export default function HomePost() {
             <main className="main-layout">
                 <Sidebar />
                 <HomeFeed />
-                <RightSidebar />
+                <RightSideBarHomePost />
             </main>
         </>
     );
