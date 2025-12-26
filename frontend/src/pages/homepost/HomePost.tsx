@@ -1,11 +1,11 @@
 import Navbar from '@/components/layout/Navbar/Navbar';
-import Logo from '@/components/common/Logo/Logo';
 import SearchNavBar from '@/components/common/Search/SearchNavBar';
 import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import './HomePost.css';
 import HomeFeed from '@/components/layout/HomeFeed/HomeFeed';
 import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
+import LogoBar from '@/components/layout/LogoBar/LogoBar';
 export default function HomePost() {
     return (
         <>
@@ -13,7 +13,7 @@ export default function HomePost() {
                 components={{
                     left: (
                         <>
-                            <Logo />
+                            <LogoBar />
                             <SearchNavBar />
                         </>
                     ),
