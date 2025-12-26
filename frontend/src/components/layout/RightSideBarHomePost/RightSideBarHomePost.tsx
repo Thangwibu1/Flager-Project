@@ -1,7 +1,7 @@
 // import TrendingNow from './TrendingNow'; // Nếu bạn đã tạo
 
 import ListFollowers from '../FollowersList/FollowersList';
-import './RightSidebar.css';
+import './RightSideBarHomePost.css';
 import ListTrending from '../TrendingList/TrendingList';
 
 export default function RightSideBarHomePost() {
