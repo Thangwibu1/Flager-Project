@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { FullPost } from '../../types/post/Post';
+import { FullPost } from '../../types/post/post.request';
 import { ViewType } from '../../config/enum/post.enum';
 
 export type IPostDocument = FullPost & mongoose.Document;

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../utils/api-response.util';
 import postService from '../services/post.service';
+import { queryPostListOfUser } from '../types/post/post.query';
 class PostController {
     createPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -25,13 +26,13 @@ class PostController {
     ) => {
         try {
             const userId = req.user!.id;
-            req.query.viewerId = userId;
-            const query: any = req.query;
-            const payload = {
-                ...query,
-                ...req.params
-            }
-            const data = await postService.getPostListOfAuthor(payload);
+            const authorId = req.params.authorId;
+            const query = queryPostListOfUser.parse(req.query);
+            const data = await postService.getPostListOfAuthor({
+                currentUserId: userId,
+                authorId: authorId,
+                query
+            });
             res.json(
                 ApiResponse.success('Create new post successfully', data)
             );

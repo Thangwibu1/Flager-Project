@@ -1,5 +1,7 @@
+import { SortOrder } from 'mongoose';
+import { ViewType } from '../../config/enum/post.enum';
 import { Post } from '../../models/post/post.model.mongo';
-import { FullPost } from '../../types/post/Post';
+import { FullPost } from '../../types/post/post.request';
 
 class PostRepository {
     createOne = async (data: any) => {
@@ -7,33 +9,49 @@ class PostRepository {
         return newPost;
     };
     getListLazyLoad = async ({
-        filter,
+        authorId,
+        viewType,
         select = [],
         limit = 10,
         lastItem,
+        sort = {
+            createdAt: 'desc'
+        }
     }: {
-        filter: Record<string, any>;
+        authorId?: string;
+        viewType?: ViewType;
         select?: (keyof FullPost)[];
         limit?: number;
-        lastItem: string | null;
+        lastItem?: string;
+        sort?: { [key: string]: SortOrder }
     }) => {
+        const dbFilter: { [key: string]: any } = {};
+        // where 
+        if(authorId){
+            dbFilter.authorId = authorId;
+        }
+        if(viewType){
+            dbFilter.viewType = viewType;
+        }
         if (lastItem) {
-            const item = await Post.findOne({
+            const foundItem = await Post.findOne({
                 _id: lastItem,
+                deletedAt: null,
             })
                 .select('createdAt')
                 .lean();
-            if (lastItem) {
-                filter.createdAt = {
-                    $lt: item?.createdAt,
+            if (foundItem) {
+                dbFilter.createdAt = {
+                    $lt: foundItem.createdAt,
                 };
             }
         }
+        // end where
         const postList = await Post.find({
-            ...filter,
+            ...dbFilter,
             deletedAt: null
         })
-            .sort({ createdAt: 'desc' })
+            .sort(sort)
             .limit(limit)
             .select(select)
             .lean();

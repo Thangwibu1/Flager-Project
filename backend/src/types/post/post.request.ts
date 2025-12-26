@@ -7,7 +7,6 @@ export const IPost = z.object({
     media: z.array(z.string().nonempty()).nullable(),
 });
 export const postListOfUser = z.object({
-    lastItem: z.string().refine(value => value == "" ? true : Types.ObjectId.isValid(value), {error: "lastItem is invalid"} ),
     authorId: z.string().nonempty().refine(value => Types.ObjectId.isValid(value), {error: "authorId is invalid"})
 }).strict();
 export const postCreate = IPost.extend({
