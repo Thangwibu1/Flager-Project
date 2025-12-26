@@ -16,7 +16,7 @@ export default function Navbar({
 
     return (
         <nav className={`navbar ${className || ''}`} {...restProps}>
-            <div className="navbar__logobar">{left}</div>
+            <div className="navbar__left">{left}</div>
             <div className="navbar__center">{center}</div>
             <div className="navbar__right">{right}</div>
             {Object.values(extra)}

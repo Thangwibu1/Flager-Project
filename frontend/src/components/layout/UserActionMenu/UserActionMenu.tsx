@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import NavIcon from '@/components/common/NavIcon/NavIcon';
-import Avatar from '@/components/common/Avatar/Avatar';
-
 import { NAV_ITEMS } from '@/utils/IconData';
+
 import './UserActionMenu.css';
 
 export default function UserActionMenu() {
+    const [activeId, setActiveId] = useState('more');
+
     return (
         <div className="user-action-menu">
             <ul className="user-action-menu__list">
@@ -13,11 +15,21 @@ export default function UserActionMenu() {
                     .map(item => (
                         <NavIcon className="" key={item.id} icon={item.icon} />
                     ))}
+                {NAV_ITEMS.slice(4, 7).map(item => (
+                    <NavIcon 
+                        className={activeId === item.id ? "active" : ""} 
+                        key={item.id} 
+                        icon={item.icon}
+                        onClick={() => setActiveId(item.id)}
+                    />
+                ))}
                 <li className="user-action-menu__avatar-wrapper">
-                    <Avatar
-                        src=""
-                        alt="User"
+                    <NavIcon 
+                        src="" 
+                        alt="User" 
                         fallbackText="U"
+                        size={40}
+                        rounded="full"
                         className="user-action-menu__avatar"
                     />
                 </li>

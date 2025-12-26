@@ -30,7 +30,7 @@ const POSTS_DATA = [
         image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
         likes: 128,
         comments: 24,
-    }
+    },
 ];
 export default function ListPost() {
     return (
