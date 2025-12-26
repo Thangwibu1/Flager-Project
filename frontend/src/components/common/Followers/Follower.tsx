@@ -1,19 +1,35 @@
 import { UserPlus } from 'lucide-react';
 
 interface FollowerProps {
-    name: string;
-    handle: string;
-    avatar: string;
+    user: {
+        id: number | string;
+        name: string;
+        handle: string;
+        avatar: string;
+    };
+    nameSize?: string;
+    handleSize?: string;
 }
 
-export default function Follower({ name, handle, avatar }: FollowerProps) {
+export default function Follower({
+    user: { name, handle, avatar },
+    nameSize = '15px',
+    handleSize = '13px',
+}: FollowerProps) {
     return (
         <div className="follower-item">
             <div className="follower-info">
                 <img src={avatar} alt={name} className="mini-avatar" />
                 <div>
-                    <p className="follower-name">{name}</p>
-                    <span className="follower-handle">{handle}</span>
+                    <p className="follower-name" style={{ fontSize: nameSize }}>
+                        {name}
+                    </p>
+                    <span
+                        className="follower-handle"
+                        style={{ fontSize: handleSize }}
+                    >
+                        {handle}
+                    </span>
                 </div>
             </div>
             <div className="follower-add-btn">

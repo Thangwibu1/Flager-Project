@@ -34,9 +34,9 @@ export default function WhoToFollow() {
                 {FOLLOWERS_DATA.map(user => (
                     <Follower
                         key={user.id}
-                        name={user.name}
-                        handle={user.handle}
-                        avatar={user.avatar}
+                        user={user}
+                        nameSize="14px"
+                        handleSize="12px"
                     />
                 ))}
             </div>
