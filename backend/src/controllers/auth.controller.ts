@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import authService from '../services/auth.service';
 import { ApiResponse } from '../utils/api-response.util';
-import { UnauthorizedRequestError } from '../errors/api/ApiError';
 import { config } from '../config/env.config';
 
 class AuthController {

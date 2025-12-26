@@ -27,6 +27,33 @@ const validateQuery = (schema: z.ZodObject<any, any>) => {
         }
     };
 };
+const validateParams = (schema: z.ZodObject<any, any>) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            schema.parse(req.params);
+            next();
+        } catch (error) {
+            if(error instanceof ZodError){
+                throw new BadRequestError(error.issues[0].message);
+            }
+            next(error);
+        }
+    };
+};
+const validateData = (schema: z.ZodObject<any, any>, getDataCb: (req: Request) => unknown) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = getDataCb(req);
+            schema.parse(data);
+            next();
+        } catch (error) {
+            if(error instanceof ZodError){
+                throw new BadRequestError(error.issues[0].message);
+            }
+            next(error);
+        }
+    };
+};
 export {
-  validateBody, validateQuery
+  validateBody, validateQuery, validateParams, validateData
 }

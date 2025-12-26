@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { validateBody } from '../middlewares/validate.middleware';
-import { postCreate } from '../types/post/Post';
+import { validateBody, validateData, validateQuery } from '../middlewares/validate.middleware';
+import { postCreate, postListOfUser } from '../types/post/Post';
 import { authenticateUserMiddleware } from '../middlewares/auth.middleware';
 import postController from '../controllers/post.controller';
+import { payloadGetPostListOfAuthor } from '../validators/post.validator';
 const router = Router();
+router.get('/list/:authorId', validateData(postListOfUser, payloadGetPostListOfAuthor), authenticateUserMiddleware, postController.getPostOfAuthor);
 router.post('/create', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
 export default router;
