@@ -1,3 +1,4 @@
+import { Button } from '@/components/common/Button/Button';
 import { Logo } from '@/components/common/Logo/Logo';
 import { LoginForm } from '@/components/layout/Form/LoginForm';
 import { useState } from 'react';
@@ -7,16 +8,6 @@ export const LoginPage = ({
 }: {
     onSwitchToRegister: () => void;
 }) => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Login:', formData);
-    };
-
     return (
         <div className="flex min-h-screen w-full bg-[#181111]">
             {/* left section */}
@@ -29,28 +20,28 @@ export const LoginPage = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
 
-                <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+                <div className="relative z-10 flex flex-col justify-between p-10 w-full">
                     {/* Logo */}
-                    <div className="flex items-center gap-3 text-white">
+                    <div className="flex items-center text-white">
                         <div className="text-[#ec1313]">
-                            <Logo size="md" />
+                            <Logo size="lg" />
                         </div>
                         <h2 className="text-2xl font-bold tracking-tight">
-                            SocialApp
+                            Flager
                         </h2>
                     </div>
 
-                    {/* Quote */}
-                    <div className="max-w-lg">
-                        <blockquote className="text-2xl font-medium leading-relaxed text-white mb-4">
-                            "Connect with friends, share what you're up to, and
-                            see what's new from others all over the world."
-                        </blockquote>
-                        <div className="flex gap-2">
-                            <div className="h-1 w-8 rounded-full bg-[#ec1313]" />
-                            <div className="h-1 w-2 rounded-full bg-white/30" />
-                            <div className="h-1 w-2 rounded-full bg-white/30" />
-                        </div>
+                    {/* Sign Up Link */}
+                    <div className="text-center text-sm">
+                        <span className="text-[#b99d9d]">
+                            Don't have an account?{' '}
+                        </span>
+                        <Button
+                            onClick={onSwitchToRegister}
+                            className="font-bold text-white transition-colors"
+                        >
+                            Sign up
+                        </Button>
                     </div>
                 </div>
             </div>
