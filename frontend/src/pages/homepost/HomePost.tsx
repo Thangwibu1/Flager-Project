@@ -5,7 +5,8 @@ import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import './HomePost.css';
 import HomeFeed from '@/components/layout/HomeFeed/HomeFeed';
 import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
-import LogoBar from '@/components/layout/LogoBar/LogoBar';
+// import LogoBar from '@/components/layout/LogoBar/LogoBar';
+import Logo from '@/components/common/Logo/Logo';
 export default function HomePost() {
     return (
         <>
@@ -13,7 +14,7 @@ export default function HomePost() {
                 components={{
                     left: (
                         <>
-                            <LogoBar />
+                            <Logo />
                             <SearchNavBar />
                         </>
                     ),
