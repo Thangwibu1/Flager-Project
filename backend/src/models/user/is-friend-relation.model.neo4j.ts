@@ -1,25 +1,18 @@
-import type { Record, Relationship } from "neo4j-driver";
-import { UserNode } from "./user.model.neo4j";
+import type { Relationship } from "neo4j-driver";
 import * as neo4jConverter from '../../utils/converters/neo4j.converter.util';
+export interface IIsFriendRelation {
+  createdAt: Date;
+}
 export class IsFriendRelation {
-  readonly fromUser: UserNode;
-  readonly toUser: UserNode;
   readonly createdAt: Date;
   constructor(
-    props: {createdAt: Date, fromUser: UserNode, toUser: UserNode}
+    props: IIsFriendRelation
   ) {
     this.createdAt = props.createdAt;
-    this.toUser = props.toUser;
-    this.fromUser = props.fromUser;
   }
-  static formatRaw(record: Record, key: {fromNode: string, toNode: string, relation: string}): IsFriendRelation{
-    const fromNode = record.get(key.fromNode);
-    const toNode = record.get(key.toNode);
-    const r: Relationship = record.get(key.relation);
+  static formatRaw(r: Relationship): IsFriendRelation{
     const p = r.properties;
     return new IsFriendRelation({
-      fromUser: UserNode.formatRaw(fromNode),
-      toUser: UserNode.formatRaw(toNode),
       createdAt: neo4jConverter.toPureDate(p.createdAt)
     });
   }

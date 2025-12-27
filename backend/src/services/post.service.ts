@@ -91,11 +91,11 @@ class PostService {
         return {
             postList: postListResponse,
             pagination: {
-                hasNext: postListResponse.length == 10,
+                hasNext: postListResponse.length == limit,
                 lastItem:
                     postListResponse.length != 0
                         ? postListResponse[postListResponse.length - 1].id
-                        : '',
+                        : null,
             },
         };
     };

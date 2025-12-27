@@ -1,4 +1,4 @@
 export type LazyPagination = {
-  lastItem: string,
+  lastItem: string | null,
   hasNext: boolean,
 }
