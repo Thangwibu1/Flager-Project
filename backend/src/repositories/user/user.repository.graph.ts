@@ -9,6 +9,7 @@ import { PostNode } from '../../models/post/post.model.neo4j';
 import * as neo4jConverter from '../../utils/converters/neo4j.converter.util';
 import { RequestFriendRelation } from '../../models/user/friend-request-relation.model.neo4j';
 import { IsFriendRelation } from '../../models/user/is-friend-relation.model.neo4j';
+import * as formatter from '../../utils/formatter.util';
 class UserNodeRepository extends BaseGraphRepo {
 
     // =========================================== CRUD USER ==========================================
@@ -18,7 +19,7 @@ class UserNodeRepository extends BaseGraphRepo {
      * @param user
      * @returns
      */
-    async createNode(user: { id: string; username: string }) {
+    createNode = async (user: { id: string; username: string }) => {
         const cypher = `
       CREATE (u:User {
         id: $id,
@@ -38,7 +39,7 @@ class UserNodeRepository extends BaseGraphRepo {
      * @param id
      * @returns
      */
-    async findById(id: string) {
+    findById = async (id: string) => {
         const cypher = `
       MATCH (u:User {id: $id})
       RETURN u
@@ -52,6 +53,16 @@ class UserNodeRepository extends BaseGraphRepo {
         });
     }
 
+    updateNodeById = async (id: string, data: {username: string}): Promise<void> => {
+        const setter = formatter.formatObjectToNeo4jSetter('u', data);
+        const cypher = `
+            MATCH (u:${neo4jInfo.node.user} { id: $id })
+            SET ${setter}
+        `;
+        return this.write(async (tx) => {
+            await tx.run(cypher, { ...data, id });
+        });
+    }
     // =========================================== END CRUD USER =========================================
 
     // =============================== USER _REQUEST_FRIEND_ USER ========================================

@@ -1,8 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import userService from '../services/user.service';
 import { ApiResponse } from '../utils/api-response.util';
-import { queryPostListOfUser } from '../types/post/post.query';
+import { QueryPostListOfUser, queryPostListOfUser } from '../types/post/post.query';
 import postService from '../services/post.service';
+import { UserIdParams } from '../types/user/user.param';
+import friendService from '../services/friend.service';
+import { UpdateUserProfileDTO } from '../types/user/user.request';
 
 class UserController {
     // [GET] /users/:userId
@@ -14,7 +17,7 @@ class UserController {
         try {
             const currentUserId = req.user!.id;
             const userId = req.params.userId;
-            const userInfo = await userService.getUserDetail(
+            const userInfo = await userService.getUserProfile(
                 currentUserId,
                 userId
             );
@@ -28,24 +31,64 @@ class UserController {
             next(error);
         }
     };
+    // [GET] /users/:userId/posts
     getUserPostList = async (
         req: Request,
         res: Response,
         next: NextFunction
     ) => {
         try {
+
             const currentUserId = req.user!.id;
-            const authorId = req.params.userId;
-            const query = queryPostListOfUser.parse(req.query);
+            const params  = req.params as UserIdParams;
+            const query: QueryPostListOfUser = queryPostListOfUser.parse(req.query);
+
             const data = await postService.getPostListOfAuthor({
                 currentUserId: currentUserId,
-                authorId: authorId,
+                authorId: params.userId,
                 query,
             });
+
             res.json(ApiResponse.success('Get user post success', data));
         } catch (error) {
             next(error);
         }
     };
+    countFriendsOfUser = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            
+            const currentUserId = req.user!.id;
+            const params = req.params as UserIdParams;
+            const total = friendService.countFriendsOfUser(currentUserId, params.userId);
+            const dataFinal = {
+                totalFriends: total
+            }
+            return res.json(
+                ApiResponse.success('Get total friends successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    updateUserProfile = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const body: UpdateUserProfileDTO = req.body;
+            await userService.updateUserProfile(currentUserId, body);
+            return res.json(
+                ApiResponse.success('Update success', null)
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 export default new UserController();

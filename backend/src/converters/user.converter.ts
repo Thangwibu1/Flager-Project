@@ -3,8 +3,15 @@ import { UserProfileResponse } from "../types/user/user.response";
 
 export const toUserProfile = (user: IUserDocument): UserProfileResponse => {
   return {
-    email: user.email,
+    id: user._id.toString(),
     username: user.username,
-    phone: user.phone
+  }
+}
+export const toMyProfile = (user: IUserDocument) => {
+  return {
+    id: user._id.toString(),
+    username: user.username,
+    email: user.email,
+    phone: user.phone,
   }
 }

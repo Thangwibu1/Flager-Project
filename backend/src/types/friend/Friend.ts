@@ -6,10 +6,9 @@ export const friendRequest = z.object({
 }).strict();
 export const friendAccept = friendRequest;
 export const friendUnfriend = friendRequest;
-export const friendCount = z.object({
-  userId: z.string().nonempty({error: "userId is not allowed to be empty"}).refine((value) => Types.ObjectId.isValid(value), {error: "userId is invalid"})
-}).strict();
-export type FriendRequestDTO = z.infer<typeof friendRequest> & {senderId: string};
-export type FriendAcceptDTO = z.infer<typeof friendRequest> & {senderId: string};
-export type FriendUnfriendDTO = z.infer<typeof friendUnfriend> & {senderId: string};
-export type FriendCountDTO = z.infer<typeof friendCount>;
+export const friendReject = friendRequest;
+
+export type FriendRequestRejectDTO = z.infer<typeof friendReject>;
+export type FriendRequestDTO = z.infer<typeof friendRequest>;
+export type FriendAcceptDTO = z.infer<typeof friendRequest>;
+export type FriendUnfriendDTO = z.infer<typeof friendUnfriend>;

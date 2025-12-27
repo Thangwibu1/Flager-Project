@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import authController from '../controllers/auth.controller';
 import {validateBody} from '../middlewares/validate.middleware';
-import { loginUser, registerUser } from '../types/user/User';
+import { loginUser, registerUser } from '../types/user/user.request';
 import { authenticateUserMiddleware, verifyRefreshTokenMiddleware } from '../middlewares/auth.middleware';
 const router = Router();
 router.post('/login', validateBody(loginUser), authController.login);

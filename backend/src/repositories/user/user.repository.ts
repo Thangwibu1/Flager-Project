@@ -1,5 +1,5 @@
 import { User } from '../../models/user/user.model.mongo'; 
-import { FullUser } from '../../types/user/User';
+import { FullUser } from '../../types/user/user.request';
 
 class UserRepository {
     findById = async (id: string, select: (keyof FullUser)[] = []) => {
@@ -22,5 +22,12 @@ class UserRepository {
     createOne = async (data: any) => {
         return User.create(data);
     };
+
+    updateByUserId = async (userId: string, data: any) => {
+        await User.updateOne({
+            _id: userId,
+            deletedAt: null,
+        }, data);
+    }
 }
 export default new UserRepository();

@@ -1,4 +1,4 @@
-import { LoginUserDTO, RegisterUserDTO } from '../types/user/User';
+import { LoginUserDTO, RegisterUserDTO } from '../types/user/user.request';
 import userService from './user.service';
 import {
     BadRequestError,

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { authenticateUserMiddleware } from '../middlewares/auth.middleware';
-import { validateBody, validateQuery } from '../middlewares/validate.middleware';
-import { friendAccept, friendCount, friendRequest, friendUnfriend } from '../types/friend/Friend';
+import { validateBody } from '../middlewares/validate.middleware';
+import { friendAccept, friendRequest, friendUnfriend } from '../types/friend/Friend';
 import friendController from '../controllers/friend.controller';
 const router = Router();
 router.post('/friend-requests', authenticateUserMiddleware, validateBody(friendRequest), friendController.sendFriendRequest);
-router.post('/friend-accept', authenticateUserMiddleware, validateBody(friendAccept), friendController.acceptFriendRequest);
+router.delete('/friend-requests', authenticateUserMiddleware, validateBody(friendRequest), friendController.rejectFriendRequest);
+router.post('/', authenticateUserMiddleware, validateBody(friendAccept), friendController.acceptFriendRequest);
 router.delete('/', authenticateUserMiddleware, validateBody(friendUnfriend), friendController.unfriendUser);
-router.get('/total', validateQuery(friendCount), friendController.countFriends);
 export default router;
