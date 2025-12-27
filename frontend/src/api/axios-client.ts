@@ -4,7 +4,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const apiClient: AxiosInstance = axios.create({
-    baseURL: `${API_URL}/api`,
+    baseURL: `${API_URL}/api/v1`,
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -17,10 +17,19 @@ apiClient.interceptors.request.use(
     config => {
         const deviceId = getOrCreateDeviceId();
         const token = localStorage.getItem('accessToken');
-        if (token) {
+
+        // Always add deviceId to all requests
+        config.headers['x-device-id'] = deviceId;
+
+        // Add token if available (skip for login/register endpoints)
+        if (
+            token &&
+            !config.url?.includes('/auth/login') &&
+            !config.url?.includes('/auth/register')
+        ) {
             config.headers.Authorization = `Bearer ${token}`;
-            config.headers['x-device-id'] = deviceId;
         }
+
         return config;
     },
     error => Promise.reject(error)
