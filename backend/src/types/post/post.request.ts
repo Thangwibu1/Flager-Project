@@ -6,9 +6,7 @@ export const IPost = z.object({
     content: z.string().nonempty({error: "Content is not allowed to be empty"}),
     media: z.array(z.string().nonempty()).nullable(),
 });
-export const postListOfUser = z.object({
-    authorId: z.string().nonempty().refine(value => Types.ObjectId.isValid(value), {error: "authorId is invalid"})
-}).strict();
+
 export const postCreate = IPost.extend({
     viewType: z
         .enum(ViewType, {error: "View type is invalid"})

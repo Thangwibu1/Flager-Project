@@ -4,8 +4,8 @@ import { validateBody, validateQuery } from '../middlewares/validate.middleware'
 import { friendAccept, friendCount, friendRequest, friendUnfriend } from '../types/friend/Friend';
 import friendController from '../controllers/friend.controller';
 const router = Router();
-router.post('/request', authenticateUserMiddleware, validateBody(friendRequest), friendController.sendFriendRequest);
-router.post('/accept', authenticateUserMiddleware, validateBody(friendAccept), friendController.acceptFriendRequest);
-router.post('/unfriend', authenticateUserMiddleware, validateBody(friendUnfriend), friendController.unfriendUser);
-router.get('/count', validateQuery(friendCount), friendController.countFriends);
+router.post('/friend-requests', authenticateUserMiddleware, validateBody(friendRequest), friendController.sendFriendRequest);
+router.post('/friend-accept', authenticateUserMiddleware, validateBody(friendAccept), friendController.acceptFriendRequest);
+router.delete('/', authenticateUserMiddleware, validateBody(friendUnfriend), friendController.unfriendUser);
+router.get('/total', validateQuery(friendCount), friendController.countFriends);
 export default router;
