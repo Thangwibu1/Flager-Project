@@ -1,13 +1,56 @@
-import { NextFunction, Request, Response } from "express";
-import { ApiResponse } from "../utils/api-response.util";
-import postService from "../services/post.service";
-
+import { NextFunction, Request, Response } from 'express';
+import { ApiResponse } from '../utils/api-response.util';
+import postService from '../services/post.service';
+import { queryPostListOfUser } from '../types/post/post.query';
 class PostController {
-  createPost = async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.user!.id;
-    req.body.userId = userId;
-    await postService.createPostByUser(req.body);
-    res.json(ApiResponse.success("Create new post successfully", null));
-  }
+    createPost = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = req.user!.id;
+            req.body.authorId = userId;
+            const newPost = await postService.createPostByUser(req.body);
+            const dataFinal = {
+                post: newPost,
+            };
+            res.json(
+                ApiResponse.success('Create new post successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getPostOfAuthor = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const userId = req.user!.id;
+            const authorId = req.params.authorId;
+            const query = queryPostListOfUser.parse(req.query);
+            const data = await postService.getPostListOfAuthor({
+                currentUserId: userId,
+                authorId: authorId,
+                query
+            });
+            res.json(
+                ApiResponse.success('Create new post successfully', data)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+    sendReactToPost =  async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            await postService.sendReactToPost(req.user!.id, req.body);
+            res.json(ApiResponse.success("Send react to post successfully", null));
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 export default new PostController();

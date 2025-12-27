@@ -20,7 +20,9 @@ const neo4jInfo = {
             isAdmin: 'IS_ADMIN',
         },
         // Các quan hệ 1 chiều xuất phát từ node Post
-        post: {},
+        post: {
+            react: "REACT"
+        },
     },
 };
 export { redisPrefix, neo4jInfo };

@@ -19,6 +19,10 @@ export const registerUser = IUser.extend({
         .regex(new RegExp('[!@#$%^&*()\.?]', 'gi'), {error: "Password need to contain at least a special character like '!@#$%^&*().?' "})
 }).strict();
 
+export const userIdParams = z.object({
+    userId: z.string().refine(value => Types.ObjectId.isValid(value), {error: "userId is invalid"})
+}).strict();
+
 export const fullUser = registerUser.extend({
     _id: z.instanceof(Types.ObjectId),
     createdAt: z.date(),

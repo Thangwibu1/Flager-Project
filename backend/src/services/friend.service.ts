@@ -1,8 +1,7 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
 import { FriendAcceptDTO, FriendUnfriendDTO, FriendRequestDTO, FriendCountDTO } from "../types/friend/Friend";
 import userService from "./user.service";
-import friendRequestRelationRepository from "../repositories/user/friend-request-relation.repository.graph";
-import isFriendRelationRepository from "../repositories/user/is-friend-relation.repository.graph";
+import userNodeRepository from '../repositories/user/user.repository.graph';
 class FriendService {
   /**
    * Hàm giúp kiểm trả sender có gửi lời mới kết bạn với receiver từ trước chưa
@@ -11,10 +10,16 @@ class FriendService {
    * @returns 
    */
   hasRequestedFriend = async (senderId: string, receiverId: string): Promise<boolean> => {
-    return await friendRequestRelationRepository.isHaveRelationWith(senderId, receiverId);
+    return await userNodeRepository.isRequestFriend(senderId, receiverId);
   }
-  isFriend = async (senderId: string, receiverId: string) => {
-    return await isFriendRelationRepository.isHaveRelationWith(senderId, receiverId);
+  /**
+   * Hàm check user1 và user2 có là bạn của nhau không
+   * @param senderId 
+   * @param receiverId 
+   * @returns 
+   */
+  areFriends = async (senderId: string, receiverId: string) => {
+    return await userNodeRepository.areFriends(senderId, receiverId);
   }
   /**
    * Hàm này giúp xử lí logic yêu cầu kết bạn (logic nghiệp vụ)
@@ -27,11 +32,11 @@ class FriendService {
       throw new ConflictRequestError("You can not add friend with yourself");
     }
     // check 2 id có tồn tại
-    const existSender = await userService.getUserById(payload.receiverId);
+    const existSender = await userService.getUserById(payload.receiverId, ['_id']);
     if(!existSender){
       throw new NotFoundRequestError("Not found sender");
     }
-    const existReceiver = await userService.getUserById(payload.senderId);
+    const existReceiver = await userService.getUserById(payload.senderId, ['_id']);
     if(!existReceiver){
       throw new NotFoundRequestError("Not found receiver");
     }
@@ -42,7 +47,7 @@ class FriendService {
       throw new ConflictRequestError("You or your requested friend has already sent a request before");
     }
     // check cả 2 đã là bạn của nhau
-    const isFriend = await this.isFriend(payload.senderId, payload.receiverId);
+    const isFriend = await this.areFriends(payload.senderId, payload.receiverId);
     if(isFriend){
       throw new ConflictRequestError("Receiver and sender are already friend of each other!");
     } 
@@ -50,7 +55,7 @@ class FriendService {
     const dataFriendRequest = {
       createdAt: new Date(),
     }
-    const newFriendRequest = await friendRequestRelationRepository.create(payload.senderId, payload.receiverId, dataFriendRequest);
+    const newFriendRequest = await userNodeRepository.createRequestFriend(payload.senderId, payload.receiverId, dataFriendRequest);
     return newFriendRequest;
   }
   /**
@@ -59,7 +64,7 @@ class FriendService {
    * @param receiverId 
    */
   deleteFriendRequest = async (senderId: string, receiverId: string): Promise<void> => {
-    await friendRequestRelationRepository.deleteByFromIdAndToId(senderId, receiverId);
+    await userNodeRepository.deleteRequestFriend(senderId, receiverId);
   }
   /**
    * Tạo quan hệ bạn bè giữa sender và receiver
@@ -68,7 +73,7 @@ class FriendService {
    * @param data 
    */
   createIsFriendRelation = async (senderId: string, receiverId: string, data: {createdAt: Date}) => {
-    await isFriendRelationRepository.createTwoEdge(senderId, receiverId, data);
+    await userNodeRepository.createIsFriendTwoEdges(senderId, receiverId, data);
   }
   /**
    * Logic nghiệp vụ kết bạn giữa sender và receiver
@@ -80,11 +85,11 @@ class FriendService {
       throw new ConflictRequestError("You can not add friend with yourself");
     }
     // check senderId and receiverId exist
-    const existSender = await userService.getUserById(payload.receiverId);
+    const existSender = await userService.getUserById(payload.receiverId, ['_id']);
     if(!existSender){
       throw new NotFoundRequestError("Not found sender");
     }
-    const existReceiver = await userService.getUserById(payload.senderId);
+    const existReceiver = await userService.getUserById(payload.senderId, ['_id']);
     if(!existReceiver){
       throw new NotFoundRequestError("Not found receiver");
     }
@@ -94,7 +99,7 @@ class FriendService {
       throw new ConflictRequestError("Receiver has not sent you a friend request!");
     }
     // check sender and receiver isFriend of each other
-    const isFriend = await this.isFriend(payload.senderId, payload.receiverId);
+    const isFriend = await this.areFriends(payload.senderId, payload.receiverId);
     if(isFriend){
       throw new ConflictRequestError("Receiver and sender are already friend of each other!");
     }
@@ -112,10 +117,8 @@ class FriendService {
    * @param friendId 
    */
   deleteIsFriendRelation = async (userId: string, friendId: string) => {
-    // xóa quan hệ phía user
-    await isFriendRelationRepository.deleteByFromIdAndToId(userId, friendId);
-    // xóa cả quan hệ phía friend
-    await isFriendRelationRepository.deleteByFromIdAndToId(friendId, userId);
+    // xóa quan hệ bạn bè của cả 2 bên
+    await userNodeRepository.deleteIsFriendTwoEdges(userId, friendId);
   }
   /**
    * Xử lí logic nghiệp vụ hủy kết bạn giữa 2 user
@@ -127,16 +130,16 @@ class FriendService {
       throw new ConflictRequestError("You can not add friend with yourself");
     }
     // check senderId and receiverId exist
-    const existSender = await userService.getUserById(payload.receiverId);
+    const existSender = await userService.getUserById(payload.receiverId, ['_id']);
     if(!existSender){
       throw new NotFoundRequestError("Not found sender");
     }
-    const existReceiver = await userService.getUserById(payload.senderId);
+    const existReceiver = await userService.getUserById(payload.senderId, ['_id']);
     if(!existReceiver){
       throw new NotFoundRequestError("Not found receiver");
     }
     // check 2 user have already been friend
-    const isFriend = await this.isFriend(payload.senderId, payload.receiverId);
+    const isFriend = await this.areFriends(payload.senderId, payload.receiverId);
     if(!isFriend){
       throw new ConflictRequestError("You and your friend are not friend of each other");
     }
@@ -155,7 +158,7 @@ class FriendService {
     if(!foundUser){
       throw new NotFoundRequestError("Not found user");
     }
-    const totalFriend = await isFriendRelationRepository.countByUserId(userId);
+    const totalFriend = await userNodeRepository.countUserIsFriendOf(userId);
     return totalFriend;
   }
 }
