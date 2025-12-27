@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
@@ -24,7 +24,7 @@ export const Input: React.FC<InputProps> = ({
     const inputType = showPasswordToggle && showPassword ? 'text' : type;
 
     return (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
             {label && (
                 <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white"
@@ -37,7 +37,7 @@ export const Input: React.FC<InputProps> = ({
                 <input
                     id={inputId}
                     type={inputType}
-                    className={`flex h-12 w-full ml-1.5 rounded-lg border ${
+                    className={`flex h-12 w-full rounded-lg border ${
                         error
                             ? 'border-red-500 focus:ring-red-500'
                             : 'border-gray-300 dark:border-border-dark focus:ring-primary'
@@ -60,7 +60,11 @@ export const Input: React.FC<InputProps> = ({
                         className="absolute right-3 text-gray-400 dark:text-text-muted hover:text-gray-600 dark:hover:text-white cursor-pointer focus:outline-none"
                     >
                         <span className="material-symbols-outlined text-[20px]">
-                            {showPassword ? 'visibility' : 'visibility_off'}
+                            {showPassword ? (
+                                <MdVisibility size={20} />
+                            ) : (
+                                <MdVisibilityOff size={20} />
+                            )}
                         </span>
                     </button>
                 )}

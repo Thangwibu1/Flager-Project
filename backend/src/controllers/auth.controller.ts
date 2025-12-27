@@ -15,13 +15,15 @@ class AuthController {
             // tự lưu refreshToken trong cookie
             res.cookie('refreshToken', data.refreshToken, {
                 httpOnly: true,
-                secure: config.env == "deployment" ? true : false,
+                secure: config.env == 'deployment' ? true : false,
                 maxAge: config.jwt.refreshExpiresInSecond * 1000,
-                sameSite: "none",
-            })
-            res.json(ApiResponse.success('Login successfully', {
-                accessToken: data.accessToken,
-            }));
+                sameSite: 'none',
+            });
+            res.json(
+                ApiResponse.success('Login successfully', {
+                    accessToken: data.accessToken,
+                })
+            );
         } catch (error) {
             next(error);
         }
@@ -49,7 +51,11 @@ class AuthController {
             // lấy refreshToken (đã kiểm tra ở middleware)
             const refreshToken = req.cookies.refreshToken as string;
             const userId = req.user!.id;
-            const token = await authService.refreshAccessToken(userId, deviceId, refreshToken);
+            const token = await authService.refreshAccessToken(
+                userId,
+                deviceId,
+                refreshToken
+            );
             const dataFinal = {
                 accessToken: token,
             };
@@ -70,19 +76,14 @@ class AuthController {
     ): Promise<void> => {
         try {
             // lấy accessToken (đã kiểm tra ở middleware)
-            const accessToken = req.headers.authorization!.split(" ")[1];
+            const accessToken = req.headers.authorization!.split(' ')[1];
             // lấy refreshToken (đã kiểm tra ở middleware)
             const refreshToken = req.cookies.refreshToken as string;
             const userId = req.user!.id;
             await authService.logout(userId, accessToken, refreshToken);
             // xóa refreshToken lưu trong cookie
             res.clearCookie('refreshToken');
-            res.json(
-                ApiResponse.success(
-                    'Logout successfully',
-                    null
-                )
-            );
+            res.json(ApiResponse.success('Logout successfully', null));
         } catch (error) {
             next(error);
         }
