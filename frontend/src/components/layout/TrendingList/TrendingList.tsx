@@ -25,7 +25,7 @@ const TRENDS_DATA = [
     },
 ];
 
-export default function ListTrending() {
+export default function TrendingList() {
     return (
         <div className="sidebar-card">
             <div className="card-header">

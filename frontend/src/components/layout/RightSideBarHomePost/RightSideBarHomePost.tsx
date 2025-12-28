@@ -1,15 +1,13 @@
-// import TrendingNow from './TrendingNow'; // Nếu bạn đã tạo
-
-import ListFollowers from '../FollowersList/FollowersList';
+;
+import FollowersList from '../FollowersList/FollowersList';
+import TrendingList from '../TrendingList/TrendingList';
 import './RightSideBarHomePost.css';
-import ListTrending from '../TrendingList/TrendingList';
 
 export default function RightSideBarHomePost() {
     return (
         <div className="right-sidebar">
-            <ListTrending />
-            <ListFollowers />
-
+            <FollowersList />
+            <TrendingList />
             <footer className="sidebar-footer">
                 Privacy · Terms · Advertising · Cookies · More © 2025 SocialApp
             </footer>
