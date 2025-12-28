@@ -1,24 +1,21 @@
 import Navbar from '@/components/layout/Navbar/Navbar';
-import SearchNavBar from '@/components/common/Search/SearchNavBar';
+
 import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import './HomePost.css';
 import HomeFeed from '@/components/layout/HomeFeed/HomeFeed';
 import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
-// import LogoBar from '@/components/layout/LogoBar/LogoBar';
-import Logo from '@/components/common/Logo/Logo';
+import LogoSearch from '@/components/layout/LogoSearch/LogoSearch';
+
 export default function HomePost() {
     return (
         <>
             <Navbar
                 components={{
                     left: (
-                        <>
-                            <Logo />
-                            <SearchNavBar />
-                        </>
+                        <LogoSearch />
                     ),
-                    right: <UserActionMenu />,
+                    right: <UserActionMenu start={5} end={7} />,
                 }}
             />
             <main className="main-layout">
