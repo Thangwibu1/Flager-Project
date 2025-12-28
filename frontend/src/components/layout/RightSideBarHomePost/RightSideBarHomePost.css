@@ -1,0 +1,24 @@
+
+@import '../../../styles/dark-theme-variables.css';
+
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    width: 280px;
+    height: 100%;
+    overflow-y: auto;
+}
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Khoảng cách giữa TrendingNow và WhoToFollow */
+}
+.sidebar-footer {
+    color: #8a8d91;
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 0 4px;
+}

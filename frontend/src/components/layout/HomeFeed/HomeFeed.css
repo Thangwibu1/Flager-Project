@@ -1,0 +1,15 @@
+.home-feed-container{
+    width: 900px;
+    min-height: 100vh;
+    /* border-left: 1px solid #333;
+    border-right: 1px solid #333; */
+    box-sizing: border-box;
+    flex-direction: column; 
+    gap: 16px;
+    padding: 20px;
+    flex: 1; 
+    height: 100%;
+    overflow-y: auto;
+    background-color: var(--bg-secondary);
+}
+

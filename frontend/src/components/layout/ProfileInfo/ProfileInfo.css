@@ -1,0 +1,257 @@
+/* ============================================
+   PROFILE INFO COMPONENT
+   ============================================ */
+
+@import '../../../styles/dark-theme-variables.css';
+
+.profile-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+}
+
+/* ============================================
+   CONTENT SECTION
+   ============================================ */
+
+.profile-info__content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.profile-info__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ============================================
+   NAME & BIO
+   ============================================ */
+
+.profile-info__name-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-info__name {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-info__verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #1d9bf0;
+    border-radius: 50%;
+    color: white;
+}
+
+.profile-info__username {
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    color: #b0b0b0;
+}
+
+.profile-info__bio {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: #c0c0c0;
+    max-width: 600px;
+}
+
+/* ============================================
+   META INFO (Location, Website)
+   ============================================ */
+
+.profile-info__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.profile-info__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.profile-info__meta-item a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.profile-info__meta-item a:hover {
+    color: var(--accent-blue-hover);
+    text-decoration: underline;
+}
+
+/* ============================================
+   STATS
+   ============================================ */
+
+.profile-info__stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-info__stat {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.profile-info__stat-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.profile-info__stat-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   ACTION BUTTONS
+   ============================================ */
+
+.profile-info__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-top: 12px; 
+}
+
+/* Base Action Button */
+.profile-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+    min-width: 120px;
+    height: 40px;
+}
+
+/* Follow Button (White) */
+.profile-action-btn--follow {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.profile-action-btn--follow:hover {
+    background-color: #f2f2f2;
+    transform: translateY(-1px);
+}
+
+/* Message Button (Dark) */
+.profile-action-btn--message {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-action-btn--message:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Edit Button */
+.profile-action-btn--edit {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .profile-info__content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .profile-info__details {
+        align-items: center;
+    }
+
+    .profile-info__name {
+        font-size: 24px;
+    }
+
+    .profile-info__bio {
+        max-width: 100%;
+    }
+
+    .profile-info__meta {
+        justify-content: center;
+    }
+
+    .profile-info__stats {
+        justify-content: center;
+    }
+
+    .profile-info__actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .profile-info__actions > * {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-info__name {
+        font-size: 20px;
+    }
+
+    .profile-info__username {
+        font-size: 14px;
+    }
+
+    .profile-info__bio {
+        font-size: 14px;
+    }
+}

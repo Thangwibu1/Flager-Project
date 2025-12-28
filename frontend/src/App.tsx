@@ -1,9 +1,14 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AppRoutes } from './routes';
+import HomePost from './pages/homepost/HomePost';
+// import { ProfilePage } from './pages/profilepage/ProfilePage';
+
+
 function App() {
     return (
         <BrowserRouter>
-            <AppRoutes />
+            {/* <ProfilePage /> */}
+            <HomePost />
+            {/* Nghĩa thêm component của Nghĩa vô nha ví dụ PersonalProfile á, chứu ko phải NMavBar */}
         </BrowserRouter>
     );
 }

@@ -1,0 +1,88 @@
+/* Khung bao ngoài (Card) */
+.sidebar-card {
+    background-color: #18191a;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e4e6eb;
+    margin: 0;
+}
+
+.see-all {
+    font-size: 13px;
+    color: #b0b3b8;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.see-all:hover {
+    text-decoration: underline;
+}
+
+/* Style cho từng dòng Follower */
+.follower-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    transition: background-color 0.2s;
+}
+
+.follower-item:last-child {
+    margin-bottom: 0;
+}
+
+.follower-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #3a3b3c;
+}
+
+.follower-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e4e6eb;
+    margin: 0;
+}
+
+.follower-handle {
+    font-size: 13px;
+    color: #8a8d91;
+}
+
+/* Nút thêm bạn bè (Icon bên phải) */
+.follower-add-btn {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.follower-add-btn:hover {
+    background-color: #3a3b3c;
+}

@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import '../../../styles/navbar-variables.css';
 
-/* IconBar Container - Khối bên trái của navbar */
+/* IconBar Container */
 .icon-bar {
     display: flex;
     flex-direction: row;
@@ -17,11 +17,43 @@
     align-items: center;
     width: auto;
     gap: var(--navbar-gap);
-    
     list-style: none;
     padding: 0;
     margin: 0;
     color: var(--navbar-text);
+}
+
+/* Icon Items */
+.icon-bar__list > * {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-bottom: 4px;
+}
+
+/* Hover */
+.icon-bar__list > *:hover {
+    filter: brightness(1.5);
+    transform: scale(1.1);
+}
+
+/* Active state */
+.icon-bar__list > *.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 3px;
+    background-color: var(--navbar-text, #fff);
+    border-radius: 2px;
 }
 
 /* Responsive Design */
@@ -29,5 +61,15 @@
     .icon-bar,
     .icon-bar__list {
         gap: var(--navbar-gap-mobile);
+    }
+
+    .icon-bar__list > * {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .icon-bar__list > *.active::after {
+        width: 24px;
+        height: 2px;
     }
 }

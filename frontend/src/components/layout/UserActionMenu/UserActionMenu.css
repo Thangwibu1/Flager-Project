@@ -1,43 +1,13 @@
 @import 'tailwindcss';
 @import '../../../styles/navbar-variables.css';
 
-/* UserActionMenu Container - Khối ở giữa navbar */
+/* UserActionMenu Container */
 .user-action-menu {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: var(--navbar-gap);
     color: var(--navbar-text);
-}
-
-/* Image Container */
-.user-action-menu__image-container {
-    width: var(--avatar-size);
-    height: var(--avatar-size);
-    border-radius: 50%;
-    overflow: hidden;
-    
-    background-color: var(--avatar-bg);
-    border: 2px solid var(--avatar-border);
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    cursor: pointer;
-    transition: var(--navbar-transition);
-    list-style: none;
-}
-
-.user-action-menu__image-container:hover {
-    border-color: var(--navbar-hover-border);
-    transform: scale(1.05);
-}
-
-.user-action-menu__image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 /* Icon List */
@@ -54,6 +24,48 @@
     color: var(--navbar-text);
 }
 
+/* Icon Items */
+.user-action-menu__list > *:not(.user-action-menu__avatar-wrapper) {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Hover */
+.user-action-menu__list > *:not(.user-action-menu__avatar-wrapper):hover {
+    filter: brightness(1.5);
+    transform: scale(1.1);
+}
+
+/* Avatar Wrapper */
+.user-action-menu__avatar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+/* Avatar */
+.user-action-menu__avatar {
+    width: var(--avatar-size, 40px);
+    height: var(--avatar-size, 40px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-action-menu__avatar:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .user-action-menu,
@@ -61,8 +73,13 @@
         gap: var(--navbar-gap-mobile);
     }
 
-    .user-action-menu__image-container {
-        width: var(--avatar-size-mobile);
-        height: var(--avatar-size-mobile);
+    .user-action-menu__list > *:not(.user-action-menu__avatar-wrapper) {
+        width: 36px;
+        height: 36px;
+    }
+
+    .user-action-menu__avatar {
+        width: var(--avatar-size-mobile, 32px);
+        height: var(--avatar-size-mobile, 32px);
     }
 }

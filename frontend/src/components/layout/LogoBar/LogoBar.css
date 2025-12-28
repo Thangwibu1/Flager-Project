@@ -1,0 +1,50 @@
+/* LogoBar Container */
+
+.logobar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Logo Section */
+.logobar__logo {
+    display: flex;
+    align-items: center;
+}
+
+.logobar__logo-img {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+/* Logo image */
+.logobar__logo-img img {
+    border: 2px solid transparent;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Search Section */
+.logobar__search {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logobar {
+        gap: 16px;
+    }
+    
+    .logobar__logo-img {
+        width: 40px;
+        height: 40px;
+    }
+}

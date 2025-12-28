@@ -1,0 +1,110 @@
+/* ============================================
+   INFO CARD COMPONENT
+   ============================================ */
+
+@import '../../../styles/dark-theme-variables.css';
+
+/* Card Base Styles */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    transition: all 0.2s ease;
+}
+
+.card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.card__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.card__action {
+    font-size: 0.875rem;
+    color: var(--accent-blue);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.card__action:hover {
+    color: var(--accent-blue-hover);
+}
+
+.card__content {
+    color: var(--text-secondary);
+}
+
+/* Info Card Specific */
+.info-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-card__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.info-card__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.info-card__icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-card__text {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.info-card__label {
+    color: var(--text-muted);
+}
+
+.info-card__value {
+    color: var(--text-secondary);
+}
+
+.info-card__value--highlight {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Edit Button */
+.info-card__edit-btn {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background: var(--bg-hover);
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.info-card__edit-btn:hover {
+    background: var(--bg-tertiary);
+}

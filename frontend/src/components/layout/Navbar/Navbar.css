@@ -1,59 +1,78 @@
 @import 'tailwindcss';
 @import '../../../styles/navbar-variables.css';
+@import '../../../styles/dark-theme-variables.css';
 
-/* Navbar Container - Dùng Flexbox */
+/* Navbar Container - Fixed full-width background */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
+    max-width: 100%;
     z-index: var(--navbar-z-index);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-primary);
+    padding: var(--navbar-padding-y) 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* Inner container with max-width */
+.navbar__container {
+    max-width: 1920px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
     
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
-    background-color: var(--navbar-bg);
-    color: var(--navbar-text);
-    border-bottom: 1px solid var(--navbar-border);
-    
-    padding: var(--navbar-padding-y) var(--navbar-padding-x);
+    gap: 16px;
 }
 
-/* Left Section */
+/* LogoBar Section - Left */
 .navbar__left {
     display: flex;
     align-items: center;
-    gap: var(--navbar-gap);
-    color: var(--navbar-text);
+    justify-content: space-between;
+    flex: 1;
+    min-width: 0;
 }
 
-/* Center Section */
+/* Center Section - IconBar */
 .navbar__center {
     display: flex;
     align-items: center;
-    gap: var(--navbar-gap);
-    flex: 1;
     justify-content: center;
+    gap: var(--navbar-gap);
     color: var(--navbar-text);
 }
 
-/* Right Section */
+/* Right Section - UserActionMenu */
 .navbar__right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--navbar-gap);
     color: var(--navbar-text);
+    flex: 1;
+    min-width: 0;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .navbar {
-        padding: var(--navbar-padding-y-mobile) var(--navbar-padding-x-mobile);
+        padding: var(--navbar-padding-y-mobile) 0;
     }
     
-    .navbar__left,
+    .navbar__container {
+        padding: 0 var(--container-padding-mobile);
+        gap: 12px;
+    }
+
     .navbar__center,
     .navbar__right {
         gap: var(--navbar-gap-mobile);

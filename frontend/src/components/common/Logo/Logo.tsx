@@ -1,11 +1,24 @@
-import LogoSvg from '@assets/img/logo.svg?react';
+import logoFlager from '../../../assets/img/logo.svg';
+import { ComponentPropsWithoutRef } from 'react';
+import './Logo.css';
 
-export const Logo = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
-    const sizes = {
-        sm: 'w-8 h-8',
-        md: 'w-15 h-15',
-        lg: 'w-30 h-30',
-    };
+interface LogoProps extends ComponentPropsWithoutRef<'div'> {
+    widthLogo?: string;
+}
 
-    return <LogoSvg className={sizes[size]} />;
-};
+export default function Logo({
+    widthLogo = '80px',
+    style,
+    className,
+    ...restProps
+}: LogoProps) {
+    return (
+        <div
+            className={`logo-wrapper ${className || ''}`}
+            style={{ width: widthLogo, ...style }}
+            {...restProps}
+        >
+            <img src={logoFlager} alt="Flager Logo" className="logo-img" />
+        </div>
+    );
+}

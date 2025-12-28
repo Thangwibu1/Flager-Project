@@ -1,56 +1,158 @@
-import React from 'react';
 import { IconType } from 'react-icons';
+import { ComponentPropsWithoutRef } from 'react';
 
-interface NavIconProps extends React.HTMLAttributes<HTMLElement> {
-    icon: IconType | string;
-    size?: number;
+interface NavIconProps extends ComponentPropsWithoutRef<'div'> {
+    // Content options
+    icon?: IconType;
+    src?: string;
+    text?: string;
+    fallbackText?: string;
+
+    // Layout options
+    layout?: 'horizontal' | 'vertical';
+    gap?: number;
+
+    // Styling options
+    size?: number | string;
+    iconSize?: number;
+    textSize?: number | string;
     color?: string;
-    Tag?: React.ElementType;
     alt?: string;
+
+    // Shape options
+    // false = square, true = rounded, 'full' = circle
+    rounded?: boolean | 'full';
+
+    // Container element
+    Tag?: React.ElementType;
 }
 
 function NavIcon({
-    icon,
-    size = 24,
+    icon: Icon,
+    src,
+    text,
+    fallbackText,
+    layout = 'horizontal',
+    gap = 8,
+    size,
+    iconSize,
+    textSize,
     color = 'white',
-    Tag = 'div',
     alt = 'icon',
+    rounded = false,
+    Tag = 'div',
+    className = '',
+    style,
     ...props
 }: NavIconProps) {
-    // Helper function to detect if string is an image URL/path
-    const isImageSource = (value: string): boolean => {
-        return (
-            value.includes('/') ||
-            value.includes('.') ||
-            value.startsWith('http') ||
-            value.startsWith('data:')
-        );
+    const getBorderRadius = () => {
+        if (rounded === 'full') return '50%';
+        if (rounded === true) return '8px';
+        return '0';
     };
 
+    const sizeValue = typeof size === 'number' ? `${size}px` : size;
+
+    const finalIconSize = iconSize || (typeof size === 'number' ? size : 24);
+
+    const finalTextSize =
+        textSize || (typeof size === 'number' ? size * 0.5 : '1em');
+
+    const hasIconAndText = (Icon && text) || (src && text);
+
+    const containerStyle: React.CSSProperties = {
+        width: hasIconAndText ? 'auto' : sizeValue,
+        height: hasIconAndText ? 'auto' : sizeValue,
+        borderRadius: getBorderRadius(),
+        display: 'flex',
+        flexDirection: hasIconAndText
+            ? layout === 'vertical'
+                ? 'column'
+                : 'row'
+            : 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: hasIconAndText ? `${gap}px` : 0,
+        overflow: rounded && !hasIconAndText ? 'hidden' : 'visible',
+        flexShrink: 0,
+        ...style,
+    };
+
+    // Render content based on what's provided
     const renderContent = () => {
-        // If icon is a function (IconType from react-icons)
-        if (typeof icon === 'function') {
-            const Icon = icon;
-            return <Icon size={size} color={color} />;
+        // Có cả 2 thì làm cả hai
+        if (Icon && text) {
+            return (
+                <>
+                    <Icon size={finalIconSize} color={color} />
+                    <span style={{ color, fontSize: finalTextSize }}>
+                        {text}
+                    </span>
+                </>
+            );
         }
 
-        // If icon is a string
-        if (typeof icon === 'string') {
-            // Check if it's an image source
-            if (isImageSource(icon)) {
-                return (
-                    <img
-                        src={icon}
-                        alt={alt}
-                        style={{ width: size, height: size }}
-                    />
-                );
-            }
-
-            // Otherwise, render as text
+        if (src && text) {
             return (
-                <span style={{ color, fontSize: size }}>
-                    {icon}
+                <>
+                    <img
+                        src={src}
+                        alt={alt}
+                        style={{
+                            width: finalIconSize,
+                            height: finalIconSize,
+                            objectFit: 'cover',
+                            display: 'block',
+                            borderRadius:
+                                rounded === 'full'
+                                    ? '50%'
+                                    : rounded
+                                    ? '4px'
+                                    : '0',
+                        }}
+                    />
+                    <span style={{ color, fontSize: finalTextSize }}>
+                        {text}
+                    </span>
+                </>
+            );
+        }
+
+        // ICon
+        if (Icon) {
+            return <Icon size={finalIconSize} color={color} />;
+        }
+
+        // Ảnh
+        if (src) {
+            return (
+                <img
+                    src={src}
+                    alt={alt}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                    }}
+                />
+            );
+        }
+
+        // Chữ
+        if (text) {
+            return (
+                <span style={{ color, fontSize: finalTextSize }}>{text}</span>
+            );
+        }
+
+        // Fallback Text
+        if (fallbackText) {
+            return (
+                <span
+                    style={{ color, fontSize: finalTextSize, fontWeight: 600 }}
+                >
+                    {fallbackText}
                 </span>
             );
         }
@@ -58,7 +160,11 @@ function NavIcon({
         return null;
     };
 
-    return <Tag {...props}>{renderContent()}</Tag>;
+    return (
+        <Tag className={className} style={containerStyle} {...props}>
+            {renderContent()}
+        </Tag>
+    );
 }
 
 export default NavIcon;

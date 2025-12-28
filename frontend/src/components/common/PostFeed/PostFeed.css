@@ -1,0 +1,89 @@
+.post-feed-container {
+    background-color: #18191a;
+    border: 1px solid #333;
+    border-radius: 15px;
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex; /* Chia 2 cột trái - phải */
+    gap: 12px;
+}
+
+.post-feed-left {
+    flex-shrink: 0;
+}
+
+.post-feed-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-feed-right {
+    flex: 1; /* Chiếm toàn bộ phần còn lại bên phải */
+    display: flex;
+    flex-direction: column;
+}
+
+.post-feed-input {
+    width: 100%;
+    background-color: #000000;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #e4e6eb;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.post-feed-input::placeholder {
+    color: #8a8d91;
+}
+
+.post-feed-divider {
+    height: 1px;
+    background-color: #333;
+    margin: 15px 0;
+}
+
+.post-feed-bottom {
+    width: 100%;
+}
+
+.post-feed-form {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+}
+
+.post-feed-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.post-feed-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.post-feed-action span {
+    color: #b0b3b8;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.post-st-feed-button {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
