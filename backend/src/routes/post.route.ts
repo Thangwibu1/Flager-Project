@@ -1,8 +1,12 @@
 import { Router } from 'express';
-import { validateBody } from '../middlewares/validate.middleware';
-import { postCreate } from '../types/post/Post';
+import { validateBody, validateData, validateParams, validateQuery } from '../middlewares/validate.middleware';
+import { postCreate, sendReactToPost } from '../types/post/post.request';
 import { authenticateUserMiddleware } from '../middlewares/auth.middleware';
 import postController from '../controllers/post.controller';
 const router = Router();
-router.post('/create', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
+router.post('/', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
+// router.delete('/');
+router.post('/:postId/reacts', validateBody(sendReactToPost), authenticateUserMiddleware, postController.sendReactToPost);
+// router.delete('/:postId/reacts');
+// router.get('/reacts/total?type=');
 export default router;
