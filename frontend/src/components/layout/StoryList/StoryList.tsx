@@ -1,7 +1,7 @@
 
 import Story from '@/components/common/Story/Story';
 
-
+// chỗ này mốt sẽ lấy từ list bạn bè của user để up lên
 const DUMMY_STORIES = [
     {
         id: 1,

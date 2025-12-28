@@ -1,4 +1,4 @@
-;
+
 import FollowersList from '../FollowersList/FollowersList';
 import TrendingList from '../TrendingList/TrendingList';
 import './RightSideBarHomePost.css';

@@ -1,11 +1,11 @@
-import HomeFeed from "@/components/layout/HomeFeed/HomeFeed";
-import Navbar from "@/components/layout/Navbar/Navbar";
-import RightSideBarHomePost from "@/components/layout/RightSideBarHomePost/RightSideBarHomePost";
-import LogoSearch from "@/components/layout/LogoSearch/LogoSearch";
-import Sidebar from "@/components/layout/Sidebar/Sidebar";
-import UserActionMenu from "@/components/layout/UserActionMenu/UserActionMenu";
-import './HomePost.css';
+import HomeFeed from '@/components/layout/HomeFeed/HomeFeed';
+import Navbar from '@/components/layout/Navbar/Navbar';
 
+import LogoSearch from '@/components/layout/LogoSearch/LogoSearch';
+import Sidebar from '@/components/layout/Sidebar/Sidebar';
+import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
+import './HomePost.css';
+import RightSideBarHomePost from '@/components/layout/RightSideBarHomePost/RightSideBarHomePost';
 
 export default function HomePost() {
     return (
