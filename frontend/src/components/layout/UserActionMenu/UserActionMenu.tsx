@@ -4,29 +4,24 @@ import { NAV_ITEMS } from '@/utils/IconData';
 
 import './UserActionMenu.css';
 
-export default function UserActionMenu() {
+export default function UserActionMenu({ start = 4, end = 7 }) {
     const [activeId, setActiveId] = useState('more');
 
     return (
         <div className="user-action-menu">
             <ul className="user-action-menu__list">
-                {NAV_ITEMS.slice(5, 7)
-                    .sort((a, b) => a.id.localeCompare(b.id))
-                    .map(item => (
-                        <NavIcon className="" key={item.id} icon={item.icon} />
-                    ))}
-                {NAV_ITEMS.slice(4, 7).map(item => (
-                    <NavIcon 
-                        className={activeId === item.id ? "active" : ""} 
-                        key={item.id} 
+                {NAV_ITEMS.slice(start, end).map(item => (
+                    <NavIcon
+                        className={activeId === item.id ? 'active' : ''}
+                        key={item.id}
                         icon={item.icon}
                         onClick={() => setActiveId(item.id)}
                     />
                 ))}
                 <li className="user-action-menu__avatar-wrapper">
-                    <NavIcon 
-                        src="" 
-                        alt="User" 
+                    <NavIcon
+                        src=""
+                        alt="User"
                         fallbackText="U"
                         size={40}
                         rounded="full"
