@@ -1,58 +1,104 @@
 @import '../../../styles/navbar-variables.css';
 
 .sidebar {
-   width: 240px;
-    height: calc(100vh - 70px);
+    width: 240px;
+    /* Chiều cao cố định bằng màn hình trừ Navbar */
+    height: calc(100vh - 70px); 
     position: sticky;
-    top: 70px;
-    padding: 15px;
-    background-color: var(--navbar-bg);
+    top: 25px;
+    
+    /* Cho phép cuộn độc lập bên trong Sidebar */
+    overflow-y: auto; 
+    overflow-x: hidden;
+    
+    padding: 10px;
+    background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
-    flex-shrink: 0;
+}
+
+/* Ẩn thanh cuộn để không bị đường kẻ sọc bên phải */
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+.sidebar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Các item giữ nguyên như cũ */
+.sidebar-item {
+    width: 100%;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 8px !important;
+    cursor: pointer;
+    background-color: transparent;
+}
+.sidebar-item:hover { background-color: var(--bg-hover); }
+
+.sidebar-list,
+.shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
 }
 
 .sidebar-item {
-    display: flex;
+    width: 100%;
+    display: flex !important;
+    justify-content: flex-start !important;
     align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 8px !important;
     cursor: pointer;
-    /* Chỉ transition cho màu nền và màu chữ để tránh giật lag */
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    background-color: transparent;
-    /* Tạo border trong suốt trước để khi hover không bị nhảy khung do thêm border */
-    border: 1px solid transparent; 
+    transition: all 0.2s ease;
     box-sizing: border-box;
+
+    /* border: 1px solid var(--border-light) !important;  */
+    background-color: transparent;
 }
 
 .sidebar-item:hover {
-    background-color: #262626;
-    /* Dùng màu border dịu hơn để không bị sắc nét quá */
-    border-color: rgba(255, 255, 255, 0.1); 
+    /* Dùng biến bg-hover của hệ thống */
+    background-color: var(--bg-hover);
+    border-color: var(--border-primary) !important;
 }
 
 .sidebar-item.active {
-    background-color: #262626;
-    border-color: rgba(255, 255, 255, 0.2);
+    /* Khi active dùng nền card và border màu chữ chính */
+    background-color: var(--bg-card);
+    border-color: var(--text-primary) !important;
 }
 
-.sidebar-item span {
+/* Căn chỉnh text bên trong NavIcon */
+.sidebar-item span,
+.sidebar-item .nav-icon-text {
+    margin-left: 12px !important;
+    text-align: left !important;
+    flex: 1;
     font-size: 15px;
     font-weight: 500;
-    /* Đảm bảo text không thay đổi kích thước */
-    line-height: 1; 
+    /* Dùng biến text secondary cho dịu mắt */
+    color: var(--text-secondary);
 }
 
 .sidebar-divider {
     height: 1px;
-    background-color: var(--navbar-border);
+    background-color: var(--border-primary);
     margin: 15px 10px;
+    border: none;
 }
 
 .shortcuts-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    color: #b0b3b8;
-    margin: 10px 0 10px 12px;
+    /* Dùng màu chữ muted (mờ) cho tiêu đề phụ */
+    color: var(--text-muted);
+    margin: 15px 0 8px 12px;
+    text-transform: uppercase; /* Cho giống style shortcut Facebook */
 }

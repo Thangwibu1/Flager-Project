@@ -23,7 +23,7 @@ const FOLLOWERS_DATA = [
     },
 ];
 
-export default function WhoToFollow() {
+export default function FollowersList() {
     return (
         <div className="sidebar-card">
             <div className="card-header">
