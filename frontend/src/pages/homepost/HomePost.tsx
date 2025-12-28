@@ -21,7 +21,7 @@ export default function HomePost() {
             <main className="main-layout">
                 <Sidebar />
                 <HomeFeed />
-                <RightSidebar />
+                <RightSideBarHomePost />
             </main>
         </>
     );
