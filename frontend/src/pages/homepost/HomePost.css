@@ -22,8 +22,9 @@
 .main-layout > :nth-child(3) {
     width: 240px;
     flex-shrink: 0;
-    padding-top: 40px;
-    padding-left: 20px;
+    padding: 0 10px ;
+    padding-top: 35px;
+    
 }
 .main-layout {
     display: flex;
