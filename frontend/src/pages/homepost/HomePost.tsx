@@ -4,6 +4,7 @@ import RightSideBarHomePost from "@/components/layout/RightSideBarHomePost/Right
 import LogoSearch from "@/components/layout/LogoSearch/LogoSearch";
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import UserActionMenu from "@/components/layout/UserActionMenu/UserActionMenu";
+import './HomePost.css';
 
 
 export default function HomePost() {

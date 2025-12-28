@@ -6,12 +6,12 @@ export default function HomePost({ className = '', style = {}, ...props }) {
     const defaultStyle = {
         display: 'flex',
         justifyContent: 'space-between',
-        border: '1px solid red',
+        // border: '1px solid red',
     };
 
     return (
         <div
-            style={{ ...defaultStyle, ...style }} 
+            style={{ ...defaultStyle, ...style }}
             className={className}
             {...props}
         >
