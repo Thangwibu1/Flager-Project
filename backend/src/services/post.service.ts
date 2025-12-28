@@ -16,6 +16,7 @@ import { LazyPagination } from '../types/pagination/pagination.response';
 import { ViewType } from '../config/enum/post.enum';
 import { QueryPostListOfUser } from '../types/post/post.query';
 import userNodeRepository from '../repositories/user/user.repository.graph';
+import { UserNotFoundError } from '../errors/user/UserError';
 class PostService {
     getPostById = async (id: string, select: (keyof FullPost)[] = []) => {
         const foundPost = await postRepository.findById(id, select);
@@ -31,7 +32,7 @@ class PostService {
         // check user exist
         const foundUser = await userService.getUserById(payload.authorId);
         if (!foundUser) {
-            throw new NotFoundRequestError('User is not found');
+            throw new UserNotFoundError();
         }
         // create post
         const newPost = await postRepository.createOne(payload);
@@ -61,7 +62,7 @@ class PostService {
         const limit = 10;
         // check authorId exist
         if (!(await userService.getUserById(authorId))) {
-            throw new NotFoundRequestError('Not found author');
+            throw new UserNotFoundError();
         }
         // handle query
         let filter: { [key: string]: any } = {};
