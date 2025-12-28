@@ -12,14 +12,12 @@ export default function HomePost() {
         <>
             <Navbar
                 components={{
-                    left: (
-                        <LogoSearch />
-                    ),
+                    left: <LogoSearch />,
                     right: <UserActionMenu start={5} end={7} />,
                 }}
             />
             <main className="main-layout">
-                <Sidebar />
+                <Sidebar fontSize={25} />
                 <HomeFeed />
                 <RightSideBarHomePost />
             </main>

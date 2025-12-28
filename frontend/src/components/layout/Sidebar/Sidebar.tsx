@@ -2,7 +2,7 @@ import NavIcon from '@/components/common/NavIcon/NavIcon';
 import { SIDEBAR_NAV_ITEMS, SIDEBAR_SHORTCUTS } from '@/utils/IconData';
 import './Sidebar.css';
 
-export default function Sidebar() {
+export default function Sidebar({ fontSize = 25 }) {
     return (
         <div className="sidebar">
             <div className="sidebar-list">
@@ -11,7 +11,7 @@ export default function Sidebar() {
                         key={item.id}
                         icon={item.icon}
                         text={item.text}
-                        size={25}
+                        size={fontSize} // Dùng fontSize cho prop size
                         color={item.active ? 'white' : '#b0b3b8'}
                         className={`sidebar-item ${
                             item.active ? 'active' : ''
@@ -26,15 +26,15 @@ export default function Sidebar() {
                 <h3 className="shortcuts-title">YOUR SHORTCUTS</h3>
                 <div className="shortcuts-list">
                     {SIDEBAR_SHORTCUTS.map(item => (
-                    <NavIcon
-                        key={item.id}
-                        icon={item.icon}
-                        text={item.text}
-                        size={25}
-                        color="#b0b3b8"
-                        className="sidebar-item"
-                    />
-                ))}
+                        <NavIcon
+                            key={item.id}
+                            icon={item.icon}
+                            text={item.text}
+                            size={25}
+                            color="#b0b3b8"
+                            className="sidebar-item"
+                        />
+                    ))}
                 </div>
             </div>
         </div>
