@@ -1,5 +1,8 @@
+import { GroupChatNotFoundError } from '../errors/group/GroupError';
+import { UserNotFoundError } from '../errors/user/UserError';
 import groupChatRepository from '../repositories/groupChat/group-chat.repository';
 import groupChatRepositoryGraph from '../repositories/groupChat/group-chat.repository.graph';
+import userRepository from '../repositories/user/user.repository';
 import { GroupChat } from '../types/group/GroupChat';
 
 class GroupChatService {
@@ -26,6 +29,11 @@ class GroupChatService {
         },
         friendId?: string
     ) => {
+        const creator = await userRepository.findById(creatorId);
+        if (!creator) {
+            throw new UserNotFoundError();
+        }
+
         // Nếu là groupChat thì cần có admin, nếu là privateChat thì không cần
         const groupChatData =
             data.type === 'groupChat' ? { ...data, admin: creatorId } : data;
@@ -49,7 +57,7 @@ class GroupChatService {
                     groupChat._id.toString()
                 );
             } catch (error) {
-                throw new Error("Can't add friend to private chat");
+                throw new UserNotFoundError("Can't add friend to private chat");
             }
         }
         return groupChat;
@@ -60,6 +68,14 @@ class GroupChatService {
         groupChatId: string,
         adderId?: string
     ) => {
+        const user = await userRepository.findById(userId);
+        if (!user) {
+            throw new UserNotFoundError();
+        }
+        const groupChatFound = await groupChatRepository.findById(groupChatId);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const groupChat = await groupChatRepositoryGraph.addMember(
             userId,
             groupChatId,
@@ -69,6 +85,10 @@ class GroupChatService {
     };
 
     updateName = async (id: string, name: string) => {
+        const groupChatFound = await groupChatRepository.findById(id);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const updatedGroupChat = await groupChatRepository.updateById(id, {
             name,
         });
@@ -76,6 +96,10 @@ class GroupChatService {
     };
 
     delete = async (id: string) => {
+        const groupChatFound = await groupChatRepository.findById(id);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const deletedGroupChat = await groupChatRepository.deleteById(id);
         return deletedGroupChat;
     };

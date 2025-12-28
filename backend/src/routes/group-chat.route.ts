@@ -8,14 +8,15 @@ import {
 import groupChatController from '../controllers/group-chat.controller';
 
 const router = Router();
+//create a group chat
 router.post(
-    '/create',
+    '/',
     authenticateUserMiddleware,
     validateBody(createGroupChatRequest),
     groupChatController.create
 );
 router.post(
-    '/add-member',
+    '/:groupId/members',
     authenticateUserMiddleware,
     validateBody(addMemberRequest),
     groupChatController.addMember
