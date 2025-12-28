@@ -85,6 +85,10 @@ class GroupChatService {
     };
 
     updateName = async (id: string, name: string) => {
+        const groupChatFound = await groupChatRepository.findById(id);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const updatedGroupChat = await groupChatRepository.updateById(id, {
             name,
         });
@@ -92,6 +96,10 @@ class GroupChatService {
     };
 
     delete = async (id: string) => {
+        const groupChatFound = await groupChatRepository.findById(id);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const deletedGroupChat = await groupChatRepository.deleteById(id);
         return deletedGroupChat;
     };
