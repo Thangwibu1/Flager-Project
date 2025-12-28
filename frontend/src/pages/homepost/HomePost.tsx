@@ -7,9 +7,10 @@ import HomeFeed from '@/components/layout/HomeFeed/HomeFeed';
 // import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
 // import LogoBar from '@/components/layout/LogoBar/LogoBar';
 import Logo from '@/components/common/Logo/Logo';
-import Navbar from '@/components/Layout/Navbar/Navbar';
-import UserActionMenu from '@/components/Layout/UserActionMenu/UserActionMenu';
-import RightSidebar from '@/components/Layout/RightSidebar/RightSidebar';
+import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
+import Navbar from '@/components/layout/Navbar/Navbar';
+import RightSideBarHomePost from '@/components/Layout/RightSideBarHomePost/RightSideBarHomePost';
+
 
 export default function HomePost() {
     return (
