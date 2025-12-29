@@ -23,7 +23,7 @@ import { Types } from 'mongoose';
  */
 const handleCreateMessage = withValidation(
     CreateMessageSocketSchema,
-    async (socket: Socket, data: CreateMessageSocketData) => {
+    async (socket: Socket, data: CreateMessageSocketData, callback?: any) => {
         try {
             // Lấy userId từ socket data (đã được set bởi auth middleware)
             const userId = (socket as any).data.user.userId;
@@ -40,18 +40,28 @@ const handleCreateMessage = withValidation(
                 metadata: data.metadata,
             });
 
-            // Emit message mới đến tất cả users trong room
+            // Broadcast message mới đến tất cả users trong room (trừ người gửi)
             socket.to(data.groupChatId).emit('new_message', newMessage);
 
-            // Emit acknowledgment về client
-            socket.emit('message_created', {
-                success: true,
-                message: newMessage,
-            });
+            // Trả về acknowledgment cho người gửi qua callback
+            if (callback) {
+                callback({
+                    success: true,
+                    message: newMessage,
+                });
+            }
         } catch (error: any) {
-            socket.emit('error', {
-                message: error.message || 'Failed to create message',
-            });
+            // Trả error qua callback nếu có, nếu không thì emit error event
+            if (callback) {
+                callback({
+                    success: false,
+                    error: error.message || 'Failed to create message',
+                });
+            } else {
+                socket.emit('error', {
+                    message: error.message || 'Failed to create message',
+                });
+            }
         }
     }
 );
