@@ -5,7 +5,6 @@ import { QueryPostListOfUser, queryPostListOfUser } from '../types/post/post.que
 import postService from '../services/post.service';
 import { UserIdParams } from '../types/user/user.param';
 import friendService from '../services/friend.service';
-import { UpdateUserProfileDTO } from '../types/user/user.request';
 
 class UserController {
     // [GET] /users/:userId
@@ -69,22 +68,6 @@ class UserController {
             }
             return res.json(
                 ApiResponse.success('Get total friends successfully', dataFinal)
-            );
-        } catch (error) {
-            next(error);
-        }
-    }
-    updateUserProfile = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
-        try {
-            const currentUserId = req.user!.id;
-            const body: UpdateUserProfileDTO = req.body;
-            await userService.updateUserProfile(currentUserId, body);
-            return res.json(
-                ApiResponse.success('Update success', null)
             );
         } catch (error) {
             next(error);
