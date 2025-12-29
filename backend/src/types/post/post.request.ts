@@ -20,7 +20,7 @@ export const sendReactToPost = z.object({
 export const fullPost = IPost.extend({
     _id: z.string().or(z.instanceof(Types.ObjectId)),
     authorId: z.string().or(z.instanceof(Types.ObjectId)),
-    totalReact: z.array(z.object({name: z.enum(ReactName), count: z.number()})),
+    totalReact: z.array(z.object({name: z.enum(ReactName), total: z.number()})),
     totalComment: z.number(),
     totalShare: z.number(),
     createdAt: z.date(),

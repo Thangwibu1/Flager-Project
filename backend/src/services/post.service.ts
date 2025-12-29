@@ -162,7 +162,13 @@ class PostService {
         };
         await postRepository.modifyReactByPostIdAndReactType(reactFilter, 1);
     };
-    updatePost = async (currentUserId: string, postId: string, payload: PostUpdateDTO) => {
+    /**
+     * Hàm xử lí logic user cập nhật post
+     * @param currentUserId 
+     * @param postId 
+     * @param payload 
+     */
+    updatePostByUser = async (currentUserId: string, postId: string, payload: PostUpdateDTO) => {
         // check post này có phải của author(người cập nhật) đăng lên không
         const isTrueAuthor = await this.isAuthorOfPost(currentUserId, postId);
         if(!isTrueAuthor){
@@ -170,6 +176,17 @@ class PostService {
         }
         // update post
         await postRepository.updatePostById(postId, payload);
+    }
+    deletePostByUser = async (currentUserId: string, postId: string) => {
+        // check post này có phải của author(người cập nhật) đăng lên không
+        const isTrueAuthor = await this.isAuthorOfPost(currentUserId, postId);
+        if(!isTrueAuthor){
+            throw new ForbiddenRequestError("You have not permission to update this post");
+        }
+        // update post
+        await postRepository.updatePostById(postId, {
+            deletedAt: new Date,
+        });
     }
 }
 export default new PostService();

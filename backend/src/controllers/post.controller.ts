@@ -63,8 +63,22 @@ class PostController {
             const currentUserId = req.user!.id;
             const params = req.params as PostIdParams;
             const body = req.body as PostUpdateDTO;
-            await postService.updatePost(currentUserId, params.postId, body);
+            await postService.updatePostByUser(currentUserId, params.postId, body);
             res.json(ApiResponse.success("Update post successfully", null));
+        } catch (error) {
+            next(error);
+        }
+    }
+    deletePost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            await postService.deletePostByUser(currentUserId, params.postId);
+            res.json(ApiResponse.success("Delete post successfully", null));
         } catch (error) {
             next(error);
         }

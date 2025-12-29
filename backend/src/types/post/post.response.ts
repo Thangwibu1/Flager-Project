@@ -12,7 +12,7 @@ export interface StandardPostResponse {
   media: string[],
   createdAt: string,
   viewType: string,
-  totalReact: {name: string, count: number}[],
+  totalReact: {name: string, total: number}[],
   totalComment: number,
   totalShare: number,
 }
