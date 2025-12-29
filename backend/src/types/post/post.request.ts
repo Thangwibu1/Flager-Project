@@ -13,8 +13,7 @@ export const postCreate = IPost.extend({
 }).strict();
 export const postUpdateSchema = postCreate;
 export const sendReactToPost = z.object({
-    reactName: z.enum(ReactName, {error: "React name is invalid"}),
-    postId: z.string().nonempty().refine(value => Types.ObjectId.isValid(value), {error: "postId is invalid"})
+    reactName: z.enum(ReactName, {error: "React name is invalid"})
 }).strict();
 
 export const fullPost = IPost.extend({

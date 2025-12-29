@@ -202,7 +202,6 @@ class UserNodeRepository extends BaseGraphRepo {
             const result = await tx.run(cypher, { fromId, toId });
             const cntDelete =
                 result.summary.counters.updates().relationshipsDeleted;
-            console.log('>>>cntDelete', cntDelete);
             return cntDelete == 2 ? true : false;
         });
     };
@@ -288,6 +287,18 @@ class UserNodeRepository extends BaseGraphRepo {
         });
     };
 
+    deleteSendReact = async (userId: string, postId: string) => {
+        const cypher = `
+            MATCH (u:${neo4jInfo.node.user} {id: $userId})-[r:${neo4jInfo.rel.post.react}]->(p:${neo4jInfo.node.post} {id: $postId})
+            DELETE r
+        `;
+        return this.write(async tx => {
+            const result = await tx.run(cypher, { userId, postId });
+            const cntDelete =
+                result.summary.counters.updates().relationshipsDeleted;
+            return cntDelete == 1 ? true : false;
+        });
+    };
     // =============================== END USER send react to POST =========================================
 }
 export default new UserNodeRepository();

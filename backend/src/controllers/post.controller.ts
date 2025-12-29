@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../utils/api-response.util';
 import postService from '../services/post.service';
 import { QueryCountReactOfPost, queryPostListOfUser } from '../types/post/post.query';
-import { PostCreateDTO, PostUpdateDTO } from '../types/post/post.request';
-import { PostIdParams } from '../types/post/post.param';
+import { PostCreateDTO, PostUpdateDTO, SendReactToPostDTO } from '../types/post/post.request';
+import { paramPostIdAndReactSchema, PostIdParams } from '../types/post/post.param';
 class PostController {
     createPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -48,7 +48,10 @@ class PostController {
         next: NextFunction
     ) => {
         try {
-            await postService.sendReactToPost(req.user!.id, req.body);
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            const body = req.body as SendReactToPostDTO;
+            await postService.sendReactToPost(currentUserId, params.postId, body);
             res.json(ApiResponse.success("Send react to post successfully", null));
         } catch (error) {
             next(error);
@@ -97,10 +100,26 @@ class PostController {
             const dataFinal = {
                 total,
             }
-            res.json(ApiResponse.success("Delete post successfully", dataFinal));
+            res.json(ApiResponse.success("Get total react of post successfully", dataFinal));
         } catch (error) {
             next(error);
         }
+    }
+
+    deleteReactOfPost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as paramPostIdAndReactSchema;
+            await postService.deleteReactOfPost(currentUserId, params.postId, params.reactName);
+            res.json(ApiResponse.success("Delete react of successfully", null));
+        } catch (error) {
+            next(error);
+            
+        }   
     }
 }
 export default new PostController();

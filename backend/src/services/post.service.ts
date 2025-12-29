@@ -1,4 +1,4 @@
-import { ForbiddenRequestError, NotFoundRequestError } from '../errors/api/ApiError';
+import { ConflictRequestError, ForbiddenRequestError, NotFoundRequestError } from '../errors/api/ApiError';
 import postRepository from '../repositories/post/post.repository';
 import postNodeRepository from '../repositories/post/post.repository.graph';
 import {
@@ -14,16 +14,18 @@ import {
 import userService from './user.service';
 import * as postConverter from '../converters/post.converter';
 import { LazyPagination } from '../types/pagination/pagination.response';
-import { ViewType } from '../config/enum/post.enum';
+import { ReactName, ViewType } from '../config/enum/post.enum';
 import { QueryCountReactOfPost, QueryPostListOfUser } from '../types/post/post.query';
 import userNodeRepository from '../repositories/user/user.repository.graph';
 import { UserNotFoundError } from '../errors/user/UserError';
 class PostService {
-
     isAuthorOfPost = async (authorId: string, postId: string) => {
-        const foundPost = await postRepository.findOneByNormalQuery({_id: postId, authorId: authorId}, ['_id']);
+        const foundPost = await postRepository.findOneByNormalQuery(
+            { _id: postId, authorId: authorId },
+            ['_id']
+        );
         return foundPost != null;
-    }
+    };
     getPostById = async (id: string, select: (keyof FullPost)[] = []) => {
         const foundPost = await postRepository.findById(id, select);
         return foundPost;
@@ -40,7 +42,7 @@ class PostService {
         const createPayload = {
             ...payload,
             authorId: currentUserId,
-        }
+        };
         const newPost = await postRepository.createOne(createPayload);
         await postNodeRepository.create({
             authorId: currentUserId,
@@ -113,9 +115,10 @@ class PostService {
      */
     sendReactToPost = async (
         currentUserId: string,
-        payload: SendReactToPostDTO
+        postId: string, 
+        body: SendReactToPostDTO,
     ) => {
-        const { postId, reactName } = payload;
+        const {  reactName } = body;
         // check post exist
         const existPost = await this.getPostById(postId, ['_id']);
         if (!existPost) {
@@ -140,7 +143,7 @@ class PostService {
             // cập nhật react mới
             await userNodeRepository.updateSendReactRelationByReactName(
                 currentUserId,
-                payload.postId,
+                postId,
                 {
                     reactName: reactName,
                 }
@@ -149,7 +152,7 @@ class PostService {
             // cập nhật react
             await userNodeRepository.createSendReactRelationToPost(
                 currentUserId,
-                payload.postId,
+                postId,
                 {
                     name: reactName,
                 }
@@ -164,50 +167,108 @@ class PostService {
     };
     /**
      * Hàm xử lí logic user cập nhật post
-     * @param currentUserId 
-     * @param postId 
-     * @param payload 
+     * @param currentUserId
+     * @param postId
+     * @param payload
      */
-    updatePostByUser = async (currentUserId: string, postId: string, payload: PostUpdateDTO) => {
+    updatePostByUser = async (
+        currentUserId: string,
+        postId: string,
+        payload: PostUpdateDTO
+    ) => {
         // check post này có phải của author(người cập nhật) đăng lên không
         const isTrueAuthor = await this.isAuthorOfPost(currentUserId, postId);
-        if(!isTrueAuthor){
-            throw new ForbiddenRequestError("You have not permission to update this post");
+        if (!isTrueAuthor) {
+            throw new ForbiddenRequestError(
+                'You have not permission to update this post'
+            );
         }
         // update post
         await postRepository.updatePostById(postId, payload);
-    }
+    };
     /**
      * Hàm xử lí logic nghiệp vụ xóa user post
-     * @param currentUserId 
-     * @param postId 
+     * @param currentUserId
+     * @param postId
      */
     deletePostByUser = async (currentUserId: string, postId: string) => {
         // check post này có phải của author(người cập nhật) đăng lên không
         const isTrueAuthor = await this.isAuthorOfPost(currentUserId, postId);
-        if(!isTrueAuthor){
-            throw new ForbiddenRequestError("You have not permission to update this post");
+        if (!isTrueAuthor) {
+            throw new ForbiddenRequestError(
+                'You have not permission to update this post'
+            );
         }
         // update post
         await postRepository.updatePostById(postId, {
-            deletedAt: new Date,
+            deletedAt: new Date(),
         });
-    }
-    
-    countTotalReactOfPost = async (currentUserId: string, postId: string, query: QueryCountReactOfPost) => {
-
+    };
+    /**
+     * Hàm xử lí logic nghiệp vụ (đếm tổng tương tác của 1 bài viết)
+     * @param currentUserId
+     * @param postId
+     * @param query
+     * @returns
+     */
+    countTotalReactOfPost = async (
+        currentUserId: string,
+        postId: string,
+        query: QueryCountReactOfPost
+    ) => {
         // nếu có chặn user xem post này thì sau code thêm
         // if (currentUserId does not allow to view post) {}
 
         // check post exist
         const foundPost = await this.getPostById(postId, ['_id', 'totalReact']);
-        if(!foundPost){
-            throw new NotFoundRequestError("Not found post");
+        if (!foundPost) {
+            throw new NotFoundRequestError('Not found post');
         }
         // handle query
-        const total = query.reactName == undefined ? foundPost.totalReact.reduce((acc, item) => item.total + acc, 0) : foundPost.totalReact.find((item) => item.name == query.reactName)?.total;
+        const total =
+            query.reactName == undefined
+                ? foundPost.totalReact.reduce(
+                      (acc, item) => item.total + acc,
+                      0
+                  )
+                : foundPost.totalReact.find(
+                      item => item.name == query.reactName
+                  )?.total;
         // end handle query
         return total;
-    }
+    };
+    /**
+     *
+     * @param currentUserId
+     * @param postId
+     * @param reactName
+     */
+    deleteReactOfPost = async (
+        currentUserId: string,
+        postId: string,
+        reactName: ReactName
+    ) => {
+        // check post exist
+        if (!(await this.getPostById(postId, ['_id']))) {
+            throw new NotFoundRequestError('Not found post');
+        }
+        // check user từng thả tương tác tương ứng cho bài post này mới cho xóa
+        const foundReact = await userNodeRepository.getSendReactToPostRelation(
+            currentUserId,
+            postId
+        );
+        if (!foundReact || !(foundReact.data.name == reactName)) {
+            throw new ConflictRequestError(
+                `You has not sent ${reactName} react to this post`
+            );
+        }
+        // xóa tương tác ở mongo và neo4j
+        await userNodeRepository.deleteSendReact(currentUserId, postId);
+        const filter = {
+            postId: postId,
+            reactName,
+        };
+        await postRepository.modifyReactByPostIdAndReactType(filter, -1);
+    };
 }
 export default new PostService();
