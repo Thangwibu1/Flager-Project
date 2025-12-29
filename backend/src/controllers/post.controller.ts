@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../utils/api-response.util';
 import postService from '../services/post.service';
-import { queryPostListOfUser } from '../types/post/post.query';
+import { QueryCountReactOfPost, queryPostListOfUser } from '../types/post/post.query';
 import { PostCreateDTO, PostUpdateDTO } from '../types/post/post.request';
 import { PostIdParams } from '../types/post/post.param';
 class PostController {
@@ -79,6 +79,25 @@ class PostController {
             const params = req.params as PostIdParams;
             await postService.deletePostByUser(currentUserId, params.postId);
             res.json(ApiResponse.success("Delete post successfully", null));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    countReactOfPost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            const query = req.query as QueryCountReactOfPost;
+            const total = await postService.countTotalReactOfPost(currentUserId, params.postId, query);
+            const dataFinal = {
+                total,
+            }
+            res.json(ApiResponse.success("Delete post successfully", dataFinal));
         } catch (error) {
             next(error);
         }
