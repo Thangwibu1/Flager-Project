@@ -214,9 +214,25 @@ class FriendService {
     }
   }
 
-  countTotalFollowing = async (userId: string) => {
+  countTotalFollowing = async (viewerId: string, userId: string) => {
     // check user exist
-
+    const foundUser = await userService.getUserById(userId);
+    if(!foundUser){
+      throw new NotFoundRequestError("Not found user");
+    }
+    // sau nếu muốn người bị block ko xem được thì code thêm
+    // if(viewerId != userId){}
+    return await userNodeRepository.countRequestFriend(userId);
+  }
+  countTotalFollower = async (viewerId: string, userId: string) => {
+    // check user exist
+    const foundUser = await userService.getUserById(userId);
+    if(!foundUser){
+      throw new NotFoundRequestError("Not found user");
+    }
+    // sau nếu muốn người bị block ko xem được thì code thêm
+    // if(viewerId != userId){}
+    return await userNodeRepository.countReceivedRequestFriend(userId);
   }
 }
 export default new FriendService();

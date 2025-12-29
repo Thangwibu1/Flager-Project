@@ -11,8 +11,8 @@ router.get('/:userId', validateParams(userIdParams), authenticateUserMiddleware,
 router.get('/:userId/posts', validateParams(userIdParams), validateQuery(queryPostListOfUser), authenticateUserMiddleware, userController.getUserPostList);
 router.get('/:userId/friends/total', validateParams(userIdParams), authenticateUserMiddleware, userController.countFriendsOfUser);
 router.get('/:userId/friends', validateParams(userIdParams), validateQuery(queryGetFriendOfUserSchema), authenticateUserMiddleware, userController.getFriendListOfUser);
-// router.get('/:userId/friends/followings/total', validateParams(userIdParams), userController.countTotalFollowingOfUser);
+router.get('/:userId/friends/followings/total', validateParams(userIdParams), authenticateUserMiddleware, userController.countTotalFollowingOfUser);
 // router.get('/:userId/friends/followings', validateParams(userIdParams), );
-// router.get('/:userId/friend/followers/total' );
+router.get('/:userId/friends/followers/total',  validateParams(userIdParams), authenticateUserMiddleware, userController.countTotalFollowerOfUser);
 // router.get('/:userId/friend/followers' );
 export default router;

@@ -96,10 +96,36 @@ class UserController {
         next: NextFunction
     ) => {
         try {
-            
+            const curUserId: string = req.user!.id;
+            const params = req.params as UserIdParams;
+            const total = await friendService.countTotalFollowing(curUserId, params.userId);
+            return res.json(
+                ApiResponse.success('Get friends successfully', {
+                    total: total,
+                })
+            );
         } catch (error) {
             next(error);
         }
     }
+    countTotalFollowerOfUser = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId: string = req.user!.id;
+            const params = req.params as UserIdParams;
+            const total = await friendService.countTotalFollower(curUserId, params.userId);
+            return res.json(
+                ApiResponse.success('Get friends successfully', {
+                    total: total,
+                })
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    
 }
 export default new UserController();
