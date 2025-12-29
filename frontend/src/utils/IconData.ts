@@ -26,6 +26,7 @@ export const NAV_ITEMS = [
     { id: 'friends', icon: MdOutlinePeopleAlt, label: 'Friends' },
     { id: 'store', icon: TbShoppingBagSearch, label: 'Store' },
     { id: 'video', icon: PiVideoBold, label: 'Video' },
+    { id: 'profile', icon: MdOutlinePeopleAlt, label: 'Profile' },
     { id: 'more', icon: PiDotsNineBold, label: 'More' },
     { id: 'chat', icon: PiChatCircleDotsDuotone, label: 'Chat' },
     { id: 'notifications', icon: IoMdNotifications, label: 'Notifications' },

@@ -1,22 +1,16 @@
 import Logo from '@/components/common/Logo/Logo';
 import SearchNavBar from '@/components/common/Search/SearchNavBar';
+import './LogoSearch.css';
 
-export default function HomePost({ className = '', style = {}, ...props }) {
-    // Style mặc định
-    const defaultStyle = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        // border: '1px solid red',
-    };
-
+export default function LogoSearch({ className = '', style = {}, ...props }) {
     return (
         <div
-            style={{ ...defaultStyle, ...style }}
-            className={className}
+            className={`logo-search ${className}`}
+            style={style}
             {...props}
         >
             <Logo />
-            <SearchNavBar />
+            <SearchNavBar widthSearch="20rem" />
         </div>
     );
 }

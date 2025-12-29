@@ -32,7 +32,7 @@ const POSTS_DATA = [
         comments: 24,
     },
 ];
-export default function ListPost() {
+export default function PostList() {
     return (
         <div className="list-post-container">
             {POSTS_DATA.map(post => (

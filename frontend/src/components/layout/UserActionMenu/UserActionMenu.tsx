@@ -4,7 +4,7 @@ import { NAV_ITEMS } from '@/utils/IconData';
 
 import './UserActionMenu.css';
 
-export default function UserActionMenu({ start = 4, end = 7 }) {
+export default function UserActionMenu({ start = 5, end = 8 }) {
     const [activeId, setActiveId] = useState('more');
 
     return (

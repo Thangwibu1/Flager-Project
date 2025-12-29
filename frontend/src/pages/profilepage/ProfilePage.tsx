@@ -1,5 +1,4 @@
 import IconBar from '@/components/Layout/IconBar/IconBar';
-import LogoBar from '@/components/Layout/LogoBar/LogoBar';
 import Header from '@/components/Layout/Header/Header';
 import ProfileCover from '@/components/Layout/ProfileCover/ProfileCover';
 import ProfileHeader from '@/components/Layout/ProfileHeader/ProfileHeader';
@@ -11,11 +10,14 @@ import { MdWork, MdSchool, MdLocationOn, MdFavorite } from 'react-icons/md';
 import './ProfilePage.css';
 import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
 import Navbar from '@/components/layout/Navbar/Navbar';
-import RightSideBarHomePost from '@/components/Layout/RightSideBarHomePost/RightSideBarHomePost';
-import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
+import RightSidebar from '@/components/Layout/RightSidebar/RightSidebar';
+import PostList from '@/components/layout/PostList/PostList';
+
+import { useState } from 'react';
+import LogoSearch from '@/components/layout/LogoSearch/LogoSearch';
 
 export function ProfilePage() {
-    const activeTab = 'posts';
+    const [activeTab, setActiveTab] = useState('posts');
 
     // --- Mock Data (Should be fetched from API) ---
     const iconStyle = { fontSize: '1.5rem', color: 'var(--text-muted)' };
@@ -123,7 +125,7 @@ export function ProfilePage() {
             <div className="profile-page__container">
                 <Navbar
                     components={{
-                        left: <LogoBar />,
+                        left: <LogoSearch />,
                         center: <IconBar />,
                         right: <UserActionMenu />,
                     }}
@@ -175,7 +177,7 @@ export function ProfilePage() {
                         ]}
                         activeTab={activeTab}
                         onTabChange={(tabId: string) => {
-                            console.log('Tab changed:', tabId);
+                            setActiveTab(tabId);
                         }}
                     />
                 </div>
@@ -191,57 +193,7 @@ export function ProfilePage() {
                     }
                     center={
                         <div className="profile-page__content">
-                            {/* Mock Posts for Scroll Testing */}
-                            {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
-                                <div
-                                    key={num}
-                                    style={{
-                                        background: 'var(--bg-card)',
-                                        border: '1px solid var(--border-primary)',
-                                        borderRadius: '0.75rem',
-                                        padding: '1.5rem',
-                                        marginBottom: '1rem',
-                                    }}
-                                >
-                                    <h3
-                                        style={{
-                                            margin: '0 0 0.5rem 0',
-                                            color: 'var(--text-primary)',
-                                        }}
-                                    >
-                                        Post {num}
-                                    </h3>
-                                    <p
-                                        style={{
-                                            margin: '0',
-                                            color: 'var(--text-secondary)',
-                                            lineHeight: '1.6',
-                                        }}
-                                    >
-                                        This is a sample post content for
-                                        testing the scroll behavior. Lorem ipsum
-                                        dolor sit amet, consectetur adipiscing
-                                        elit. Sed do eiusmod tempor incididunt
-                                        ut labore et dolore magna aliqua.
-                                    </p>
-                                    <div
-                                        style={{
-                                            marginTop: '1rem',
-                                            padding: '0.5rem',
-                                            background: 'var(--bg-hover)',
-                                            borderRadius: '0.5rem',
-                                        }}
-                                    >
-                                        <small
-                                            style={{
-                                                color: 'var(--text-muted)',
-                                            }}
-                                        >
-                                            Posted 2 hours ago
-                                        </small>
-                                    </div>
-                                </div>
-                            ))}
+                            <PostList />
                         </div>
                     }
                     right={<RightSidebar suggestions={suggestions} />}
