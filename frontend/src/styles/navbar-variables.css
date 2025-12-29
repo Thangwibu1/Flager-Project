@@ -3,38 +3,38 @@
 /* Biến dùng chung cho navbar */
 :root {
     /* Colors */
-    --navbar-bg: #242424; 
-    --navbar-text: #ffffff; 
+    --navbar-bg: #1a1a1a;
+    --navbar-text: #ffffff;
     --navbar-border: #333333;
     --navbar-hover-border: theme('colors.blue.500');
-    
+
     /* Avatar/Image */
     --avatar-bg: #1a1a1a;
     --avatar-border: #444444;
-    --avatar-size: 2.5rem; /* 40px */
-    --avatar-size-mobile: 2rem; /* 32px */
-    
+    --avatar-size: 2.5rem;
+    --avatar-size-mobile: 2rem;
+
     /* Spacing */
     --navbar-padding-x: 1rem;
     --navbar-padding-y: 0.75rem;
     --navbar-padding-x-mobile: 0.5rem;
     --navbar-padding-y-mobile: 0.5rem;
-    
+
     /* Gap between items */
     --navbar-gap: 1rem;
     --navbar-gap-mobile: 0.5rem;
-    
+
     /* Z-index */
     --navbar-z-index: 1000;
-    
+
     /* Transitions */
     --navbar-transition: all 0.2s ease-in-out;
 
     /* Search Tokens */
-    --search-bg: #121212;              
-    --search-bg-focus: #1a1a1a;        
-    --search-border: #262626;         
-    --search-focus-border: #333333;    
-    --search-icon: #737373;            
-    --search-placeholder: #737373;     
+    --search-bg: #121212;
+    --search-bg-focus: #1a1a1a;
+    --search-border: #262626;
+    --search-focus-border: #333333;
+    --search-icon: #737373;
+    --search-placeholder: #737373;
 }

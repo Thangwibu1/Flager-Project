@@ -6,9 +6,10 @@
     min-height: 100vh;
 }
 
-.main-layout > :nth-child(2) { 
-    width: 700px;
-    flex-shrink: 0; 
+.main-layout > :nth-child(2) {
+    flex: 1;
+    min-width: 0;
+    flex-shrink: 0;
 }
 
 /* Sidebar trái */
@@ -28,9 +29,10 @@
 }
 .main-layout {
     display: flex;
-    height: calc(100vh - 70px); /* Khống chế chiều cao toàn bộ vùng nội dung */
+    height: calc(100vh - 70px); 
     overflow: hidden; 
-    max-width: 1280px; /* Hoặc 1400px tùy ông, để nó bóp vô 1 cục */
+    max-width: var(--container-max-width, 1440px);
     margin: 0 auto;
+    padding: 0 var(--container-padding);
+    justify-content: space-between;
 }
-

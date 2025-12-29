@@ -7,7 +7,7 @@ interface SearchNavBarProps extends ComponentPropsWithoutRef<'div'> {
     text?: string;
     widthSearch?: string;
     value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // lấy data theo ký tự gõ á
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; 
     name?: string;
 }
 

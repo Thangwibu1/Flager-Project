@@ -9,6 +9,7 @@ import { IoPersonAddSharp } from 'react-icons/io5';
 import { FaBookmark } from 'react-icons/fa';
 import { MdOutlinePhotoLibrary } from 'react-icons/md';
 import { MdEmojiEmotions } from 'react-icons/md';
+import { CgProfile } from 'react-icons/cg';
 
 import {
     Home,
@@ -26,7 +27,7 @@ export const NAV_ITEMS = [
     { id: 'friends', icon: MdOutlinePeopleAlt, label: 'Friends' },
     { id: 'store', icon: TbShoppingBagSearch, label: 'Store' },
     { id: 'video', icon: PiVideoBold, label: 'Video' },
-    { id: 'profile', icon: MdOutlinePeopleAlt, label: 'Profile' },
+    { id: 'profile', icon: CgProfile, label: 'Profile' },
     { id: 'more', icon: PiDotsNineBold, label: 'More' },
     { id: 'chat', icon: PiChatCircleDotsDuotone, label: 'Chat' },
     { id: 'notifications', icon: IoMdNotifications, label: 'Notifications' },

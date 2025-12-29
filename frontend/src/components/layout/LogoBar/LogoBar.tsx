@@ -2,6 +2,7 @@
 import NavIcon from '@/components/common/NavIcon/NavIcon';
 import logoFlager from '@/assets/img/logo.svg';
 import './LogoBar.css';
+import SearchNavBar from '@/components/common/Search/SearchNavBar';
 
 export default function LogoBar() {
     return (
@@ -15,6 +16,7 @@ export default function LogoBar() {
                     className="logobar__logo-img"
                 />
             </div>
+            <SearchNavBar widthSearch="20rem" />
         </div>
     );
 }

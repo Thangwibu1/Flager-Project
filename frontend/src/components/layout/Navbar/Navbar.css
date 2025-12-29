@@ -12,12 +12,10 @@
    
     z-index: var(--navbar-z-index);
     background-color: transparent;
-    color: var(--text-primary);
-    padding: var(--navbar-padding-y) 0;
+    padding: 0;
     overflow-x: hidden;
     box-sizing: border-box;
     
-    /* Center the container */
     display: flex;
     justify-content: center;
 }
@@ -26,14 +24,19 @@
     max-width: var(--container-max-width, 1440px);
     width: 100%;
     margin: 0 auto;
-    padding: 0 var(--container-padding);
-    background-color: var(--navbar-bg); 
-    border-bottom: 0.0625rem solid var(--border-primary);
+    padding: var(--container-padding);
+    background-color: var(--navbar-bg);
+    border: 1px solid var(--navbar-border);
+    transition: border-color 0.5s ease; 
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: 1.5rem; 
-    
+}
+
+.navbar__container.scrolled {
+    border-color: transparent;
 }
 
 /* LogoBar Section - Left (Logo + Search) */
@@ -85,11 +88,11 @@
 
 @media (max-width: 48rem) { 
     .navbar {
-        padding: var(--navbar-padding-y-mobile) 0;
+        padding: 0;
     }
     
     .navbar__container {
-        padding: 0 var(--container-padding-mobile);
+        padding: var(--container-padding-mobile) 0;
         gap: 0.5rem;
     }
 
