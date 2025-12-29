@@ -10,6 +10,7 @@ import * as neo4jConverter from '../../utils/converters/neo4j.converter.util';
 import { RequestFriendRelation } from '../../models/user/friend-request-relation.model.neo4j';
 import { IsFriendRelation } from '../../models/user/is-friend-relation.model.neo4j';
 import * as formatter from '../../utils/formatter.util';
+import { neo4jClient } from '../../config/database/neo4j.config';
 class UserNodeRepository extends BaseGraphRepo {
     // =========================================== CRUD USER ==========================================
 
@@ -260,8 +261,8 @@ class UserNodeRepository extends BaseGraphRepo {
             where += ' AND r.createdAt < $createdAt ';
         }
         if (keyword) {
-            filterParams.keyword = formatter.toNeo4jQueryKeySearch(keyword);
-            where += ' AND toLower(u2.username) CONTAINS toLower($keyword) ';
+            filterParams.keyword = keyword;
+            where += ' AND apoc.text.clean(toLower(u2.username)) CONTAINS apoc.text.clean(toLower($keyword)) ';
         }
         const cypher = `
             MATCH (u1: ${neo4jInfo.node.user} {id: $userId}) -[r: ${neo4jInfo.rel.user.isFriend}]-> (u2: ${neo4jInfo.node.user})
