@@ -9,27 +9,31 @@
     left: 0;
     right: 0;
     width: 100%;
-    max-width: 100%;
+   
     z-index: var(--navbar-z-index);
-    background-color: var(--bg-secondary);
+    background-color: transparent;
     color: var(--text-primary);
-    border-bottom: 0.0625rem solid var(--border-primary);
     padding: var(--navbar-padding-y) 0;
     overflow-x: hidden;
     box-sizing: border-box;
+    
+    /* Center the container */
+    display: flex;
+    justify-content: center;
 }
 
-/* Inner container with max-width */
 .navbar__container {
     max-width: var(--container-max-width, 1440px);
     width: 100%;
     margin: 0 auto;
     padding: 0 var(--container-padding);
-    
+    background-color: var(--navbar-bg); 
+    border-bottom: 0.0625rem solid var(--border-primary);
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 1.5rem; 
+    
 }
 
 /* LogoBar Section - Left (Logo + Search) */

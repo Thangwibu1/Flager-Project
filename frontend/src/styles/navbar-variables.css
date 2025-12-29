@@ -1,10 +1,10 @@
 @import 'tailwindcss';
 
-/* Navbar Design Tokens - Biến dùng chung cho navbar */
+/* Biến dùng chung cho navbar */
 :root {
     /* Colors */
-    --navbar-bg: #000000; /* Black background */
-    --navbar-text: #ffffff; /* White text */
+    --navbar-bg: #242424; 
+    --navbar-text: #ffffff; 
     --navbar-border: #333333;
     --navbar-hover-border: theme('colors.blue.500');
     
@@ -30,7 +30,7 @@
     /* Transitions */
     --navbar-transition: all 0.2s ease-in-out;
 
-    /* Search Tokens mới dựa trên hình ảnh */
+    /* Search Tokens */
     --search-bg: #121212;              
     --search-bg-focus: #1a1a1a;        
     --search-border: #262626;         
