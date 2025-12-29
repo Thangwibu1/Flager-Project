@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { validateBody, validateData, validateParams, validateQuery } from '../middlewares/validate.middleware';
-import { postCreate, sendReactToPost } from '../types/post/post.request';
+import { postCreate, postUpdateSchema, sendReactToPost } from '../types/post/post.request';
 import { authenticateUserMiddleware } from '../middlewares/auth.middleware';
 import postController from '../controllers/post.controller';
+import { postIdParamSchema } from '../types/post/post.param';
 const router = Router();
 router.post('/', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
-// router.patch('/:postId');
+router.patch('/:postId', validateParams(postIdParamSchema), validateBody(postUpdateSchema), authenticateUserMiddleware, postController.updatePost);
 // router.delete('/:postId');
 router.post('/:postId/reacts', validateBody(sendReactToPost), authenticateUserMiddleware, postController.sendReactToPost);
 // router.delete('/:postId/reacts');

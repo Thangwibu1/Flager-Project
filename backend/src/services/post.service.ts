@@ -1,9 +1,10 @@
-import { NotFoundRequestError } from '../errors/api/ApiError';
+import { ForbiddenRequestError, NotFoundRequestError } from '../errors/api/ApiError';
 import postRepository from '../repositories/post/post.repository';
 import postNodeRepository from '../repositories/post/post.repository.graph';
 import {
     FullPost,
     PostCreateDTO,
+    PostUpdateDTO,
     SendReactToPostDTO,
 } from '../types/post/post.request';
 import {
@@ -18,6 +19,11 @@ import { QueryPostListOfUser } from '../types/post/post.query';
 import userNodeRepository from '../repositories/user/user.repository.graph';
 import { UserNotFoundError } from '../errors/user/UserError';
 class PostService {
+
+    isAuthorOfPost = async (authorId: string, postId: string) => {
+        const foundPost = await postRepository.findOneByNormalQuery({_id: postId, authorId: authorId}, ['_id']);
+        return foundPost != null;
+    }
     getPostById = async (id: string, select: (keyof FullPost)[] = []) => {
         const foundPost = await postRepository.findById(id, select);
         return foundPost;
@@ -27,17 +33,17 @@ class PostService {
      * @param payload
      */
     createPostByUser = async (
+        currentUserId: string,
         payload: PostCreateDTO
     ): Promise<PostCreateResponse> => {
-        // check user exist
-        const foundUser = await userService.getUserById(payload.authorId);
-        if (!foundUser) {
-            throw new UserNotFoundError();
-        }
         // create post
-        const newPost = await postRepository.createOne(payload);
+        const createPayload = {
+            ...payload,
+            authorId: currentUserId,
+        }
+        const newPost = await postRepository.createOne(createPayload);
         await postNodeRepository.create({
-            authorId: payload.authorId,
+            authorId: currentUserId,
             postId: newPost._id.toString(),
         });
         return postConverter.toPostCreate(newPost);
@@ -156,5 +162,14 @@ class PostService {
         };
         await postRepository.modifyReactByPostIdAndReactType(reactFilter, 1);
     };
+    updatePost = async (currentUserId: string, postId: string, payload: PostUpdateDTO) => {
+        // check post này có phải của author(người cập nhật) đăng lên không
+        const isTrueAuthor = await this.isAuthorOfPost(currentUserId, postId);
+        if(!isTrueAuthor){
+            throw new ForbiddenRequestError("You have not permission to update this post");
+        }
+        // update post
+        await postRepository.updatePostById(postId, payload);
+    }
 }
 export default new PostService();

@@ -10,25 +10,16 @@ export const IPost = z.object({
 export const postCreate = IPost.extend({
     viewType: z
         .enum(ViewType, {error: "View type is invalid"})
-})
-    .refine(
-        value =>
-            (value.content != null && value.content != '') ||
-            (value.media != null && value.media.length > 0),
-        {
-            error: 'You need to send a none empty content or media in order to post',
-        }
-    )
-    .strict();
-
+}).strict();
+export const postUpdateSchema = postCreate;
 export const sendReactToPost = z.object({
     reactName: z.enum(ReactName, {error: "React name is invalid"}),
     postId: z.string().nonempty().refine(value => Types.ObjectId.isValid(value), {error: "postId is invalid"})
 }).strict();
 
 export const fullPost = IPost.extend({
-    _id: z.instanceof(Types.ObjectId),
-    authorId: z.instanceof(Types.ObjectId),
+    _id: z.string().or(z.instanceof(Types.ObjectId)),
+    authorId: z.string().or(z.instanceof(Types.ObjectId)),
     totalReact: z.array(z.object({name: z.enum(ReactName), count: z.number()})),
     totalComment: z.number(),
     totalShare: z.number(),
@@ -39,6 +30,7 @@ export const fullPost = IPost.extend({
 });
 
 export type Post = z.infer<typeof IPost>;
-export type PostCreateDTO = z.infer<typeof postCreate> & {authorId: string};
+export type PostCreateDTO = z.infer<typeof postCreate>;
+export type PostUpdateDTO = z.infer<typeof postUpdateSchema>;
 export type FullPost = z.infer<typeof fullPost>;
 export type SendReactToPostDTO = z.infer<typeof sendReactToPost>;

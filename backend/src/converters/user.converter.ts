@@ -1,4 +1,4 @@
-import { IUserDocument } from "../models/user/user.model.mongo";
+import { IUserDocument } from "../models/user/User.model.mongo";
 import { UserProfileResponse } from "../types/user/user.response";
 
 export const toUserProfile = (user: IUserDocument): UserProfileResponse => {
