@@ -14,14 +14,17 @@ import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
 import Navbar from '@/components/layout/Navbar/Navbar';
 import RightSidebar from '@/components/Layout/RightSidebar/RightSidebar';
 import PostList from '@/components/layout/PostList/PostList';
-import LogoSearch from '@/components/layout/LogoSearch/LogoSearch';
 
-import {
-    useUserProfile,
-    useFriendCount,
-    useUserPosts,
-} from '@/hooks/useProfileQuery';
+import { useProfilePageData } from '@/features/user/hooks/useProfilePageData';
 import { useAuthStore } from '@/store/slices/authSlice';
+import {
+    getMockUserProfile,
+    getMockUserPosts,
+    getMockFriendCount,
+    getMockPhotos,
+    getMockFriends,
+    getMockSuggestions,
+} from '@/features/user/mocks/mockData';
 
 import './ProfilePage.css';
 import LogoBar from '@/components/Layout/LogoBar/LogoBar';
@@ -35,63 +38,21 @@ export function ProfilePage() {
     const userId = urlUserId || currentUser?.id || '';
 
     // Fetch data
-    const { data: userProfile, isLoading: profileLoading } =
-        useUserProfile(userId);
-    const { data: friendCount } = useFriendCount(userId);
-    const { data: userPosts } = useUserPosts(userId, 1, 100);
+    const { profile, posts, friendCount } = useProfilePageData(
+        userId,
+        activeTab
+    );
 
     // Determine if viewing own profile
     const isOwner = userId === currentUser?.id;
 
-    // Mock data for UI testing
-    const MOCK_USER_PROFILE = {
-        _id: userId,
-        email: 'alex.sterling@example.com',
-        username: 'alexsterling',
-        avatar: 'https://i.pravatar.cc/150?u=alex',
-        phone: '+1234567890',
-        bio: 'Digital Artist & UI Designer | Creating beautiful experiences ✨',
-        location: 'New York, USA',
-        website: 'alexsterling.design',
-        coverPhoto: 'https://images.unsplash.com/photo-1557683316-973673baf926',
-        followers: 1250,
-        following: 342,
-    };
-
-    const MOCK_POSTS = [
-        {
-            _id: '1',
-            content:
-                'Just arrived at this amazing spot! The coffee here is absolutely incredible. ☕✨ #CoffeeLovers #MorningVibes',
-            image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600',
-            createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-            author: {
-                _id: userId,
-                username: 'alexsterling',
-                avatar: 'https://i.pravatar.cc/150?u=alex',
-            },
-        },
-        {
-            _id: '2',
-            content:
-                'Working on some new UI designs today. Coding with React and Tailwind is so satisfying! 💻🚀 #WebDev #UIUX',
-            image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
-            createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-            author: {
-                _id: userId,
-                username: 'alexsterling',
-                avatar: 'https://i.pravatar.cc/150?u=alex',
-            },
-        },
-    ];
-
-    const MOCK_FRIEND_COUNT = 128;
-
-    // Use API data - for UI testing
-    const displayProfile = userProfile || MOCK_USER_PROFILE;
+    // Display data với fallback sang mock khi API chưa có data
+    const displayProfile = profile.data ?? getMockUserProfile(userId);
     const displayPosts =
-        userPosts && userPosts.length > 0 ? userPosts : MOCK_POSTS;
-    const displayFriendCount = friendCount ?? MOCK_FRIEND_COUNT;
+        posts.data && posts.data.length > 0
+            ? posts.data
+            : getMockUserPosts(userId);
+    const displayFriendCount = friendCount.data ?? getMockFriendCount();
 
     // Icon style for info cards
     const iconStyle = { fontSize: '1.5rem', color: 'var(--text-muted)' };
@@ -124,58 +85,12 @@ export function ProfilePage() {
         },
     ];
 
-    // Mock photo data (No backend data)
-    const photos = [
-        {
-            id: 1,
-            url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
-        },
-        {
-            id: 2,
-            url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-        },
-        {
-            id: 3,
-            url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
-        },
-    ];
+    // Mock data cho các phần chưa có API (photos, friends, suggestions)
+    const photos = getMockPhotos();
+    const friends = getMockFriends();
+    const suggestions = getMockSuggestions();
 
-    // Mock friend data (No backend data)
-    const friends = [
-        {
-            id: 1,
-            name: 'Jenny Wilson',
-            avatar: 'https://i.pravatar.cc/150?u=jenny',
-        },
-        {
-            id: 2,
-            name: 'Robert Fox',
-            avatar: 'https://i.pravatar.cc/150?u=robert',
-        },
-        {
-            id: 3,
-            name: 'Kristin Watson',
-            avatar: 'https://i.pravatar.cc/150?u=kristin',
-        },
-    ];
-
-    // Mock suggestions (No backend data)
-    const suggestions = [
-        {
-            id: 1,
-            name: 'Cameron',
-            mutualFriends: 7,
-            avatar: 'https://i.pravatar.cc/150?u=cameron',
-        },
-        {
-            id: 2,
-            name: 'Esther',
-            mutualFriends: 12,
-            avatar: 'https://i.pravatar.cc/150?u=esther',
-        },
-    ];
-
-    // Profile tabs data (using real API data with mock fallback)
+    // Profile tabs data
     const tabs = [
         { id: 'posts', label: 'Posts', count: displayPosts.length },
         { id: 'about', label: 'About' },
@@ -185,7 +100,7 @@ export function ProfilePage() {
     ];
 
     // Loading state
-    if (profileLoading) {
+    if (profile.isLoading) {
         return (
             <div className="profile-page">
                 <Navbar
@@ -252,7 +167,9 @@ export function ProfilePage() {
                                     displayProfile.coverPhoto ||
                                     'https://images.unsplash.com/photo-1557683316-973673baf926'
                                 }
-                                canEdit={isOwner}
+                                canEdit={true} 
+                                //isOwner
+                                // Để true để test thôi
                             />
                         }
                         avatarAndInfo={

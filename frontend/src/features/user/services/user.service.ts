@@ -44,9 +44,13 @@ class UserService {
      * Get user's posts
      * GET /users/:userId/posts
      */
-    async getUserPosts(userId: string, page = 1, limit = 10): Promise<UserPost[]> {
+    async getUserPosts(
+        userId: string,
+        page = 1,
+        limit = 10
+    ): Promise<UserPost[]> {
         const response = await apiClient.get(`/users/${userId}/posts`, {
-            params: { page, limit }
+            params: { page, limit },
         });
         return response.data.data.posts || [];
     }
