@@ -5,6 +5,7 @@ import { QueryPostListOfUser, queryPostListOfUser } from '../types/post/post.que
 import postService from '../services/post.service';
 import { UserIdParams } from '../types/user/user.param';
 import friendService from '../services/friend.service';
+import { QueryGetFriendOfUser } from '../types/friend/friend.query';
 
 class UserController {
     // [GET] /users/:userId
@@ -64,11 +65,38 @@ class UserController {
             const params = req.params as UserIdParams;
             const total = friendService.countFriendsOfUser(currentUserId, params.userId);
             const dataFinal = {
-                totalFriends: total
+                total: total
             }
             return res.json(
                 ApiResponse.success('Get total friends successfully', dataFinal)
             );
+        } catch (error) {
+            next(error);
+        }
+    }
+    getFriendListOfUser = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const query = req.query as QueryGetFriendOfUser;
+            const params = req.params as UserIdParams;
+            const dataFinal = await friendService.getListFriendsOfUser( req.user!.id, params.userId, query);
+            return res.json(
+                ApiResponse.success('Get friends successfully', dataFinal)
+            );
+        }  catch (error) {
+            next(error);
+        }
+    }
+    countTotalFollowingOfUser = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            
         } catch (error) {
             next(error);
         }

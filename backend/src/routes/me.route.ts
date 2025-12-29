@@ -7,4 +7,6 @@ const router = Router();
 
 router.patch('/profile', validateBody(updateUserProfile), authenticateUserMiddleware, meController.updateMyProfile);
 router.get('/profile', authenticateUserMiddleware,  meController.getMyProfile);
+// router.patch('/profile/avatar');
+// router.patch('/profile/background-avatar');
 export default router;

@@ -155,7 +155,7 @@ class UserNodeRepository extends BaseGraphRepo {
           MATCH (u2:User) WHERE u2.id = $toId
     
           MERGE (u1)-[r1:${neo4jInfo.rel.user.isFriend}]->(u2)
-          ON CREATE SET r.createdAt = $createdAt
+          ON CREATE SET r1.createdAt = $createdAt
           MERGE (u2)-[r2:${neo4jInfo.rel.user.isFriend}]->(u1)
           ON CREATE SET r2.createdAt = $createdAt
           RETURN r1, r2
@@ -206,6 +206,47 @@ class UserNodeRepository extends BaseGraphRepo {
         });
     };
 
+    getIsFriendList = async ({
+        userId,
+        keyword,
+        lastItem,
+        limit = 12,
+    }: {
+        userId: string,
+        keyword?: string,
+        lastItem?: number,
+        limit?: number
+    }) => {
+        const filterParams: any = {};
+        filterParams.userId = userId;
+        let where = " WHERE 1=1 ";
+        let orderBy = " ORDER BY r.createdAt DESC";
+        if(lastItem){
+            filterParams.createdAt = lastItem;
+            where += " AND r.createdAt < $createdAt ";
+        }
+        if(keyword){
+            filterParams.keyword = formatter.toNeo4jQueryKeySearch(keyword);
+            where += " AND toLower(u2.username) CONTAINS toLower($keyword) ";
+        }
+        const cypher = `
+            MATCH (u1: ${neo4jInfo.node.user} {id: $userId}) -[r: ${neo4jInfo.rel.user.isFriend}]-> (u2: ${neo4jInfo.node.user})
+            ${where}
+            ${orderBy}
+            LIMIT ${limit}
+            RETURN u2, r
+        `;
+        return this.read(async (tx) => {
+            const result = await tx.run(cypher, filterParams);
+            const records = result.records;
+            return records.map(record => {
+                return {
+                    node: UserNode.formatRaw(record.get('u2')),
+                    rel: IsFriendRelation.formatRaw(record.get('r')),
+                }
+            })
+        });
+    }
     /**
      * Hàm giúp đếm số lượng bạn bè của user1 nếu theo mẫu user1->user2: tức count số lượng user2 
      * @param userId 
