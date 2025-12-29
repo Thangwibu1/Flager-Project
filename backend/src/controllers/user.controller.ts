@@ -41,7 +41,7 @@ class UserController {
 
             const currentUserId = req.user!.id;
             const params  = req.params as UserIdParams;
-            const query: QueryPostListOfUser = queryPostListOfUser.parse(req.query);
+            const query = req.query as QueryPostListOfUser;
 
             const data = await postService.getPostListOfAuthor({
                 currentUserId: currentUserId,

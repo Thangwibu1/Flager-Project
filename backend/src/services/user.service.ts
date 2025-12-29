@@ -41,7 +41,7 @@ class UserService {
         const user = await this.getUserById(currentUserId);
         return userConvertor.toMyProfile(user as any);
     }
-    updateUserProfile = async (userId: string, payload: UpdateUserProfileDTO) => {
+    updateMyProfile = async (userId: string, payload: UpdateUserProfileDTO) => {
         // update ở mongo
         await userRepository.updateByUserId(userId, payload);
         // update ở userNode

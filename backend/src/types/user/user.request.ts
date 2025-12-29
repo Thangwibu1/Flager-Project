@@ -53,6 +53,12 @@ export const fullUser = registerUser.extend({
     updatedAt: z.date(),
     deletedAt: z.date().nullable().optional(),
 });
+export const updateUserProfile = z.object({
+    username: z
+        .string()
+        .nonempty({ error: 'Username is not allow to be empty!' }),
+});
+export type UpdateUserProfileDTO = z.infer<typeof updateUserProfile>;
 
 export type User = z.infer<typeof IUser>;
 export type RegisterUserDTO = z.infer<typeof registerUser>;
