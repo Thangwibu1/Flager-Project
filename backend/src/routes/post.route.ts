@@ -18,5 +18,5 @@ router.delete('/:postId/reacts/:reactName', validateParams(paramPostIdAndReactSc
 
 router.post('/:postId/comments', validateParams(postIdParamSchema), validateBody(createCommentToPostBodySchema), authenticateUserMiddleware, commentController.createCommentToPost);
 router.post('/:postId/comments/:commentId/replies', validateParams(commentReplyParams), validateBody(replyCommentBodySchema), authenticateUserMiddleware, commentController.replyToComment);
-
+router.delete('/:postId/comments/:commentId', validateParams(commentReplyParams), authenticateUserMiddleware, commentController.deleteComment);
 export default router;

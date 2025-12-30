@@ -15,6 +15,19 @@ class CommentNodeRepository extends BaseGraphRepo{
       await tx.run(cypher, params);
     });
   }
+
+  deleteCommentById = async (commentId: string) => {
+    const params = {
+      id: commentId,
+    }
+    const cypher = `
+      MATCH (c: ${neo4jInfo.node.comment} { id: $id })
+      DETACH DELETE c
+    `;
+    return this.write(async (tx) => {
+      await tx.run(cypher, params);
+    });
+  }
   // ====================== CRUD WITH NODE COMMENT ===============================================
 }
 

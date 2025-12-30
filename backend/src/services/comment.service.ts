@@ -1,5 +1,4 @@
 import {
-    ConflictRequestError,
     NotFoundRequestError,
 } from '../errors/api/ApiError';
 import commentRepository from '../repositories/comment/comment.repository';
@@ -11,6 +10,7 @@ import postService from './post.service';
 import commentNodeRepository from '../repositories/comment/comment.repository.graph';
 import { FullComment } from '../types/comments/comment';
 import userService from './user.service';
+import postRepository from '../repositories/post/post.repository';
 class CommentService {
     getCommentById = async (id: string, select: (keyof FullComment)[] = []) => {
         return await commentRepository.findOneById(id, select);
@@ -32,7 +32,10 @@ class CommentService {
             postId: postId,
         });
         // create node in neo4j
-        await commentNodeRepository.createNode(comment._id.toString());
+        await Promise.all([
+            commentNodeRepository.createNode(comment._id.toString()),
+            postRepository.modifyTotalCommentById(postId, 1)
+        ]);
         // converter
         return comment;
     };
@@ -48,33 +51,68 @@ class CommentService {
         parentId: string;
         body: ReplyCommentBodyDTO;
     }) => {
+        const [foundPost, foundParent, foundUserReply] = await Promise.all([
+            postService.getPostById(postId),
+            this.getCommentById(parentId, ['_id']),
+            body.replyToId
+                ? userService.getUserById(body.replyToId, ['_id'])
+                : Promise.resolve(null),
+        ]);
         // check post exists
-        if (!(await postService.getPostById(postId))) {
-            throw new NotFoundRequestError('postId is not found');
+        if (!foundPost) {
+            throw new NotFoundRequestError('post is not found');
         }
-
         // check parent comment exist
-        const foundParent = await this.getCommentById(parentId, ['_id']);
         if (!foundParent) {
-            throw new NotFoundRequestError('Not found parentId');
+            throw new NotFoundRequestError('Not found comment');
         }
-        if (body.replyTo) {
-            // check replyTo exist
-            if (!(await userService.getUserById(body.replyTo))) {
-                throw new NotFoundRequestError('Not found replyTo user');
-            }
+        // check replyTo exist
+        if (body.replyToId && !foundUserReply) {
+            throw new NotFoundRequestError('Not found user to reply');
         }
-        const newComment = await commentRepository.createOne({
-          ...body,
-          postId: postId,
-          userId: userId,
-          parentId: parentId,
-          replyToId: body.replyTo ?? undefined
+        const newReply = await commentRepository.createOne({
+            ...body,
+            postId: postId,
+            userId: userId,
+            parentId: parentId,
+            replyToId: body.replyToId ?? undefined,
         });
-        // create node in neo4j
-        await commentNodeRepository.createNode(newComment._id.toString());
+        await Promise.all([
+            // create node in neo
+            commentNodeRepository.createNode(newReply._id.toString()),
+            // update parent total reply
+            commentRepository.modifyReplyTotal(parentId, 1),
+            // update total comment in post mongo
+            postRepository.modifyTotalCommentById(postId, 1)
+        ]);
+
         // converter
-        return newComment;
+        return newReply;
+    };
+
+    deleteComment = async (userId: string, postId: string, commentId: string) => {
+        // check comment tồn tại của post này tồn tại
+        const foundComment = await commentRepository.findOneByNormalFilter(
+            {
+                userId,
+                postId,
+                _id: commentId,
+            },
+            ['_id', 'parentId', 'totalReply']
+        );
+        if (!foundComment) {
+            throw new NotFoundRequestError('Not found comment');
+        }
+        await Promise.all([
+            // soft delete in mongo
+            commentRepository.deleteOneById(commentId),
+            // delete node in neo
+            commentNodeRepository.deleteCommentById(commentId),
+            // update totalReply in comment
+            foundComment.parentId ? commentRepository.modifyReplyTotal(foundComment.parentId, -1) : Promise.resolve(null),
+            // update totalComment in post
+            foundComment.parentId ? postRepository.modifyTotalCommentById(postId, -1) : postRepository.modifyTotalCommentById(postId, -(foundComment.totalReply + 1))
+        ]);
     };
 }
 

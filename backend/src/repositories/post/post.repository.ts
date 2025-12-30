@@ -77,6 +77,16 @@ class PostRepository {
             }
         });
     }
+
+    modifyTotalCommentById = async (postId: string, amount: number) => {
+        await Post.updateOne({
+            _id: postId,
+        }, {
+            $inc: {
+                totalComment: amount
+            }
+        });
+    }
     /**
      * Hàm giúp lấy dữ liệu với filter dạng đối chiếu bằng, ví dụ: { authorId: data, createdAt: time,... }
      * @param filter 

@@ -5,7 +5,7 @@ import { ApiResponse } from "../utils/api-response.util";
 import commentService from "../services/comment.service";
 import { CommentReplyParams } from "../types/comments/comment.params";
 
-class Comment {
+class CommentController {
     // [POST] /posts/:postId/comments
     createCommentToPost = async (
         req: Request,
@@ -47,6 +47,22 @@ class Comment {
             next(error);
         }
     };
+    // [DELETE] /:postId/comments/:commentId
+    deleteComment = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as CommentReplyParams;
+            await commentService.deleteComment(curUserId, params.postId, params.commentId);
+            res.json(ApiResponse.success('Add comment to post successfully', null));
+        } catch (error) {
+            next(error);
+        }
+
+    }
 }
 
-export default new Comment();
+export default new CommentController();

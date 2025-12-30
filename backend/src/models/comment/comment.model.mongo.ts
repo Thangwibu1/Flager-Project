@@ -35,7 +35,7 @@ const commentSchema = new Schema<ICommentDocument>(
         deletedAt: {
             type: Date,
             required: false,
-            default: undefined,
+            default: null,
         },
         totalReact: {
             type: [

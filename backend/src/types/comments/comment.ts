@@ -3,11 +3,11 @@ import z from "zod";
 import { ReactName } from "../../config/enum/post.enum";
 
 export const IComment = z.object({
-  _id: z.instanceof(Types.ObjectId),
-  userId: z.instanceof(Types.ObjectId),
-  postId: z.instanceof(Types.ObjectId),
+  _id: z.instanceof(Types.ObjectId).or(z.string()),
+  userId: z.instanceof(Types.ObjectId).or(z.string()),
+  postId: z.instanceof(Types.ObjectId).or(z.string()),
   replyToId: z.instanceof(Types.ObjectId).nullable().optional(),
-  parentId: z.instanceof(Types.ObjectId).nullable().optional(),
+  parentId: z.instanceof(Types.ObjectId).or(z.string()).nullable().optional(),
   content: z.string(),
   media: z.array(z.string()),
   totalReply: z.number(),
