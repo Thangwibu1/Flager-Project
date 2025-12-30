@@ -1,4 +1,8 @@
-import { useUserProfile, useUserPosts, useFriendCount } from './userHooks';
+import {
+    useUserProfile,
+    useUserPosts,
+    useFriendCount,
+} from '../../user/hooks/userHooks';
 
 /**
  * Interface cho return value của useProfilePageData
@@ -35,18 +39,13 @@ export const useProfilePageData = (
 ): ProfilePageData => {
     const profileQuery = useUserProfile(userId);
 
-    const postsQuery = useUserPosts(
-        userId,
-        1, 
-        10,
-        {
-            // QUAN TRỌNG: Lazy loading
-            enabled: activeTab === 'posts', 
-        }
-    );
+    const postsQuery = useUserPosts(userId, 1, 10, {
+        // QUAN TRỌNG: Lazy loading
+        enabled: activeTab === 'posts',
+    });
 
     const friendCountQuery = useFriendCount(userId, {
-        enabled: activeTab === 'friends', 
+        enabled: activeTab === 'friends',
     });
 
     // Trả về object với structure rõ ràng

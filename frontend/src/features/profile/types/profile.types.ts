@@ -1,4 +1,4 @@
-import { User, UserStats, UserRelationship } from './user.types';
+import { User, UserStats, UserRelationship } from '../../user/types/user.types';
 
 export interface Profile {
     user: User;

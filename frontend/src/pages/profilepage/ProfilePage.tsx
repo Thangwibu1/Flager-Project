@@ -15,7 +15,6 @@ import Navbar from '@/components/layout/Navbar/Navbar';
 import RightSidebar from '@/components/Layout/RightSidebar/RightSidebar';
 import PostList from '@/components/layout/PostList/PostList';
 
-import { useProfilePageData } from '@/features/user/hooks/useProfilePageData';
 import { useAuthStore } from '@/store/slices/authSlice';
 import {
     getMockUserProfile,
@@ -28,6 +27,7 @@ import {
 
 import './ProfilePage.css';
 import LogoBar from '@/components/Layout/LogoBar/LogoBar';
+import { useProfilePageData } from '@/features/profile/hooks/useProfilePageData';
 
 export function ProfilePage() {
     const [activeTab, setActiveTab] = useState('posts');
@@ -167,7 +167,7 @@ export function ProfilePage() {
                                     displayProfile.coverPhoto ||
                                     'https://images.unsplash.com/photo-1557683316-973673baf926'
                                 }
-                                canEdit={true} 
+                                canEdit={true}
                                 //isOwner
                                 // Để true để test thôi
                             />
