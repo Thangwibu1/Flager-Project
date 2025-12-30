@@ -1,10 +1,13 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 import { ReactName } from '../../config/enum/post.enum';
+import { FullComment } from '../../types/comments/comment';
 
-const commentSchema = new Schema(
+export type ICommentDocument = FullComment & Document;
+
+const commentSchema = new Schema<ICommentDocument>(
     {
         postId: {
-            type: Types.ObjectId,
+            type: Schema.Types.ObjectId,
             required: true,
         },
         content: {
@@ -16,16 +19,16 @@ const commentSchema = new Schema(
           default: [],
         },
         parentId: {
-            type: Types.ObjectId,
+            type: Schema.Types.ObjectId,
             required: false,
             default: undefined,
         }, // rep comment chính
         userId: {
-            type: Types.ObjectId,
+            type: Schema.Types.ObjectId,
             required: true,
         }, // chủ comment
         replyToId: {
-            type: Types.ObjectId,
+            type: Schema.Types.ObjectId,
             required: false,
             default: undefined,
         }, // rep comment con bắt kì trong comment cha
@@ -62,6 +65,6 @@ const commentSchema = new Schema(
     }
 );
 
-const Comment = mongoose.model('Comment', commentSchema);
+const Comment = mongoose.model<ICommentDocument>('Comment', commentSchema);
 
 export { Comment };

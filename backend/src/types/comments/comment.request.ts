@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import z from "zod";
 
 export const createCommentToPostBodySchema = z.object({
@@ -5,4 +6,9 @@ export const createCommentToPostBodySchema = z.object({
   media: z.array(z.string().nonempty({error: "Url is not allowed to be empty"})).min(0),
 }).strict();
 
+export const replyCommentBodySchema = createCommentToPostBodySchema.extend({
+  replyTo: z.string().nullable().refine(value => value != null ? Types.ObjectId.isValid(value): true, {error: "parentId is invalid"}),
+}).strict();
+
 export type CreateCommentToPostBodyDTO = z.infer<typeof createCommentToPostBodySchema>;
+export type ReplyCommentBodyDTO = z.infer<typeof replyCommentBodySchema>;
