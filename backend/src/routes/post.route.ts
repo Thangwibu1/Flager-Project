@@ -5,6 +5,8 @@ import { authenticateUserMiddleware } from '../middlewares/auth.middleware';
 import postController from '../controllers/post.controller';
 import { paramPostIdAndReactSchema, postIdParamSchema } from '../types/post/post.param';
 import { queryCountReactOfPostSchema } from '../types/post/post.query';
+import { createCommentToPostBodySchema } from '../types/comments/comment.request';
+import commentController from '../controllers/comment.controller';
 const router = Router();
 router.post('/', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
 router.patch('/:postId', validateParams(postIdParamSchema), validateBody(postUpdateSchema), authenticateUserMiddleware, postController.updatePost);
@@ -12,5 +14,7 @@ router.delete('/:postId', validateParams(postIdParamSchema), authenticateUserMid
 router.post('/:postId/reacts', validateParams(postIdParamSchema), validateBody(sendReactToPost), authenticateUserMiddleware, postController.sendReactToPost);
 router.get('/:postId/reacts/total', validateParams(postIdParamSchema), validateQuery(queryCountReactOfPostSchema), authenticateUserMiddleware, postController.countReactOfPost);
 router.delete('/:postId/reacts/:reactName', validateParams(paramPostIdAndReactSchema), authenticateUserMiddleware, postController.deleteReactOfPost);
+
+router.post('/:postId/comments', validateParams(postIdParamSchema), validateBody(createCommentToPostBodySchema), authenticateUserMiddleware, commentController.createCommentToPost);
 
 export default router;

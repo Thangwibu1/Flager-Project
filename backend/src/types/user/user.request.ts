@@ -60,13 +60,6 @@ export const updateUserProfile = z.object({
 }).strict();
 export type UpdateUserProfileDTO = z.infer<typeof updateUserProfile>;
 
-export const updateUserProfile = z.object({
-    username: z
-        .string()
-        .nonempty({ error: 'Username is not allow to be empty!' }),
-});
-export type UpdateUserProfileDTO = z.infer<typeof updateUserProfile>;
-
 export type User = z.infer<typeof IUser>;
 export type RegisterUserDTO = z.infer<typeof registerUser>;
 export type LoginUserDTO = z.infer<typeof loginUser>;

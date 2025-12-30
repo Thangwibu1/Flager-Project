@@ -10,6 +10,7 @@ const neo4jInfo = {
         user: 'User',
         post: 'Post',
         groupChat: 'GroupChat',
+        comment: 'Comment',
     },
     rel: {
         // các quan hệ 1 chiều xuất phát từ node User
@@ -23,6 +24,7 @@ const neo4jInfo = {
         post: {
             react: "REACT"
         },
+        comment: {}
     },
 };
 export { redisPrefix, neo4jInfo };
