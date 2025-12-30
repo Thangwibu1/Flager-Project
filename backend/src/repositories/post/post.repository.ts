@@ -4,7 +4,7 @@ import { Post } from '../../models/post/Post.model.mongo';
 import { FullPost } from '../../types/post/post.request';
 
 class PostRepository {
-    createOne = async (data: any) => {
+    createOne = async (data: Partial<Omit<FullPost, '_id' | 'cratedAt' | 'updatedAt'>>) => {
         const newPost = await Post.create(data);
         return newPost;
     };
@@ -76,6 +76,22 @@ class PostRepository {
                 "totalReact.$.total": amount,
             }
         });
+    }
+    /**
+     * Hàm giúp lấy dữ liệu với filter dạng đối chiếu bằng, ví dụ: { authorId: data, createdAt: time,... }
+     * @param filter 
+     * @param select 
+     * @returns 
+     */
+    findOneByNormalQuery = async (filter: Partial<FullPost>, select: (keyof FullPost)[] = ['_id']) => {
+        return await Post.exists({
+            ...filter,
+            deletedAt: null
+        }).select(select).lean();
+    }
+
+    updatePostById = async (postId: string, update: Partial<Omit<FullPost, '_id' | 'authorId'>> ) => {
+        await Post.updateOne({_id: postId, deletedAt: null}, update);
     }
 }
 export default new PostRepository();

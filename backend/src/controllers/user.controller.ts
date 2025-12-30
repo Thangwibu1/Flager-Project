@@ -5,7 +5,7 @@ import { QueryPostListOfUser, queryPostListOfUser } from '../types/post/post.que
 import postService from '../services/post.service';
 import { UserIdParams } from '../types/user/user.param';
 import friendService from '../services/friend.service';
-import { UpdateUserProfileDTO } from '../types/user/user.request';
+import { QueryGetFollowerList, QueryGetFollowingList, QueryGetFriendOfUser } from '../types/friend/friend.query';
 
 class UserController {
     // [GET] /users/:userId
@@ -41,7 +41,7 @@ class UserController {
 
             const currentUserId = req.user!.id;
             const params  = req.params as UserIdParams;
-            const query: QueryPostListOfUser = queryPostListOfUser.parse(req.query);
+            const query = req.query as QueryPostListOfUser;
 
             const data = await postService.getPostListOfAuthor({
                 currentUserId: currentUserId,
@@ -65,7 +65,7 @@ class UserController {
             const params = req.params as UserIdParams;
             const total = friendService.countFriendsOfUser(currentUserId, params.userId);
             const dataFinal = {
-                totalFriends: total
+                total: total
             }
             return res.json(
                 ApiResponse.success('Get total friends successfully', dataFinal)
@@ -74,21 +74,100 @@ class UserController {
             next(error);
         }
     }
-    updateUserProfile = async (
+    getFriendListOfUser = async (
         req: Request,
         res: Response,
         next: NextFunction
     ) => {
         try {
-            const currentUserId = req.user!.id;
-            const body: UpdateUserProfileDTO = req.body;
-            await userService.updateUserProfile(currentUserId, body);
+            const query = req.query as QueryGetFriendOfUser;
+            const params = req.params as UserIdParams;
+            const dataFinal = await friendService.getListFriendsOfUser( req.user!.id, params.userId, query);
             return res.json(
-                ApiResponse.success('Update success', null)
+                ApiResponse.success('Get friends successfully', dataFinal)
+            );
+        }  catch (error) {
+            next(error);
+        }
+    }
+    countTotalFollowingOfUser = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId: string = req.user!.id;
+            const params = req.params as UserIdParams;
+            const total = await friendService.countTotalFollowing(curUserId, params.userId);
+            return res.json(
+                ApiResponse.success('Get friends successfully', {
+                    total: total,
+                })
             );
         } catch (error) {
             next(error);
         }
     }
+    countTotalFollowerOfUser = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId: string = req.user!.id;
+            const params = req.params as UserIdParams;
+            const total = await friendService.countTotalFollower(curUserId, params.userId);
+            return res.json(
+                ApiResponse.success('Get friends successfully', {
+                    total: total,
+                })
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    getFollowingUserList = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as UserIdParams;
+            const query = req.query as QueryGetFollowingList;
+            const {userList, pagination} = await friendService.getFollowingUserList(curUserId, params.userId, query);
+            const dataFinal = {
+                followingList: userList,
+                pagination,
+            }
+            return res.json(
+                ApiResponse.success('Get following users successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    getFollowerList = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as UserIdParams;
+            const query = req.query as QueryGetFollowerList;
+            const {userList, pagination} = await friendService.getFollowerList(curUserId, params.userId, query);
+            const dataFinal = {
+                followingList: userList,
+                pagination,
+            }
+            return res.json(
+                ApiResponse.success('Get following users successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    
 }
 export default new UserController();

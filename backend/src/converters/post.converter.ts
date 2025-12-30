@@ -13,9 +13,9 @@ export const toPostCreate = (post: IPostDocument): PostCreateResponse => {
 }
 
 export const toStandardPost = (post: IPostDocument): StandardPostResponse => {
-  post.totalReact.map((item) => {
-    return {name: item.count, count: item.count}
-  }).sort((a, b) => (a.count > b.count) ? -1 : 1);
+  const totalReact = post.totalReact.map((item) => {
+    return {name: item.name, total: item.total}
+  }).sort((a, b) => (a.total > b.total) ? -1 : 1);
   return {
     content: post.content,
     media: post.media || [],
@@ -23,7 +23,7 @@ export const toStandardPost = (post: IPostDocument): StandardPostResponse => {
     totalComment: post.totalComment,
     totalShare: post.totalShare,
     authorId: post.authorId.toString(),
-    totalReact: post.totalReact,
+    totalReact: totalReact,
     createdAt: formatterUtil.formatDate(post.createdAt),
     id: post._id.toString(),
   }

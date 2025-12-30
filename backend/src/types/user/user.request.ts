@@ -48,11 +48,17 @@ export const userIdParams = z
 
 export const fullUser = registerUser.extend({
     _id: z.instanceof(Types.ObjectId),
-    avatar: z.string().optional(),
+    avatar: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),
-    deletedAt: z.date().nullable().optional(),
+    deletedAt: z.date().nullable(),
 });
+export const updateUserProfile = z.object({
+    username: z
+        .string()
+        .nonempty({ error: 'Username is not allow to be empty!' }),
+}).strict();
+export type UpdateUserProfileDTO = z.infer<typeof updateUserProfile>;
 
 export const updateUserProfile = z.object({
     username: z

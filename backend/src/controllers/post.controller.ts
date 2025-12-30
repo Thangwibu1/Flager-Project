@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../utils/api-response.util';
 import postService from '../services/post.service';
-import { queryPostListOfUser } from '../types/post/post.query';
+import { QueryCountReactOfPost, queryPostListOfUser } from '../types/post/post.query';
+import { PostCreateDTO, PostUpdateDTO, SendReactToPostDTO } from '../types/post/post.request';
+import { paramPostIdAndReactSchema, PostIdParams } from '../types/post/post.param';
 class PostController {
     createPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId = req.user!.id;
-            req.body.authorId = userId;
-            const newPost = await postService.createPostByUser(req.body);
+            const body = req.body as PostCreateDTO;
+            const newPost = await postService.createPostByUser(userId, body);
             const dataFinal = {
                 post: newPost,
             };
@@ -46,11 +48,78 @@ class PostController {
         next: NextFunction
     ) => {
         try {
-            await postService.sendReactToPost(req.user!.id, req.body);
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            const body = req.body as SendReactToPostDTO;
+            await postService.sendReactToPost(currentUserId, params.postId, body);
             res.json(ApiResponse.success("Send react to post successfully", null));
         } catch (error) {
             next(error);
         }
+    }
+    updatePost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            const body = req.body as PostUpdateDTO;
+            await postService.updatePostByUser(currentUserId, params.postId, body);
+            res.json(ApiResponse.success("Update post successfully", null));
+        } catch (error) {
+            next(error);
+        }
+    }
+    deletePost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            await postService.deletePostByUser(currentUserId, params.postId);
+            res.json(ApiResponse.success("Delete post successfully", null));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    countReactOfPost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            const query = req.query as QueryCountReactOfPost;
+            const total = await postService.countTotalReactOfPost(currentUserId, params.postId, query);
+            const dataFinal = {
+                total,
+            }
+            res.json(ApiResponse.success("Get total react of post successfully", dataFinal));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    deleteReactOfPost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const currentUserId = req.user!.id;
+            const params = req.params as paramPostIdAndReactSchema;
+            await postService.deleteReactOfPost(currentUserId, params.postId, params.reactName);
+            res.json(ApiResponse.success("Delete react of successfully", null));
+        } catch (error) {
+            next(error);
+            
+        }   
     }
 }
 export default new PostController();
