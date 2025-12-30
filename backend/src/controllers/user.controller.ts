@@ -5,7 +5,7 @@ import { QueryPostListOfUser, queryPostListOfUser } from '../types/post/post.que
 import postService from '../services/post.service';
 import { UserIdParams } from '../types/user/user.param';
 import friendService from '../services/friend.service';
-import { QueryGetFriendOfUser } from '../types/friend/friend.query';
+import { QueryGetFollowerList, QueryGetFollowingList, QueryGetFriendOfUser } from '../types/friend/friend.query';
 
 class UserController {
     // [GET] /users/:userId
@@ -121,6 +121,48 @@ class UserController {
                 ApiResponse.success('Get friends successfully', {
                     total: total,
                 })
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    getFollowingUserList = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as UserIdParams;
+            const query = req.query as QueryGetFollowingList;
+            const {userList, pagination} = await friendService.getFollowingUserList(curUserId, params.userId, query);
+            const dataFinal = {
+                followingList: userList,
+                pagination,
+            }
+            return res.json(
+                ApiResponse.success('Get following users successfully', dataFinal)
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+    getFollowerList = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as UserIdParams;
+            const query = req.query as QueryGetFollowerList;
+            const {userList, pagination} = await friendService.getFollowerList(curUserId, params.userId, query);
+            const dataFinal = {
+                followingList: userList,
+                pagination,
+            }
+            return res.json(
+                ApiResponse.success('Get following users successfully', dataFinal)
             );
         } catch (error) {
             next(error);

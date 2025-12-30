@@ -1,7 +1,7 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
 import userService from "./user.service";
 import userNodeRepository from '../repositories/user/user.repository.graph';
-import { QueryGetFriendOfUser } from "../types/friend/friend.query";
+import { QueryGetFollowerList, QueryGetFollowingList, QueryGetFriendOfUser } from "../types/friend/friend.query";
 import { StandardFriendResponse } from "../types/friend/friend.response";
 import { LazyPagination } from "../types/pagination/pagination.response";
 import * as friendConverter from '../converters/friend.converter';
@@ -204,7 +204,7 @@ class FriendService {
       ...filter,
       limit,
     });
-    const friendListFinal = rawResult.map(item => friendConverter.toGetFriendList(item));
+    const friendListFinal = rawResult.map(item => friendConverter.toStandardFriend(item));
     return {
       friendList: friendListFinal,
       pagination: {
@@ -233,6 +233,80 @@ class FriendService {
     // sau nếu muốn người bị block ko xem được thì code thêm
     // if(viewerId != userId){}
     return await userNodeRepository.countReceivedRequestFriend(userId);
+  }
+
+  getFollowingUserList = async (curUserId: string, userId: string, query: QueryGetFollowingList): Promise<{
+    userList: StandardFriendResponse[],
+    pagination: LazyPagination,
+  }> => {
+    const filter: any = {};
+    const limit = 12;
+    // check userId exist
+    if(!(await userService.getUserById(userId))){
+      throw new NotFoundRequestError("User not found");
+    }
+    filter.userId = userId;
+    // block logic (nếu có)
+    // if(curUserId != userId) { //check block or not }
+
+    // handle query
+    if(query.lastItem){
+      filter.lastItem = query.lastItem;
+    }
+    // end handle query
+
+    // get list from db
+    const rawList = await userNodeRepository.getRequestFriendList({
+      ...filter,
+      limit,
+    });
+    const userResponse = rawList.map(item => {
+      return friendConverter.toStandardFriend(item);
+    });
+    return {
+      userList: userResponse,
+      pagination: {
+        hasNext: limit == rawList.length,
+        lastItem: rawList.length != 0 ? rawList[rawList.length - 1].rel.createdAt.getTime() : null,
+      }
+    }
+  }
+
+  getFollowerList = async (curUserId: string, userId: string, query: QueryGetFollowerList): Promise<{
+    userList: StandardFriendResponse[],
+    pagination: LazyPagination,
+  }> => {
+    const filter: any = {};
+    const limit = 12;
+    // check userId exist
+    if(!(await userService.getUserById(userId))){
+      throw new NotFoundRequestError("User not found");
+    }
+    filter.userId = userId;
+    // block logic (nếu có)
+    // if(curUserId != userId) { //check block or not }
+
+    // handle query
+    if(query.lastItem){
+      filter.lastItem = query.lastItem;
+    }
+    // end handle query
+
+    // get list from db
+    const rawList = await userNodeRepository.getReceivedRequestedFriendList({
+      ...filter,
+      limit,
+    });
+    const userResponse = rawList.map(item => {
+      return friendConverter.toStandardFriend(item);
+    });
+    return {
+      userList: userResponse,
+      pagination: {
+        hasNext: limit == rawList.length,
+        lastItem: rawList.length != 0 ? rawList[rawList.length - 1].rel.createdAt.getTime() : null,
+      }
+    }
   }
 }
 export default new FriendService();

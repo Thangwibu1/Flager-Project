@@ -3,7 +3,7 @@ import { UserNode } from "../models/user/user.model.neo4j"
 import { StandardFriendResponse } from "../types/friend/friend.response"
 import { formatDate } from "../utils/formatter.util"
 
-export const toGetFriendList = (data: {
+export const toStandardFriend = (data: {
   node: UserNode,
   rel: IsFriendRelation,
 }): StandardFriendResponse => {

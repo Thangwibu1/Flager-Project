@@ -170,6 +170,79 @@ class UserNodeRepository extends BaseGraphRepo {
             return cntDelete == 0 ? false : true;
         });
     };
+    getRequestFriendList = async ({
+        userId,
+        lastItem,
+        limit = 12,
+    }: {
+        userId: string,
+        lastItem?: number,
+        limit?: number,
+    }) => {
+        const filterParams : {[key: string]: any} = {};
+        filterParams.userId = userId;
+        let where = ` WHERE 1=1 `;
+        const orderBy = ` ORDER BY r.createdAt DESC `;
+        if(lastItem){
+            filterParams.createdAt = lastItem;
+            where += ` AND r.createdAt < $createdAt `;
+        }
+
+        const cypher = `
+            MATCH (u1:${neo4jInfo.node.user} { id: $userId }) -[r: ${neo4jInfo.rel.user.requestFriend}]-> (u2:${neo4jInfo.node.user} )
+            ${where}
+            ${orderBy}
+            LIMIT ${limit}
+            RETURN u2, r
+        `;
+        return this.read(async (tx) => {
+            const result = await tx.run(cypher, filterParams);
+            const records = result.records;
+            return records.map(item => {
+                return {
+                    node: UserNode.formatRaw(item.get('u2')),
+                    rel: RequestFriendRelation.formatRaw(item.get('r'))
+                }
+            });
+        })
+    }
+
+    getReceivedRequestedFriendList = async ({
+        userId,
+        lastItem,
+        limit = 12,
+    }: {
+        userId: string,
+        lastItem?: number,
+        limit?: number,
+    }) => {
+        const filterParams : {[key: string]: any} = {};
+        filterParams.userId = userId;
+        let where = ` WHERE 1=1 `;
+        const orderBy = ` ORDER BY r.createdAt DESC `;
+        if(lastItem){
+            filterParams.createdAt = lastItem;
+            where += ` AND r.createdAt < $createdAt `;
+        }
+
+        const cypher = `
+            MATCH (u1:${neo4jInfo.node.user} { id: $userId }) <-[r: ${neo4jInfo.rel.user.requestFriend}]- (u2:${neo4jInfo.node.user} )
+            ${where}
+            ${orderBy}
+            LIMIT ${limit}
+            RETURN u2, r
+        `;
+        return this.read(async (tx) => {
+            const result = await tx.run(cypher, filterParams);
+            const records = result.records;
+            return records.map(item => {
+                return {
+                    node: UserNode.formatRaw(item.get('u2')),
+                    rel: RequestFriendRelation.formatRaw(item.get('r'))
+                }
+            });
+        })
+    }
     // =============================== END USER _REQUEST_FRIEND_ USER =======================================
 
     // =============================== USER _IS_FRIEND_ USER ================================================
