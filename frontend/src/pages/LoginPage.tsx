@@ -1,5 +1,6 @@
 import { Button } from '@/components/common/Button/Button';
-import { Logo } from '@/components/common/Logo/Logo';
+import Logo from '@/components/common/Logo/Logo';
+// import { Logo } from '@/components/common/Logo/Logo';
 import { LoginForm } from '@/components/layout/Form/LoginForm';
 import { useState } from 'react';
 
@@ -24,7 +25,7 @@ export const LoginPage = ({
                     {/* Logo */}
                     <div className="flex items-center text-white">
                         <div className="text-[#ec1313]">
-                            <Logo size="lg" />
+                            <Logo />
                         </div>
                         <h2 className="text-2xl font-bold tracking-tight">
                             Flager
@@ -52,7 +53,7 @@ export const LoginPage = ({
                     {/* Logo */}
                     <div className="lg:hidden flex justify-center">
                         <div className="text-[#ec1313]">
-                            <Logo size="md" />
+                            <Logo />
                         </div>
                     </div>
 

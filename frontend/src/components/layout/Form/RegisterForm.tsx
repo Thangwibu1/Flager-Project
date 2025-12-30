@@ -2,24 +2,44 @@ import React, { useState } from 'react';
 import { FormGroup } from './FormGroup';
 import { Input } from '@/components/common/Input/Input';
 import { Button } from '@/components/common/Button/Button';
-import { Lock, Mail } from 'lucide-react';
+import { Lock, Mail, Phone } from 'lucide-react';
 import { FaApple } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { IoCardOutline } from 'react-icons/io5';
-import { MdCheckBox, MdOutlineLockReset } from 'react-icons/md';
+import { MdOutlineLockReset } from 'react-icons/md';
+import { RegisterFormData, RegisterRequest } from '@/features/auth/types';
+import { useRegister } from '@/features/auth/hooks/useRegister';
 export const RegisterForm: React.FC = () => {
-    const [formData, setFormData] = useState({
-        fullname: '',
+    const [formData, setFormData] = useState<RegisterFormData>({
         email: '',
         password: '',
         confirmPassword: '',
+        username: '',
+        phone: '',
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Login:', formData);
-    };
+    const confirmPasswordError =
+        formData.confirmPassword &&
+        formData.password !== formData.confirmPassword
+            ? 'Passwords do not match'
+            : undefined;
 
+    const registerMutation = useRegister();
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (formData.password !== formData.confirmPassword) {
+            return; // chặn submit
+        }
+
+        registerMutation.mutate({
+            email: formData.email,
+            password: formData.password,
+            username: formData.username,
+            phone: formData.phone,
+        });
+        console.log(formData.username);
+    };
     return (
         <div className="w-full bg-background-dark">
             <div className="p-2">
@@ -34,17 +54,17 @@ export const RegisterForm: React.FC = () => {
                 </div>
 
                 <FormGroup onSubmit={handleSubmit}>
-                    {/* FullName Input */}
+                    {/* username Input */}
                     <Input
-                        id="fullname"
+                        id="username"
                         type="text"
                         label="Full Name"
                         placeholder="Dao Thi Ut Trinh"
-                        value={formData.fullname}
+                        value={formData.username}
                         onChange={e =>
                             setFormData({
                                 ...formData,
-                                fullname: e.target.value,
+                                username: e.target.value,
                             })
                         }
                         leftIcon={<IoCardOutline className="w-5 h-5" />}
@@ -61,7 +81,18 @@ export const RegisterForm: React.FC = () => {
                         }
                         leftIcon={<Mail className="w-5 h-5" />}
                     />
-
+                    {/* Email Input */}
+                    <Input
+                        id="phone"
+                        type="number"
+                        label="Phone"
+                        placeholder="0901928382"
+                        value={formData.phone}
+                        onChange={e =>
+                            setFormData({ ...formData, phone: e.target.value })
+                        }
+                        leftIcon={<Phone className="w-5 h-5" />}
+                    />
                     {/* Password Input */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-between mb-2">
@@ -92,7 +123,7 @@ export const RegisterForm: React.FC = () => {
                             </label>
                         </div>
                         <Input
-                            id="password"
+                            id="confirmPassword"
                             type="password"
                             placeholder="••••••••"
                             value={formData.confirmPassword}
@@ -106,14 +137,12 @@ export const RegisterForm: React.FC = () => {
                                 <MdOutlineLockReset className="w-5 h-5" />
                             }
                             showPasswordToggle
+                            error={confirmPasswordError}
                         />
                     </div>
-                    
+
                     {/* Submit Button */}
-                    <button
-                        onClick={handleSubmit}
-                        className="w-full h-12 flex items-center justify-center rounded-lg bg-[#ec1313] text-white text-sm font-bold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-[#ec1313] focus:ring-offset-2 focus:ring-offset-[#181111] transition-colors"
-                    >
+                    <button className="w-full h-12 flex items-center justify-center rounded-lg bg-[#ec1313] text-white text-sm font-bold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-[#ec1313] focus:ring-offset-2 focus:ring-offset-[#181111] transition-colors">
                         Sign Up
                     </button>
                 </FormGroup>
