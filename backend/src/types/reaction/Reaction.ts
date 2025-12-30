@@ -1,24 +1,25 @@
 import { z } from 'zod';
 import { Types } from 'mongoose';
 
-// Facebook-style reaction emojis
-const emojis = ['👍', '❤️', '😆', '😮', '😢', '😡'] as const;
+// Reaction types
+const reactionTypes = ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY'] as const;
 
 export const IReaction = z.object({
     _id: z.instanceof(Types.ObjectId),
     userId: z.instanceof(Types.ObjectId),
-    emoji: z.enum(emojis),
+    type: z.enum(reactionTypes),
     time: z.date(),
 });
 
 export type Reaction = z.infer<typeof IReaction>;
+export type ReactionType = (typeof reactionTypes)[number];
 
-// Export emoji constants for reference
-export const ReactionEmoji = {
-    LIKE: '👍',
-    LOVE: '❤️',
-    HAHA: '😆',
-    WOW: '😮',
-    SAD: '😢',
-    ANGRY: '😡',
+// Export reaction types for reference
+export const ReactionTypes = {
+    LIKE: 'LIKE',
+    LOVE: 'LOVE',
+    HAHA: 'HAHA',
+    WOW: 'WOW',
+    SAD: 'SAD',
+    ANGRY: 'ANGRY',
 } as const;

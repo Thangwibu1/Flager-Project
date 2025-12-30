@@ -10,9 +10,9 @@ const ReactionSchema = new Schema<ReactionDocument>(
             required: true,
             ref: 'User',
         },
-        emoji: {
+        type: {
             type: String,
-            enum: ['👍', '❤️', '😆', '😮', '😢', '😡'],
+            enum: ['LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY'],
             required: true,
         },
         time: {
