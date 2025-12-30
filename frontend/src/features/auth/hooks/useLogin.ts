@@ -39,8 +39,8 @@ export const useLogin = () => {
             queryClient.invalidateQueries({ queryKey: ['user'] });
             queryClient.invalidateQueries({ queryKey: ['profile'] });
 
-            // 3. Navigate to dashboard after successful login
-            navigate('/');
+            // 3. Navigate to messages page after successful login
+            navigate('/messages');
 
             console.log('✅ Login successful:', data.message);
         },

@@ -1,0 +1,804 @@
+# React Query Hooks - Complete Guideline
+
+## 📚 Table of Contents
+1. [useQuery - Basic Data Fetching](#usequery)
+2. [useInfiniteQuery - Pagination](#useinfinitequery)
+3. [useMutation - Data Mutations](#usemutation)
+4. [Built-in Functions Reference](#built-in-functions)
+5. [Flow Diagrams](#flow-diagrams)
+6. [Best Practices](#best-practices)
+
+---
+
+## 1️⃣ useQuery - Basic Data Fetching
+
+### 📖 Overview
+`useQuery` dùng để **fetch và cache data** từ API.
+
+### 🎯 Use Cases
+- Fetch danh sách items (users, posts, chats)
+- Fetch single item detail
+- Fetch data không cần pagination
+
+---
+
+### 📝 Complete Example
+
+```typescript
+import { useQuery } from '@tanstack/react-query';
+
+const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['groupChats', userId],
+    queryFn: async () => {
+        const response = await fetchGroupChats(userId);
+        return response.data;
+    },
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: true,
+    retry: 1,
+});
+```
+
+---
+
+### 🔧 Options Explained
+
+#### `queryKey: ['groupChats', userId]`
+**Mục đích:** Unique identifier cho cache
+
+**Format:**
+```typescript
+queryKey: ['resource']                    // Simple
+queryKey: ['resource', id]                // With param
+queryKey: ['resource', id, { filter }]    // With filters
+```
+
+**Cách hoạt động:**
+```typescript
+// Cache structure
+{
+    ['groupChats', 'user1']: { data: [...], timestamp: ... },
+    ['groupChats', 'user2']: { data: [...], timestamp: ... },
+    ['messages', 'chat1']: { data: [...], timestamp: ... },
+}
+```
+
+**Khi nào cache được reuse:**
+```typescript
+// Component A
+useQuery({ queryKey: ['groupChats', 'user1'] })  // Fetch từ API
+
+// Component B (mount sau)
+useQuery({ queryKey: ['groupChats', 'user1'] })  // Lấy từ CACHE (không fetch lại)
+
+// Component C
+useQuery({ queryKey: ['groupChats', 'user2'] })  // Fetch từ API (key khác)
+```
+
+---
+
+#### `queryFn: async () => { ... }`
+**Mục đích:** Function để fetch data
+
+**Rules:**
+- ✅ MUST return Promise
+- ✅ MUST return data (không return undefined)
+- ✅ Throw error nếu fail
+
+**Example:**
+```typescript
+queryFn: async () => {
+    // 1. Validate
+    if (!userId) throw new Error('userId required');
+    
+    // 2. Fetch
+    const response = await api.get(`/users/${userId}`);
+    
+    // 3. Return data
+    return response.data;
+}
+```
+
+**❌ Common Mistakes:**
+```typescript
+// BAD: Không return
+queryFn: async () => {
+    await api.get('/users');
+    // Missing return!
+}
+
+// BAD: Return undefined
+queryFn: async () => {
+    const data = await api.get('/users');
+    if (!data) return undefined;  // ❌ Không được return undefined
+}
+
+// GOOD: Always return data
+queryFn: async () => {
+    const data = await api.get('/users');
+    return data || [];  // ✅ Return empty array nếu không có data
+}
+```
+
+---
+
+#### `enabled: !!userId`
+**Mục đích:** Conditional fetching
+
+**Cách hoạt động:**
+```typescript
+enabled: true   // ✅ Fetch ngay
+enabled: false  // ❌ Không fetch
+
+// Examples:
+enabled: !!userId              // Fetch khi có userId
+enabled: isLoggedIn            // Fetch khi user đã login
+enabled: !!userId && isReady   // Fetch khi cả 2 conditions đều true
+```
+
+**Use Cases:**
+```typescript
+// 1. Dependent queries
+const { data: user } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: fetchUser,
+});
+
+const { data: posts } = useQuery({
+    queryKey: ['posts', user?.id],
+    queryFn: fetchPosts,
+    enabled: !!user,  // Chỉ fetch posts khi đã có user
+});
+
+// 2. Conditional based on props
+const { data } = useQuery({
+    queryKey: ['data'],
+    queryFn: fetchData,
+    enabled: props.shouldFetch,  // Fetch based on prop
+});
+```
+
+---
+
+#### `staleTime: 1000 * 60 * 5` (5 minutes)
+**Mục đích:** Thời gian data được coi là "fresh"
+
+**Cách hoạt động:**
+```
+t=0s:   Fetch data → Cache → Data is FRESH
+t=1s:   Component re-mount → Return cached data (không fetch)
+t=4m:   Component re-mount → Return cached data (không fetch)
+t=5m:   Data becomes STALE
+t=5m1s: Component re-mount → Return cached data + Refetch in background
+```
+
+**Visual Timeline:**
+```
+0s ──────── 5m ──────────────────────────────────────────
+   FRESH         STALE
+   ↓             ↓
+   No refetch    Refetch in background
+```
+
+**Recommendations:**
+```typescript
+staleTime: 0                    // Always stale (always refetch)
+staleTime: 1000 * 60            // 1 minute (frequently changing data)
+staleTime: 1000 * 60 * 5        // 5 minutes (normal data)
+staleTime: 1000 * 60 * 60       // 1 hour (rarely changing data)
+staleTime: Infinity             // Never stale (static data)
+```
+
+---
+
+#### `gcTime: 1000 * 60 * 30` (30 minutes)
+**Mục đích:** Thời gian giữ cache trong memory
+
+**Renamed:** `cacheTime` → `gcTime` (Garbage Collection Time) in React Query v5
+
+**Cách hoạt động:**
+```
+Component mounts → Fetch data → Cache data
+    ↓
+Component unmounts → Start gcTime countdown
+    ↓
+After 30 minutes → Remove cache from memory
+```
+
+**Example:**
+```typescript
+// t=0: Component A mounts
+useQuery({ queryKey: ['data'], gcTime: 60000 })  // Fetch & cache
+
+// t=10s: Component A unmounts
+// → Start 60s countdown
+
+// t=30s: Component B mounts
+useQuery({ queryKey: ['data'] })  // Use cached data (still in memory)
+
+// t=70s: Cache removed (60s after unmount)
+// → Next mount will fetch again
+```
+
+**Recommendations:**
+```typescript
+gcTime: 0                       // Remove immediately after unmount
+gcTime: 1000 * 60 * 5           // 5 minutes (default)
+gcTime: 1000 * 60 * 30          // 30 minutes (longer cache)
+gcTime: Infinity                // Never remove (permanent cache)
+```
+
+---
+
+#### `refetchOnWindowFocus: true`
+**Mục đích:** Auto refetch khi user focus lại window
+
+**Cách hoạt động:**
+```
+User switches to another tab
+    ↓
+User switches back to your app
+    ↓
+React Query refetches data
+    ↓
+UI updates with latest data
+```
+
+**Use Cases:**
+```typescript
+// ✅ GOOD: Real-time data (messages, notifications)
+refetchOnWindowFocus: true
+
+// ❌ BAD: Static data (user profile, settings)
+refetchOnWindowFocus: false
+```
+
+---
+
+#### `retry: 1`
+**Mục đích:** Số lần retry khi request fail
+
+**Options:**
+```typescript
+retry: false                    // Không retry
+retry: 1                        // Retry 1 lần
+retry: 3                        // Retry 3 lần (default)
+retry: (failureCount, error) => failureCount < 3  // Custom logic
+```
+
+**Example:**
+```typescript
+retry: (failureCount, error) => {
+    // Không retry nếu 401 (Unauthorized)
+    if (error.response?.status === 401) return false;
+    
+    // Retry tối đa 3 lần
+    return failureCount < 3;
+}
+```
+
+---
+
+#### `retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)`
+**Mục đích:** Delay giữa các lần retry
+
+**Exponential Backoff:**
+```typescript
+Attempt 1: 1000ms  (1s)
+Attempt 2: 2000ms  (2s)
+Attempt 3: 4000ms  (4s)
+Attempt 4: 8000ms  (8s)
+Attempt 5: 16000ms (16s)
+Attempt 6: 30000ms (30s max)
+```
+
+**Code Breakdown:**
+```typescript
+retryDelay: (attemptIndex) => {
+    // 2 ** attemptIndex: Exponential growth
+    // 2^0 = 1, 2^1 = 2, 2^2 = 4, 2^3 = 8...
+    const delay = 1000 * 2 ** attemptIndex;
+    
+    // Math.min(..., 30000): Cap tối đa 30s
+    return Math.min(delay, 30000);
+}
+```
+
+---
+
+### 📊 Return Values
+
+```typescript
+const {
+    data,              // Data từ queryFn
+    isLoading,         // true khi đang fetch lần đầu
+    isFetching,        // true khi đang fetch (bao gồm refetch)
+    isRefetching,      // true khi đang refetch (background)
+    error,             // Error object nếu fail
+    refetch,           // Function để manually refetch
+    isSuccess,         // true khi fetch thành công
+    isError,           // true khi có error
+    status,            // 'pending' | 'error' | 'success'
+} = useQuery({ ... });
+```
+
+**Differences:**
+```typescript
+// isLoading vs isFetching
+isLoading:   true  → false (chỉ lần đầu)
+isFetching:  true  → false → true → false (mỗi lần fetch)
+
+// Example:
+Initial fetch:     isLoading=true,  isFetching=true
+Refetch:           isLoading=false, isFetching=true
+Background refetch: isLoading=false, isRefetching=true
+```
+
+---
+
+## 2️⃣ useInfiniteQuery - Pagination
+
+### 📖 Overview
+`useInfiniteQuery` dùng để **fetch data với pagination** (infinite scroll, load more).
+
+### 🎯 Use Cases
+- Infinite scroll (Facebook feed, Twitter timeline)
+- Load more button
+- Cursor-based pagination
+
+---
+
+### 📝 Complete Example
+
+```typescript
+const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+} = useInfiniteQuery({
+    queryKey: ['messages', groupChatId],
+    queryFn: async ({ pageParam }) => {
+        return await fetchMessages(groupChatId, { before: pageParam });
+    },
+    getNextPageParam: (lastPage) => {
+        return lastPage.hasMore ? lastPage.messages[0]._id : undefined;
+    },
+    initialPageParam: undefined,
+    enabled: !!groupChatId,
+});
+
+const messages = data?.pages.flatMap(page => page.messages) ?? [];
+```
+
+---
+
+### 🔧 Options Explained
+
+#### `queryFn: async ({ pageParam }) => { ... }`
+**Mục đích:** Fetch một page of data
+
+**Parameters:**
+```typescript
+queryFn: async ({ pageParam, direction, meta }) => {
+    // pageParam: Value từ getNextPageParam hoặc initialPageParam
+    // direction: 'forward' | 'backward'
+    // meta: Custom metadata
+    
+    return await fetchData({ before: pageParam });
+}
+```
+
+**Example:**
+```typescript
+queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
+    // Page 1: pageParam = undefined (from initialPageParam)
+    // Page 2: pageParam = 'msg20._id' (from getNextPageParam)
+    // Page 3: pageParam = 'msg40._id'
+    
+    const response = await api.get('/messages', {
+        params: {
+            limit: 20,
+            before: pageParam,  // undefined cho page đầu
+        }
+    });
+    
+    return response.data;
+}
+```
+
+---
+
+#### `getNextPageParam: (lastPage) => { ... }`
+**Mục đích:** Xác định param cho page tiếp theo
+
+**Return:**
+- `string | number`: Có page tiếp theo
+- `undefined | null`: Không còn pages
+
+**Example:**
+```typescript
+getNextPageParam: (lastPage, allPages) => {
+    // lastPage: Response từ lần fetch cuối cùng
+    // allPages: Array of all pages đã fetch
+    
+    if (lastPage.hasMore && lastPage.messages.length > 0) {
+        // Return ID của message cuối cùng
+        return lastPage.messages[lastPage.messages.length - 1]._id;
+    }
+    
+    // Không còn pages
+    return undefined;
+}
+```
+
+**Flow:**
+```
+Page 1: pageParam = undefined
+    ↓ Fetch 20 messages (msg1-msg20)
+    ↓ getNextPageParam returns msg20._id
+    
+Page 2: pageParam = msg20._id
+    ↓ Fetch 20 messages before msg20 (msg21-msg40)
+    ↓ getNextPageParam returns msg40._id
+    
+Page 3: pageParam = msg40._id
+    ↓ Fetch 15 messages before msg40 (msg41-msg55)
+    ↓ getNextPageParam returns undefined (no more)
+    ↓ hasNextPage = false
+```
+
+---
+
+#### `initialPageParam: undefined`
+**Mục đích:** Param cho page đầu tiên
+
+**REQUIRED in React Query v5!**
+
+**Example:**
+```typescript
+// Cursor-based pagination
+initialPageParam: undefined as string | undefined
+
+// Offset-based pagination
+initialPageParam: 0
+
+// Page-based pagination
+initialPageParam: 1
+```
+
+---
+
+### 📊 Return Values
+
+```typescript
+const {
+    data,                  // { pages: [...], pageParams: [...] }
+    fetchNextPage,         // Function để fetch page tiếp theo
+    fetchPreviousPage,     // Function để fetch page trước
+    hasNextPage,           // true nếu còn pages
+    hasPreviousPage,       // true nếu có pages trước
+    isFetchingNextPage,    // true khi đang fetch next page
+    isFetchingPreviousPage, // true khi đang fetch previous page
+} = useInfiniteQuery({ ... });
+```
+
+**Data Structure:**
+```typescript
+data = {
+    pages: [
+        { messages: [msg1, msg2], hasMore: true },   // Page 1
+        { messages: [msg3, msg4], hasMore: true },   // Page 2
+        { messages: [msg5], hasMore: false },        // Page 3
+    ],
+    pageParams: [undefined, 'msg2._id', 'msg4._id']
+}
+```
+
+**Flatten pages:**
+```typescript
+const messages = data?.pages.flatMap(page => page.messages) ?? [];
+// Result: [msg1, msg2, msg3, msg4, msg5]
+```
+
+---
+
+## 3️⃣ useMutation - Data Mutations
+
+### 📖 Overview
+`useMutation` dùng để **create, update, delete data**.
+
+### 🎯 Use Cases
+- Send message
+- Create post
+- Update profile
+- Delete item
+
+---
+
+### 📝 Complete Example
+
+```typescript
+const mutation = useMutation({
+    mutationFn: (content: string) => {
+        return sendMessage(groupChatId, content);
+    },
+    onMutate: async (content) => {
+        // Optimistic update
+        await queryClient.cancelQueries({ queryKey: ['messages'] });
+        const previousData = queryClient.getQueryData(['messages']);
+        
+        queryClient.setQueryData(['messages'], (old) => ({
+            ...old,
+            messages: [...old.messages, tempMessage],
+        }));
+        
+        return { previousData };
+    },
+    onError: (err, content, context) => {
+        // Rollback
+        queryClient.setQueryData(['messages'], context.previousData);
+    },
+    onSuccess: (data) => {
+        // Invalidate queries
+        queryClient.invalidateQueries({ queryKey: ['messages'] });
+    },
+});
+
+// Usage
+mutation.mutate('Hello!');
+```
+
+---
+
+### 🔧 Options Explained
+
+#### `mutationFn: (variables) => { ... }`
+**Mục đích:** Function để execute mutation
+
+**Example:**
+```typescript
+mutationFn: async (content: string) => {
+    const response = await api.post('/messages', { content });
+    return response.data;
+}
+
+// Call
+mutation.mutate('Hello!');  // content = 'Hello!'
+```
+
+---
+
+#### `onMutate: async (variables) => { ... }`
+**Mục đích:** Chạy TRƯỚC khi mutation execute (optimistic update)
+
+**Return:** Context object để rollback
+
+**Example:**
+```typescript
+onMutate: async (content) => {
+    // 1. Cancel ongoing queries
+    await queryClient.cancelQueries({ queryKey: ['messages'] });
+    
+    // 2. Snapshot current data
+    const previousData = queryClient.getQueryData(['messages']);
+    
+    // 3. Optimistically update
+    queryClient.setQueryData(['messages'], (old) => [...old, tempMessage]);
+    
+    // 4. Return context for rollback
+    return { previousData, tempMessage };
+}
+```
+
+---
+
+#### `onError: (error, variables, context) => { ... }`
+**Mục đích:** Chạy nếu mutation FAIL
+
+**Example:**
+```typescript
+onError: (err, content, context) => {
+    // Rollback to previous state
+    queryClient.setQueryData(['messages'], context.previousData);
+    
+    // Show error toast
+    toast.error('Failed to send message');
+}
+```
+
+---
+
+#### `onSuccess: (data, variables, context) => { ... }`
+**Mục đích:** Chạy nếu mutation SUCCESS
+
+**Example:**
+```typescript
+onSuccess: (data, content, context) => {
+    // Replace temp message with real message
+    queryClient.setQueryData(['messages'], (old) => 
+        old.map(msg => msg._id === context.tempMessage._id ? data : msg)
+    );
+    
+    // Or invalidate to refetch
+    queryClient.invalidateQueries({ queryKey: ['messages'] });
+}
+```
+
+---
+
+### 📊 Return Values
+
+```typescript
+const {
+    mutate,        // Function để trigger mutation
+    mutateAsync,   // Async version (returns Promise)
+    isPending,     // true khi đang execute
+    isSuccess,     // true khi success
+    isError,       // true khi error
+    data,          // Response data
+    error,         // Error object
+    reset,         // Reset mutation state
+} = useMutation({ ... });
+```
+
+**Usage:**
+```typescript
+// Sync
+mutation.mutate('Hello!');
+
+// Async
+try {
+    const result = await mutation.mutateAsync('Hello!');
+    console.log(result);
+} catch (error) {
+    console.error(error);
+}
+```
+
+---
+
+## 4️⃣ Built-in Functions Reference
+
+### queryClient.setQueryData()
+**Mục đích:** Manually update cache
+
+```typescript
+queryClient.setQueryData(['messages'], newData);
+
+// With updater function
+queryClient.setQueryData(['messages'], (old) => [...old, newMessage]);
+```
+
+---
+
+### queryClient.getQueryData()
+**Mục đích:** Get data từ cache
+
+```typescript
+const data = queryClient.getQueryData(['messages']);
+```
+
+---
+
+### queryClient.invalidateQueries()
+**Mục đích:** Mark queries as stale → Trigger refetch
+
+```typescript
+// Invalidate specific query
+queryClient.invalidateQueries({ queryKey: ['messages'] });
+
+// Invalidate all queries starting with 'messages'
+queryClient.invalidateQueries({ queryKey: ['messages'], exact: false });
+```
+
+---
+
+### queryClient.cancelQueries()
+**Mục đích:** Cancel ongoing queries
+
+```typescript
+await queryClient.cancelQueries({ queryKey: ['messages'] });
+```
+
+---
+
+## 5️⃣ Flow Diagrams
+
+### useQuery Flow
+```
+Component mounts
+    ↓
+Check cache
+    ├─ Has cache & fresh → Return cached data
+    ├─ Has cache & stale → Return cached data + Refetch in background
+    └─ No cache → Fetch from API
+    ↓
+Store in cache
+    ↓
+Return data to component
+```
+
+### useInfiniteQuery Flow
+```
+Component mounts
+    ↓
+Fetch page 1 (pageParam = initialPageParam)
+    ↓
+Store in pages[0]
+    ↓
+User scrolls → fetchNextPage()
+    ↓
+Get pageParam from getNextPageParam(pages[0])
+    ↓
+Fetch page 2 (pageParam = 'msg20._id')
+    ↓
+Store in pages[1]
+    ↓
+Repeat...
+```
+
+### useMutation Flow
+```
+mutation.mutate('Hello!')
+    ↓
+onMutate: Optimistic update
+    ↓
+mutationFn: Send to server
+    ├─ Success → onSuccess: Finalize update
+    └─ Error → onError: Rollback
+```
+
+---
+
+## 6️⃣ Best Practices
+
+### 1. Query Keys
+```typescript
+// ✅ GOOD: Hierarchical
+['users']
+['users', userId]
+['users', userId, 'posts']
+['users', userId, 'posts', { status: 'published' }]
+
+// ❌ BAD: Flat
+['userPosts']
+['userPublishedPosts']
+```
+
+### 2. staleTime vs gcTime
+```typescript
+// Frequently changing data
+staleTime: 0
+gcTime: 1000 * 60 * 5
+
+// Rarely changing data
+staleTime: 1000 * 60 * 60
+gcTime: 1000 * 60 * 60 * 24
+```
+
+### 3. Optimistic Updates
+```typescript
+// Always return context for rollback
+onMutate: async () => {
+    const previousData = queryClient.getQueryData(['data']);
+    // Update...
+    return { previousData };  // ✅
+}
+```
+
+### 4. Error Handling
+```typescript
+// Handle errors in component
+const { error } = useQuery({ ... });
+
+if (error) {
+    return <ErrorMessage error={error} />;
+}
+```
+
+---
+
+**Bạn đã hiểu rõ tất cả chưa?** 😊

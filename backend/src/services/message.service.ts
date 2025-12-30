@@ -36,13 +36,12 @@ class MessageService {
      */
     getMessagesByGroupChatId = async (
         groupChatId: string,
-        limit?: number,
-        lastMessageId?: string
+        options?: { limit?: number; before?: string }
     ) => {
         const messages = await messageRepository.getMessagesByGroupChatId({
             groupChatId,
-            limit,
-            lastMessageId,
+            limit: options?.limit,
+            lastMessageId: options?.before,
         });
         return messages;
     };

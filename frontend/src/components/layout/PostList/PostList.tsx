@@ -2,6 +2,21 @@ import NewPost from '@/components/common/NewPost/NewPost';
 import '../../common/NewPost/NewPost.css';
 
 //chỗ này sau này cần lấy từ DB xử lý
+
+interface PostData {
+    id: number;
+    user: {
+        name: string;
+        avatar: string;
+        time: string;
+        location: string;
+    };
+    content: string;
+    image?: string;
+    likes: number;
+    comments: number;
+}
+
 const POSTS_DATA = [
     {
         id: 1,

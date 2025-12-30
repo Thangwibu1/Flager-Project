@@ -30,7 +30,7 @@ export const setupSocket = (io: Server) => {
             messageHandlers[SOCKET_EVENTS.DELETE_MESSAGE]
         );
 
-        // ===== Register Reaction Events =====
+        // Register Reaction Events
         socket.on(
             SOCKET_EVENTS.ADD_REACTION,
             messageHandlers[SOCKET_EVENTS.ADD_REACTION]
@@ -40,13 +40,13 @@ export const setupSocket = (io: Server) => {
             messageHandlers[SOCKET_EVENTS.REMOVE_REACTION]
         );
 
-        // ===== Register Read Status Events =====
+        // Register Read Status Events
         socket.on(
             SOCKET_EVENTS.MARK_AS_READ,
             messageHandlers[SOCKET_EVENTS.MARK_AS_READ]
         );
 
-        // ===== Register Room Events =====
+        // Register Room Events
         socket.on(
             SOCKET_EVENTS.JOIN_GROUP_CHAT,
             messageHandlers[SOCKET_EVENTS.JOIN_GROUP_CHAT]
