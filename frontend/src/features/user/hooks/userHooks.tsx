@@ -1,6 +1,13 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { userService, UserProfile, UserPost } from '@/features/user/services/user.service';
-import { USER_QUERY_CONFIG, USER_QUERY_KEYS } from '@/features/user/constants';
+import {
+    userService,
+    UserProfile,
+    UserPost,
+} from '@/features/user/services/user.service';
+import {
+    USER_QUERY_CONFIG,
+    USER_QUERY_KEYS,
+} from '@/features/user/util/constants.util';
 
 /**
  * Hook để fetch user profile data
@@ -17,7 +24,7 @@ export const useUserProfile = (
         queryFn: () => userService.getUserProfile(userId!),
         enabled: !!userId,
         staleTime: USER_QUERY_CONFIG.PROFILE_STALE_TIME,
-        ...options, 
+        ...options,
     });
 };
 
@@ -40,7 +47,7 @@ export const useUserPosts = (
         queryFn: () => userService.getUserPosts(userId!, page, limit),
         enabled: !!userId,
         staleTime: USER_QUERY_CONFIG.POSTS_STALE_TIME,
-        ...options, 
+        ...options,
     });
 };
 
@@ -59,6 +66,6 @@ export const useFriendCount = (
         queryFn: () => userService.getFriendCount(userId!),
         enabled: !!userId,
         staleTime: USER_QUERY_CONFIG.FRIENDS_STALE_TIME,
-        ...options, 
+        ...options,
     });
 };
