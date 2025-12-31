@@ -8,7 +8,6 @@ import {
     SendReactToPostDTO,
 } from '../types/post/post.request';
 import {
-    PostCreateResponse,
     StandardPostResponse,
 } from '../types/post/post.response';
 import userService from './user.service';
@@ -37,7 +36,7 @@ class PostService {
     createPostByUser = async (
         currentUserId: string,
         payload: PostCreateDTO
-    ): Promise<PostCreateResponse> => {
+    ): Promise<StandardPostResponse> => {
         // create post
         const createPayload = {
             ...payload,
@@ -48,7 +47,7 @@ class PostService {
             authorId: currentUserId,
             postId: newPost._id.toString(),
         });
-        return postConverter.toPostCreate(newPost);
+        return postConverter.toStandardPost(newPost);
     };
     /**
      * Hàm xử lí logic nghiệp vụ lấy post theo chủ sở hữu

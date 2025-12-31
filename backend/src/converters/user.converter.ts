@@ -1,4 +1,3 @@
-import { IUserDocument } from '../models/user/User.model.mongo';
 import { FullUser } from '../types/user/user.request';
 import { UserProfileResponse } from '../types/user/user.response';
 import { formatDate } from '../utils/formatter.util';
