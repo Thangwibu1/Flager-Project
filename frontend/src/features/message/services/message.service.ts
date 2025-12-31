@@ -1,7 +1,5 @@
-import axios from 'axios';
+import { apiClient } from '@/api/axios-client';
 import { GetMessagesResponse } from '../types/message.types';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 /**
  * Message Service
@@ -21,8 +19,6 @@ class MessageService {
             before?: string; // messageId for lazy loading
         }
     ): Promise<GetMessagesResponse> {
-        const token = localStorage.getItem('accessToken');
-
         // Build query params
         const params = new URLSearchParams();
         if (options?.limit) {
@@ -34,14 +30,10 @@ class MessageService {
 
         const queryString = params.toString();
         const url = queryString
-            ? `${API_URL}/messages/group-chat/${groupChatId}?${queryString}`
-            : `${API_URL}/messages/group-chat/${groupChatId}`;
+            ? `/messages/group-chat/${groupChatId}?${queryString}`
+            : `/messages/group-chat/${groupChatId}`;
 
-        const response = await axios.get<GetMessagesResponse>(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await apiClient.get<GetMessagesResponse>(url);
 
         return response.data;
     }

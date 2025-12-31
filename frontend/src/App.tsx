@@ -29,7 +29,13 @@ function App() {
 
                         {/* Protected routes */}
                         <Route path="/" element={<HomePost />} />
+
+                        {/* Messages routes with optional chatId parameter */}
                         <Route path="/messages" element={<MessagePage />} />
+                        <Route
+                            path="/messages/:chatId"
+                            element={<MessagePage />}
+                        />
                     </Routes>
                 </BrowserRouter>
 

@@ -1,10 +1,8 @@
-import axios from 'axios';
+import { apiClient } from '@/api/axios-client';
 import {
     GetGroupChatsResponse,
     GetGroupChatResponse,
 } from '../types/groupChat.types';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 /**
  * GroupChat Service
@@ -19,15 +17,8 @@ class GroupChatService {
     async getGroupChatsByUserId(
         userId: string
     ): Promise<GetGroupChatsResponse> {
-        const token = localStorage.getItem('accessToken');
-
-        const response = await axios.get<GetGroupChatsResponse>(
-            `${API_URL}/group-chats/user/${userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
+        const response = await apiClient.get<GetGroupChatsResponse>(
+            `/group-chats/user/${userId}`
         );
 
         return response.data;
@@ -39,15 +30,8 @@ class GroupChatService {
      * @returns Promise<GetGroupChatResponse>
      */
     async getGroupChatById(groupChatId: string): Promise<GetGroupChatResponse> {
-        const token = localStorage.getItem('accessToken');
-
-        const response = await axios.get<GetGroupChatResponse>(
-            `${API_URL}/group-chats/${groupChatId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
+        const response = await apiClient.get<GetGroupChatResponse>(
+            `/group-chats/${groupChatId}`
         );
 
         return response.data;

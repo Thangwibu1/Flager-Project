@@ -16,48 +16,66 @@ export const setupSocket = (io: Server) => {
         const user = (socket as any).data.user;
         console.log(`✅ User connected: ${user.username} (${socket.id})`);
 
-        // Register Message Events
-        socket.on(
-            SOCKET_EVENTS.CREATE_MESSAGE,
-            messageHandlers[SOCKET_EVENTS.CREATE_MESSAGE]
+        // Register Message Events - Bind socket to each handler
+        socket.on(SOCKET_EVENTS.CREATE_MESSAGE, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.CREATE_MESSAGE](
+                socket,
+                data,
+                callback
+            )
         );
-        socket.on(
-            SOCKET_EVENTS.UPDATE_MESSAGE,
-            messageHandlers[SOCKET_EVENTS.UPDATE_MESSAGE]
+        socket.on(SOCKET_EVENTS.UPDATE_MESSAGE, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.UPDATE_MESSAGE](
+                socket,
+                data,
+                callback
+            )
         );
-        socket.on(
-            SOCKET_EVENTS.DELETE_MESSAGE,
-            messageHandlers[SOCKET_EVENTS.DELETE_MESSAGE]
+        socket.on(SOCKET_EVENTS.DELETE_MESSAGE, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.DELETE_MESSAGE](
+                socket,
+                data,
+                callback
+            )
         );
 
         // Register Reaction Events
-        socket.on(
-            SOCKET_EVENTS.ADD_REACTION,
-            messageHandlers[SOCKET_EVENTS.ADD_REACTION]
+        socket.on(SOCKET_EVENTS.ADD_REACTION, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.ADD_REACTION](socket, data, callback)
         );
-        socket.on(
-            SOCKET_EVENTS.REMOVE_REACTION,
-            messageHandlers[SOCKET_EVENTS.REMOVE_REACTION]
+        socket.on(SOCKET_EVENTS.REMOVE_REACTION, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.REMOVE_REACTION](
+                socket,
+                data,
+                callback
+            )
         );
 
         // Register Read Status Events
-        socket.on(
-            SOCKET_EVENTS.MARK_AS_READ,
-            messageHandlers[SOCKET_EVENTS.MARK_AS_READ]
+        socket.on(SOCKET_EVENTS.MARK_AS_READ, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.MARK_AS_READ](socket, data, callback)
         );
 
         // Register Room Events
-        socket.on(
-            SOCKET_EVENTS.JOIN_GROUP_CHAT,
-            messageHandlers[SOCKET_EVENTS.JOIN_GROUP_CHAT]
+        socket.on(SOCKET_EVENTS.JOIN_GROUP_CHAT, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.JOIN_GROUP_CHAT](
+                socket,
+                data,
+                callback
+            )
         );
-        socket.on(
-            SOCKET_EVENTS.LEAVE_GROUP_CHAT,
-            messageHandlers[SOCKET_EVENTS.LEAVE_GROUP_CHAT]
+        socket.on(SOCKET_EVENTS.LEAVE_GROUP_CHAT, (data, callback) =>
+            messageHandlers[SOCKET_EVENTS.LEAVE_GROUP_CHAT](
+                socket,
+                data,
+                callback
+            )
         );
 
         // ===== Register Typing Events =====
-        socket.on(SOCKET_EVENTS.TYPING, messageHandlers[SOCKET_EVENTS.TYPING]);
+        socket.on(SOCKET_EVENTS.TYPING, data =>
+            messageHandlers[SOCKET_EVENTS.TYPING](socket, data)
+        );
 
         // ===== Disconnect Handler =====
         socket.on(SOCKET_EVENTS.DISCONNECT, () => {

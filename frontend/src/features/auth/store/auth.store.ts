@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UserInfo } from '../types/auth.types';
+import { decodeUserFromToken } from '@/utils/jwt.util';
 
 interface AuthState {
     // State
@@ -15,7 +16,7 @@ interface AuthState {
     setAuth: (
         accessToken: string,
         refreshToken: string,
-        user: UserInfo
+        user?: UserInfo // Optional, will decode from token if not provided
     ) => void;
     clearAuth: () => void;
 }
@@ -33,9 +34,14 @@ export const useAuthStore = create<AuthState>()(
             setTokens: (accessToken: string, refreshToken: string) => {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);
+
+                // Decode user from token
+                const user = decodeUserFromToken(accessToken);
+
                 set({
                     accessToken,
                     refreshToken,
+                    user,
                     isAuthenticated: true,
                 });
             },
@@ -49,14 +55,20 @@ export const useAuthStore = create<AuthState>()(
             setAuth: (
                 accessToken: string,
                 refreshToken: string,
-                user: UserInfo
+                user?: UserInfo
             ) => {
                 localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
+                if (refreshToken) {
+                    localStorage.setItem('refreshToken', refreshToken);
+                }
+
+                // If user not provided, decode from token
+                const finalUser = user || decodeUserFromToken(accessToken);
+
                 set({
                     accessToken,
                     refreshToken,
-                    user,
+                    user: finalUser,
                     isAuthenticated: true,
                 });
             },
@@ -78,9 +90,23 @@ export const useAuthStore = create<AuthState>()(
             partialize: state => ({
                 accessToken: state.accessToken,
                 refreshToken: state.refreshToken,
-                user: state.user,
+                // Don't persist user, decode from token on hydration
                 isAuthenticated: state.isAuthenticated,
             }),
+            // Hydrate user from token after loading from storage
+            onRehydrateStorage: () => state => {
+                if (state?.accessToken) {
+                    const user = decodeUserFromToken(state.accessToken);
+                    if (user) {
+                        state.user = user;
+                    } else {
+                        // Token invalid, clear auth
+                        state.accessToken = null;
+                        state.refreshToken = null;
+                        state.isAuthenticated = false;
+                    }
+                }
+            },
         }
     )
 );

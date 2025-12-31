@@ -28,7 +28,7 @@ export const MessageChatHeader: React.FC<MessageChatHeaderProps> = ({
                 <div className="chat-details">
                     <h3 className="chat-name">{groupChat.name}</h3>
                     <p className="chat-members">
-                        {groupChat.members.length} members
+                        {groupChat.members?.length || 0} members
                     </p>
                 </div>
             </div>

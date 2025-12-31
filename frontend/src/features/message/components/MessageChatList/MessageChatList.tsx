@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useGroupChats } from '../../../group-chat/hooks/useGroupChats';
 import { useAuthStore } from '../../../auth/store/auth.store';
 import { GroupChat } from '../../../group-chat/types/groupChat.types';
+import { ChatListHeader } from './ChatListHeader';
+import { ChatListSearch } from './ChatListSearch';
+import { ChatListLoading } from './ChatListLoading';
+import { ChatListEmpty } from './ChatListEmpty';
+import { ChatListItem } from './ChatListItem';
 import './MessageChatList.css';
 
 interface MessageChatListProps {
@@ -9,10 +14,6 @@ interface MessageChatListProps {
     selectedChatId?: string;
 }
 
-/**
- * MessageChatList Component
- * Sidebar hiển thị danh sách group chats
- */
 export const MessageChatList: React.FC<MessageChatListProps> = ({
     onSelectChat,
     selectedChatId,
@@ -33,7 +34,7 @@ export const MessageChatList: React.FC<MessageChatListProps> = ({
     );
 
     // Format last message time
-    const formatTime = (date?: Date) => {
+    const formatTime = (date?: Date): string => {
         if (!date) return '';
         const messageDate = new Date(date);
         const now = new Date();
@@ -60,93 +61,30 @@ export const MessageChatList: React.FC<MessageChatListProps> = ({
     return (
         <div className="chat-list">
             {/* Header */}
-            <div className="chat-list-header">
-                <h2>Messages</h2>
-            </div>
+            <ChatListHeader />
 
             {/* Search */}
-            <div className="chat-list-search">
-                <div className="search-input-wrapper">
-                    <svg
-                        className="search-icon"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                    >
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                    <input
-                        type="text"
-                        placeholder="Search chats..."
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                    />
-                </div>
-            </div>
+            <ChatListSearch value={searchQuery} onChange={setSearchQuery} />
 
             {/* Loading State */}
-            {isLoading && (
-                <div className="chat-list-loading">
-                    <div className="spinner"></div>
-                    <p>Loading chats...</p>
-                </div>
-            )}
+            {isLoading && <ChatListLoading />}
 
             {/* Empty State */}
             {!isLoading && filteredChats.length === 0 && (
-                <div className="chat-list-empty">
-                    <div className="empty-icon">💬</div>
-                    <p>
-                        {searchQuery
-                            ? 'No chats found'
-                            : 'No chats yet. Start a conversation!'}
-                    </p>
-                </div>
+                <ChatListEmpty hasSearchQuery={!!searchQuery} />
             )}
 
             {/* Chat List */}
             {!isLoading && filteredChats.length > 0 && (
                 <div className="chat-list-items">
                     {filteredChats.map(chat => (
-                        <div
+                        <ChatListItem
                             key={chat._id}
-                            className={`chat-list-item ${
-                                chat._id === selectedChatId ? 'active' : ''
-                            }`}
-                            onClick={() => onSelectChat(chat)}
-                        >
-                            <div className="chat-item-avatar">
-                                {chat.avatar ? (
-                                    <img src={chat.avatar} alt={chat.name} />
-                                ) : (
-                                    <div className="avatar-placeholder">
-                                        {chat.name.charAt(0).toUpperCase()}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="chat-item-content">
-                                <div className="chat-item-header">
-                                    <h4 className="chat-item-name">
-                                        {chat.name}
-                                    </h4>
-                                    <span className="chat-item-time">
-                                        {formatTime(chat.lastMessageAt)}
-                                    </span>
-                                </div>
-                                <div className="chat-item-footer">
-                                    <p className="chat-item-message">
-                                        Click to view messages
-                                    </p>
-                                    {/* Unread badge (optional) */}
-                                    {/* <span className="unread-badge">3</span> */}
-                                </div>
-                            </div>
-                        </div>
+                            chat={chat}
+                            isActive={chat._id === selectedChatId}
+                            onSelect={onSelectChat}
+                            formatTime={formatTime}
+                        />
                     ))}
                 </div>
             )}
