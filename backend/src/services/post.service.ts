@@ -94,7 +94,7 @@ class PostService {
             limit,
         });
         // convert post response
-        const postListResponse = postList.map((item: any) =>
+        const postListResponse = postList.map((item) =>
             postConverter.toStandardPost(item)
         );
         return {

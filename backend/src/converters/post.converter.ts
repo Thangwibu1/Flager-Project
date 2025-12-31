@@ -1,8 +1,9 @@
 import { IPostDocument } from "../models/post/Post.model.mongo";
+import { FullPost } from "../types/post/post.request";
 import { PostCreateResponse, StandardPostResponse } from "../types/post/post.response";
 import * as formatterUtil from '../utils/formatter.util';
 
-export const toPostCreate = (post: IPostDocument): PostCreateResponse => {
+export const toPostCreate = (post: FullPost): PostCreateResponse => {
   return {
     content: post.content,
     media: post.media || [],
@@ -12,7 +13,7 @@ export const toPostCreate = (post: IPostDocument): PostCreateResponse => {
   }
 }
 
-export const toStandardPost = (post: IPostDocument): StandardPostResponse => {
+export const toStandardPost = (post: FullPost): StandardPostResponse => {
   const totalReact = post.totalReact.map((item) => {
     return {name: item.name, total: item.total}
   }).sort((a, b) => (a.total > b.total) ? -1 : 1);

@@ -24,7 +24,7 @@ export const fullPost = IPost.extend({
     totalShare: z.number(),
     createdAt: z.date(),
     updatedAt: z.date(),
-    deletedAt: z.date().nullable().optional(),
+    deletedAt: z.date().nullable(),
     viewType: z.enum(ViewType),
 });
 

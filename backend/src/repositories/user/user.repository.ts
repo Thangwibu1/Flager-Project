@@ -7,7 +7,7 @@ class UserRepository {
             _id: id,
         })
             .select(select)
-            .lean();
+            .lean<FullUser>();
         return foundUser;
     };
     findByEmail = async (email: string, select: (keyof FullUser)[] = []) => {
@@ -15,7 +15,7 @@ class UserRepository {
             email: email,
         })
             .select(select)
-            .lean();
+            .lean<FullUser>();
         return foundUser;
     };
 

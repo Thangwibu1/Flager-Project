@@ -24,7 +24,7 @@ class PostRepository {
         limit?: number;
         lastItem?: string;
         sort?: { [key: string]: SortOrder }
-    }) => {
+    }): Promise<FullPost[]> => {
         const dbFilter: { [key: string]: any } = {};
         // where 
         if(authorId){
@@ -62,7 +62,7 @@ class PostRepository {
         return await Post.findOne({
             _id: id,
             deletedAt: null
-        }).select(select).lean();
+        }).select(select).lean<FullPost>();
     }
 
     modifyReactByPostIdAndReactType = async (filter: {postId: string, reactName: ReactName}, amount: number): Promise<void> => {

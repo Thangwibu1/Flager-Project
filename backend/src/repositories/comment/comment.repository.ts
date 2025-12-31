@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Comment } from '../../models/comment/comment.model.mongo';
+import { Comment, ICommentDocument } from '../../models/comment/comment.model.mongo';
 import { FullComment } from '../../types/comments/comment';
 
 class CommentRepository {
@@ -14,19 +14,19 @@ class CommentRepository {
         return await Comment.create(data);
     };
 
-    findOneById = async (id: string, select: (keyof FullComment)[] = []) => {
+    findOneById = async (id: string, select: (keyof FullComment)[] = []): Promise<FullComment | null> => {
         return await Comment.findOne({
             _id: id,
             deletedAt: null,
         })
             .select(select)
-            .lean();
+            .lean<FullComment>();
     };
 
     findOneByNormalFilter = async (
         filter: Partial<FullComment>,
         select: (keyof FullComment)[] = []
-    ) => {
+    ): Promise<FullComment | null> => {
         return await Comment.findOne({
             ...filter,
             deletedAt: null,
