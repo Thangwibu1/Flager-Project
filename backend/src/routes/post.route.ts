@@ -8,6 +8,7 @@ import { queryCountReactOfPostSchema } from '../types/post/post.query';
 import { createCommentToPostBodySchema, replyCommentBodySchema } from '../types/comments/comment.request';
 import commentController from '../controllers/comment.controller';
 import { commentReplyParams } from '../types/comments/comment.params';
+import { getCommentListSchema } from '../types/comments/comment.query';
 const router = Router();
 router.post('/', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
 router.patch('/:postId', validateParams(postIdParamSchema), validateBody(postUpdateSchema), authenticateUserMiddleware, postController.updatePost);
@@ -16,7 +17,11 @@ router.post('/:postId/reacts', validateParams(postIdParamSchema), validateBody(s
 router.get('/:postId/reacts/total', validateParams(postIdParamSchema), validateQuery(queryCountReactOfPostSchema), authenticateUserMiddleware, postController.countReactOfPost);
 router.delete('/:postId/reacts/:reactName', validateParams(paramPostIdAndReactSchema), authenticateUserMiddleware, postController.deleteReactOfPost);
 
+router.get('/:postId/comments', validateParams(postIdParamSchema), validateQuery(getCommentListSchema), authenticateUserMiddleware, commentController.getCommentListOfPost);
 router.post('/:postId/comments', validateParams(postIdParamSchema), validateBody(createCommentToPostBodySchema), authenticateUserMiddleware, commentController.createCommentToPost);
-router.post('/:postId/comments/:commentId/replies', validateParams(commentReplyParams), validateBody(replyCommentBodySchema), authenticateUserMiddleware, commentController.replyToComment);
 router.delete('/:postId/comments/:commentId', validateParams(commentReplyParams), authenticateUserMiddleware, commentController.deleteComment);
+
+// router.get('/:postId/comments/:commentId/replies', validateParams(commentReplyParams), authenticateUserMiddleware, commentController.getReplyListOfComment);
+router.post('/:postId/comments/:commentId/replies', validateParams(commentReplyParams), validateBody(replyCommentBodySchema), authenticateUserMiddleware, commentController.replyToComment);
+router.get('/:postId/comments/:commentId/replies/total', validateParams(commentReplyParams), authenticateUserMiddleware, commentController.countTotalReplyOfComment);
 export default router;

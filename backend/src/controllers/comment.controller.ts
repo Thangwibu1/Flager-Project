@@ -4,6 +4,7 @@ import { PostIdParams } from "../types/post/post.param";
 import { ApiResponse } from "../utils/api-response.util";
 import commentService from "../services/comment.service";
 import { CommentReplyParams } from "../types/comments/comment.params";
+import { GetCommentListQuery } from "../types/comments/comment.query";
 
 class CommentController {
     // [POST] /posts/:postId/comments
@@ -57,6 +58,55 @@ class CommentController {
             const curUserId = req.user!.id;
             const params = req.params as CommentReplyParams;
             await commentService.deleteComment(curUserId, params.postId, params.commentId);
+            res.json(ApiResponse.success('Add comment to post successfully', null));
+        } catch (error) {
+            next(error);
+        }
+
+    }
+
+    countTotalReplyOfComment = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => { 
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as CommentReplyParams;
+            
+            res.json(ApiResponse.success('Add comment to post successfully', null));
+        } catch (error) {
+            next(error);
+        }
+
+    }
+
+    getCommentListOfPost = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => { 
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as PostIdParams;
+            const query = req.query as GetCommentListQuery;
+            const data = await commentService.getCommentListOfPost(curUserId, params.postId, query);
+            res.json(ApiResponse.success('Get comment of post successfully', data));
+        } catch (error) {
+            next(error);
+        }
+
+    }
+
+    getReplyListOfComment = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => { 
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as CommentReplyParams;
+            const query = req.query;
             res.json(ApiResponse.success('Add comment to post successfully', null));
         } catch (error) {
             next(error);

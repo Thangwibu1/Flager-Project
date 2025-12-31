@@ -11,6 +11,11 @@ import commentNodeRepository from '../repositories/comment/comment.repository.gr
 import { FullComment } from '../types/comments/comment';
 import userService from './user.service';
 import postRepository from '../repositories/post/post.repository';
+import { GetCommentListQuery } from '../types/comments/comment.query';
+import * as commentConverter from '../converters/comment.converter';
+import { LazyPagination } from '../types/pagination/pagination.response';
+import { StandardComment } from '../types/comments/comment.response';
+
 class CommentService {
     getCommentById = async (id: string, select: (keyof FullComment)[] = []) => {
         return await commentRepository.findOneById(id, select);
@@ -114,6 +119,40 @@ class CommentService {
             foundComment.parentId ? postRepository.modifyTotalCommentById(postId, -1) : postRepository.modifyTotalCommentById(postId, -(foundComment.totalReply + 1))
         ]);
     };
+
+    getCommentListOfPost = async (curUserId: string, postId: string, query: GetCommentListQuery): Promise<{
+        commentList: StandardComment[],
+        pagination: LazyPagination,
+    }> => {
+        const limit = 5;
+        // check post exist
+        if(!(await postService.getPostById(postId, ['_id']))){
+            throw new NotFoundRequestError("Not found post");
+        }
+        // if() {// curUserId not have permission to view post}
+        // handle query
+        const filter : any = {
+            postId: postId,
+        };
+        if(query.lastItem){
+            filter.lastItem = query.lastItem;
+        }
+
+        // end handle query
+
+        const rawList = await commentRepository.getListForLazyLoad({
+            ...filter,
+            limit,
+        });
+        const responseList = rawList.map(item => commentConverter.toStandardComment(item));
+        return {
+            commentList: responseList,
+            pagination: {
+                hasNext: rawList.length == limit,
+                lastItem: rawList.length != 0 ? rawList[rawList.length - 1].createdAt.getTime() : null
+            },
+        }
+    }
 }
 
 export default new CommentService();

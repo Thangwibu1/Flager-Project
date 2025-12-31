@@ -1,6 +1,7 @@
-import { Types } from 'mongoose';
+import { SortOrder, Types } from 'mongoose';
 import { Comment, ICommentDocument } from '../../models/comment/comment.model.mongo';
 import { FullComment } from '../../types/comments/comment';
+import { parseKeyStringValueToObject } from '../../utils/parser.util';
 
 class CommentRepository {
     createOne = async (data: {
@@ -60,6 +61,42 @@ class CommentRepository {
             }
         );
     };
+
+    getListForLazyLoad = async ({
+        sortKey = 'createdAt',
+        sortValue = 'desc',
+        lastItem,
+        limit = 20,
+        parentId,
+        postId,
+        select = [],
+    }: {
+        sortValue?: SortOrder,
+        sortKey?: keyof FullComment,
+        limit?: number,
+        lastItem?: number | undefined,
+        parentId?: string | Types.ObjectId,
+        postId?: string | Types.ObjectId ,
+        select?: (keyof FullComment)[]
+    }) => {
+        const filterDb : any = {};
+        if(postId){
+            filterDb.postId = postId;
+        }
+        if(lastItem){
+            filterDb.createdAt = {
+                $lt: lastItem
+            }
+        }
+        filterDb.parentId = parentId ?? undefined;
+        const sort = parseKeyStringValueToObject<SortOrder>(sortKey, sortValue);
+        const commentList = await Comment.find({
+            ...filterDb,
+            deletedAt: null,
+        }).lean<FullComment[]>().select(select).sort(sort).limit(limit);
+
+        return commentList;
+    }
 }
 
 export default new CommentRepository();

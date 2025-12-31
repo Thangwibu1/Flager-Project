@@ -31,3 +31,7 @@ const parseUpdateNestedObject = (obj: any) => {
   });
   return final;
 }
+
+export const parseKeyStringValueToObject = <T>(key: string, value: T) => {
+  return Object.fromEntries([[key, value]]);
+}

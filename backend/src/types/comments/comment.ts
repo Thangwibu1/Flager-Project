@@ -6,8 +6,8 @@ export const IComment = z.object({
   _id: z.instanceof(Types.ObjectId).or(z.string()),
   userId: z.instanceof(Types.ObjectId).or(z.string()),
   postId: z.instanceof(Types.ObjectId).or(z.string()),
-  replyToId: z.instanceof(Types.ObjectId).nullable().optional(),
-  parentId: z.instanceof(Types.ObjectId).or(z.string()).nullable().optional(),
+  replyToId: z.instanceof(Types.ObjectId).optional(),
+  parentId: z.instanceof(Types.ObjectId).or(z.string()).optional(),
   content: z.string(),
   media: z.array(z.string()),
   totalReply: z.number(),
@@ -15,7 +15,9 @@ export const IComment = z.object({
     name: ReactName,
     total: z.number()
   })),
-  deletedAt: z.date().nullable().optional()
+  deletedAt: z.date().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date()
 });
 
 export type FullComment = z.infer<typeof IComment>;
