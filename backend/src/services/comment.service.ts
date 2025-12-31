@@ -11,10 +11,10 @@ import commentNodeRepository from '../repositories/comment/comment.repository.gr
 import { FullComment } from '../types/comments/comment';
 import userService from './user.service';
 import postRepository from '../repositories/post/post.repository';
-import { GetCommentListQuery } from '../types/comments/comment.query';
+import { GetCommentListQuery, GetReplyCommentListQuery } from '../types/comments/comment.query';
 import * as commentConverter from '../converters/comment.converter';
 import { LazyPagination } from '../types/pagination/pagination.response';
-import { StandardComment } from '../types/comments/comment.response';
+import { StandardComment, ReplyCommandResponse } from '../types/comments/comment.response';
 
 class CommentService {
     getCommentById = async (id: string, select: (keyof FullComment)[] = []) => {
@@ -124,7 +124,7 @@ class CommentService {
         commentList: StandardComment[],
         pagination: LazyPagination,
     }> => {
-        const limit = 5;
+        const limit = 20;
         // check post exist
         if(!(await postService.getPostById(postId, ['_id']))){
             throw new NotFoundRequestError("Not found post");
@@ -145,6 +145,46 @@ class CommentService {
             limit,
         });
         const responseList = rawList.map(item => commentConverter.toStandardComment(item));
+        return {
+            commentList: responseList,
+            pagination: {
+                hasNext: rawList.length == limit,
+                lastItem: rawList.length != 0 ? rawList[rawList.length - 1].createdAt.getTime() : null
+            },
+        }
+    }
+
+    getReplyListOfComment = async ({curUserId, postId, parentId, query}: {
+        curUserId: string, postId: string, query: GetReplyCommentListQuery, parentId: string,
+    }): Promise<{
+        commentList: ReplyCommandResponse[],
+        pagination: LazyPagination,
+    }> => {
+        const limit = 20;
+        // check comment exist
+        if(!(await commentRepository.findOneByNormalFilter({
+            _id: parentId,
+            postId: postId,
+        }, ['_id']))){
+            throw new NotFoundRequestError("Not found comment");
+        }
+        // if() {// curUserId not have permission to view post}
+        // handle query
+
+        const filter : any = {
+            postId: postId,
+            parentId: parentId,
+        };
+        if(query.lastItem){
+            filter.lastItem = query.lastItem;
+        }
+
+        // end handle query
+        const rawList = await commentRepository.getListForLazyLoad({
+            ...filter,
+            limit,
+        });
+        const responseList = rawList.map(item => commentConverter.toReplyCommandResponse(item));
         return {
             commentList: responseList,
             pagination: {

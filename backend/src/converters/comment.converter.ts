@@ -1,5 +1,5 @@
 import { FullComment } from "../types/comments/comment"
-import { StandardComment, StandardReplyCommand } from "../types/comments/comment.response"
+import { StandardComment, ReplyCommandResponse } from "../types/comments/comment.response"
 import { formatDate } from "../utils/formatter.util"
 
 export const toStandardComment = (comment: FullComment): StandardComment => {
@@ -14,7 +14,7 @@ export const toStandardComment = (comment: FullComment): StandardComment => {
 }
 
 
-export const toStandardReply = (comment: FullComment): StandardReplyCommand => {
+export const toReplyCommandResponse = (comment: FullComment): ReplyCommandResponse => {
   return {
     content: comment.content,
     media: comment.media,
@@ -22,5 +22,6 @@ export const toStandardReply = (comment: FullComment): StandardReplyCommand => {
     id: comment._id.toString(),
     parentId: comment.parentId!.toString(),
     totalReact: [],
+    replyToId:  comment.replyToId ? comment.replyToId.toString() : null,
   }
 }

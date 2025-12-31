@@ -9,10 +9,10 @@ export interface StandardComment {
   totalReact: {name: ReactName, total: number}[]
 }
 
-export interface StandardReplyCommand {
+export interface ReplyCommandResponse {
   id: string,
   parentId: string,
-  replyToId?: string,
+  replyToId: string | null,
   createdAt: string,
   content: string,
   media: string[],

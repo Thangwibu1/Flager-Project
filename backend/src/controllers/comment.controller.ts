@@ -4,7 +4,7 @@ import { PostIdParams } from "../types/post/post.param";
 import { ApiResponse } from "../utils/api-response.util";
 import commentService from "../services/comment.service";
 import { CommentReplyParams } from "../types/comments/comment.params";
-import { GetCommentListQuery } from "../types/comments/comment.query";
+import { GetCommentListQuery, GetReplyCommentListQuery } from "../types/comments/comment.query";
 
 class CommentController {
     // [POST] /posts/:postId/comments
@@ -65,22 +65,6 @@ class CommentController {
 
     }
 
-    countTotalReplyOfComment = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => { 
-        try {
-            const curUserId = req.user!.id;
-            const params = req.params as CommentReplyParams;
-            
-            res.json(ApiResponse.success('Add comment to post successfully', null));
-        } catch (error) {
-            next(error);
-        }
-
-    }
-
     getCommentListOfPost = async (
         req: Request,
         res: Response,
@@ -106,8 +90,14 @@ class CommentController {
         try {
             const curUserId = req.user!.id;
             const params = req.params as CommentReplyParams;
-            const query = req.query;
-            res.json(ApiResponse.success('Add comment to post successfully', null));
+            const query = req.query as GetReplyCommentListQuery;
+            const data = await commentService.getReplyListOfComment({ 
+                curUserId: curUserId,
+                parentId: params.commentId,
+                postId: params.postId,
+                query: query,
+            });
+            res.json(ApiResponse.success('Add comment to post successfully', data));
         } catch (error) {
             next(error);
         }
