@@ -1,10 +1,13 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import HomePost from './pages/homepost/HomePost';
 import { AuthRoutes } from './routes/AuthRoutes';
 import { MessagePage } from './pages/messagepage/MessagePage';
 import { SocketProvider } from './contexts/SocketContext';
+import { ProtectedRoute } from './routes/ProtectedRoute';
+import { useAuthStore } from './features/auth/store/auth.store';
+import { isTokenExpired } from './utils/jwt.util';
 
 // Create QueryClient instance
 const queryClient = new QueryClient({
@@ -19,6 +22,14 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+    const { accessToken, isAuthenticated } = useAuthStore();
+
+    // Check if user is authenticated with valid token
+    const isUserAuthenticated = () => {
+        if (!accessToken || !isAuthenticated) return false;
+        return !isTokenExpired(accessToken);
+    };
+
     return (
         <QueryClientProvider client={queryClient}>
             <SocketProvider>
@@ -27,14 +38,34 @@ function App() {
                         {/* Auth routes */}
                         <Route path="/auth/*" element={<AuthRoutes />} />
 
-                        {/* Protected routes */}
-                        <Route path="/" element={<HomePost />} />
+                        {/* Root route - redirect based on auth status */}
+                        <Route
+                            path="/"
+                            element={
+                                isUserAuthenticated() ? (
+                                    <HomePost />
+                                ) : (
+                                    <Navigate to="/auth/login" replace />
+                                )
+                            }
+                        />
 
-                        {/* Messages routes with optional chatId parameter */}
-                        <Route path="/messages" element={<MessagePage />} />
+                        {/* Protected routes */}
+                        <Route
+                            path="/messages"
+                            element={
+                                <ProtectedRoute>
+                                    <MessagePage />
+                                </ProtectedRoute>
+                            }
+                        />
                         <Route
                             path="/messages/:chatId"
-                            element={<MessagePage />}
+                            element={
+                                <ProtectedRoute>
+                                    <MessagePage />
+                                </ProtectedRoute>
+                            }
                         />
                     </Routes>
                 </BrowserRouter>

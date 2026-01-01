@@ -41,8 +41,8 @@ export const useLogin = () => {
             queryClient.invalidateQueries({ queryKey: ['user'] });
             queryClient.invalidateQueries({ queryKey: ['profile'] });
 
-            // Navigate to messages page after successful login
-            navigate('/messages');
+            // Navigate to home page after successful login
+            navigate('/');
 
             console.log('✅ Login successful:', data.message);
         },
