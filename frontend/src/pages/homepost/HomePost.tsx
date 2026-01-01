@@ -13,7 +13,7 @@ export default function HomePost() {
             <Navbar
                 components={{
                     left: <LogoSearch />,
-                    right: <UserActionMenu start={5} end={7} />,
+                    right: <UserActionMenu start={5} end={8} />,
                 }}
             />
             <main className="main-layout">

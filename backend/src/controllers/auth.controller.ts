@@ -12,13 +12,16 @@ class AuthController {
         try {
             const deviceId = req.headers['x-device-id'];
             const data = await authService.login(req.body, deviceId);
-            // tự lưu refreshToken trong cookie
+
+            // Save refreshToken in httpOnly cookie (not in response)
             res.cookie('refreshToken', data.refreshToken, {
                 httpOnly: true,
                 secure: config.env == 'deployment' ? true : false,
                 maxAge: config.jwt.refreshExpiresInSecond * 1000,
                 sameSite: 'none',
             });
+
+            // Return only accessToken (user info is in JWT payload)
             res.json(
                 ApiResponse.success('Login successfully', {
                     accessToken: data.accessToken,

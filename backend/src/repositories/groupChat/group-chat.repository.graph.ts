@@ -185,6 +185,25 @@ class GroupChatNodeRepository extends BaseGraphRepo {
             return cntDelete == 0 ? false : true;
         });
     }
+
+    /**
+     * Tìm tất cả GroupChat mà user là member (có edge IS_IN)
+     * @param userId - ID của user
+     * @returns Array of GroupChat nodes
+     */
+    async findByUserId(userId: string) {
+        const cypher = `
+      MATCH (u:${neo4jInfo.node.user} {id: $userId})-[:${neo4jInfo.rel.user.isIn}]->(g:${neo4jInfo.node.groupChat})
+      RETURN g
+      ORDER BY g.lastMessageAt DESC
+    `;
+        return this.read(async tx => {
+            const result = await tx.run(cypher, { userId });
+            return result.records.map(record =>
+                GroupChatNode.formatRaw(record.get('g'))
+            );
+        });
+    }
 }
 
 export default new GroupChatNodeRepository();

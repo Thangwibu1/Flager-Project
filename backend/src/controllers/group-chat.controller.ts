@@ -56,6 +56,48 @@ class GroupChatController {
             next(error);
         }
     };
+
+    getGroupChatsByUserId = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const userId = req.params.userId || req.user!.id;
+            const groupChats = await groupChatService.getGroupChatsByUserId(
+                userId
+            );
+
+            res.json(
+                ApiResponse.success('Group chats retrieved successfully', {
+                    groupChats,
+                })
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getGroupChatById = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const { groupChatId } = req.params;
+            const groupChat = await groupChatService.getGroupChatById(
+                groupChatId
+            );
+
+            res.json(
+                ApiResponse.success('Group chat retrieved successfully', {
+                    groupChat,
+                })
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 export default new GroupChatController();

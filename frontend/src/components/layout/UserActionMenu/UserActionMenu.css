@@ -48,6 +48,7 @@
     align-items: center;
     justify-content: center;
     list-style: none;
+    position: relative; /* For dropdown positioning */
 }
 
 /* Avatar */
@@ -66,6 +67,92 @@
     transform: scale(1.05);
 }
 
+/* Dropdown Menu - Fixed Position Popup */
+.user-action-menu__dropdown {
+    position: fixed; /* Fixed positioning for popup behavior */
+    /* top and right will be set via inline styles */
+    background: rgba(
+        39,
+        28,
+        28,
+        0.95
+    ); /* --color-surface-dark with transparency */
+    border: 1px solid rgba(84, 59, 59, 0.6); /* --color-border-dark */
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    min-width: 220px;
+    padding: 8px;
+    z-index: 9999; /* Very high z-index to appear above everything */
+    animation: dropdownSlideIn 0.2s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes dropdownSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dropdown Header */
+.user-action-menu__dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Dropdown Divider */
+.user-action-menu__dropdown-divider {
+    height: 1px;
+    background: rgba(84, 59, 59, 0.4); /* --color-border-dark */
+    margin: 4px 0;
+}
+
+/* Dropdown Items */
+.user-action-menu__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.user-action-menu__dropdown-item:hover {
+    background: rgba(84, 59, 59, 0.3); /* --color-border-dark */
+    color: rgba(255, 255, 255, 1);
+}
+
+.user-action-menu__dropdown-item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Logout Item - Special styling */
+.user-action-menu__dropdown-item--logout {
+    color: #ec1313; /* --color-primary */
+}
+
+.user-action-menu__dropdown-item--logout:hover {
+    background: rgba(236, 19, 19, 0.15); /* --color-primary with transparency */
+    color: #ff4444;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .user-action-menu,
@@ -81,5 +168,10 @@
     .user-action-menu__avatar {
         width: var(--avatar-size-mobile, 32px);
         height: var(--avatar-size-mobile, 32px);
+    }
+
+    .user-action-menu__dropdown {
+        min-width: 200px;
+        right: -10px; /* Adjust for mobile */
     }
 }

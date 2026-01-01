@@ -28,18 +28,20 @@ export const useLogin = () => {
         mutationFn: authService.login,
 
         onSuccess: data => {
-            // 1. Save tokens and user info to Zustand store (also saves to localStorage)
+            console.log('🔍 Login response:', data);
+            console.log('🔍 Access token:', data.data.accessToken);
+
+            // Save accessToken (auth store will decode user automatically)
             setAuth(
                 data.data.accessToken,
-                data.data.refreshToken,
-                data.data.user
+                '' // refreshToken is in httpOnly cookie
             );
 
-            // 2. Invalidate user-related queries to refetch fresh data
+            // Invalidate user-related queries to refetch fresh data
             queryClient.invalidateQueries({ queryKey: ['user'] });
             queryClient.invalidateQueries({ queryKey: ['profile'] });
 
-            // 3. Navigate to dashboard after successful login
+            // Navigate to home page after successful login
             navigate('/');
 
             console.log('✅ Login successful:', data.message);
