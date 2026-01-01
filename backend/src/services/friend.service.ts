@@ -1,7 +1,10 @@
 import { ConflictRequestError, NotFoundRequestError } from "../errors/api/ApiError";
-import { FriendAcceptDTO, FriendUnfriendDTO, FriendRequestDTO } from "../types/friend/Friend";
 import userService from "./user.service";
 import userNodeRepository from '../repositories/user/user.repository.graph';
+import { QueryGetFollowerList, QueryGetFollowingList, QueryGetFriendOfUser } from "../types/friend/friend.query";
+import { StandardFriendResponse } from "../types/friend/friend.response";
+import { LazyPagination } from "../types/pagination/pagination.response";
+import * as friendConverter from '../converters/friend.converter';
 class FriendService {
   /**
    * Hàm giúp kiểm trả sender có gửi lời mới kết bạn với receiver từ trước chưa
@@ -93,16 +96,17 @@ class FriendService {
     if(!existReceiver){
       throw new NotFoundRequestError("Not found receiver");
     }
-    // check receiverId have already sent a request to senderId (người được chấp nhận lời mời kết bạn phải gửi lời mời từ trước rồi)
-    const isReceiverSentRequest = await this.hasRequestedFriend(receiverId, currentUserId);
-    if(!isReceiverSentRequest){
-      throw new ConflictRequestError("Receiver has not sent you a friend request!");
-    }
     // check sender and receiver isFriend of each other
     const isFriend = await this.areFriends(currentUserId, receiverId);
     if(isFriend){
       throw new ConflictRequestError("Receiver and sender are already friend of each other!");
     }
+    // check receiverId have already sent a request to senderId (người được chấp nhận lời mời kết bạn phải gửi lời mời từ trước rồi)
+    const isReceiverSentRequest = await this.hasRequestedFriend(receiverId, currentUserId);
+    if(!isReceiverSentRequest){
+      throw new ConflictRequestError("Receiver has not sent you a friend request!");
+    }
+    
     // delete FRIEND_REQUEST relation from receiver side
     await this.deleteFriendRequest(receiverId, currentUserId);
     // create IS_FRIEND relationship
@@ -179,6 +183,130 @@ class FriendService {
       throw new ConflictRequestError("Receiver has not send friend request to you");
     }
     await this.deleteFriendRequest(receiverId, currentUserId);
+  }
+  getListFriendsOfUser = async (curUserId: string, userId: string, query: QueryGetFriendOfUser): Promise<{
+    friendList: StandardFriendResponse[],
+    pagination: LazyPagination,
+  }> => {
+    const limit = 12;
+    if(!(await userService.getUserById(userId, ['_id']))){
+      throw new NotFoundRequestError("Not found user");
+    }
+    const filter: any = {};
+    if(query.lastItem){
+      filter.lastItem = query.lastItem;
+    }
+    if(query.keyword){
+      filter.keyword = query.keyword;
+    }
+    filter.userId = userId;
+    const rawResult = await userNodeRepository.getIsFriendList({
+      ...filter,
+      limit,
+    });
+    const friendListFinal = rawResult.map(item => friendConverter.toStandardFriend(item));
+    return {
+      friendList: friendListFinal,
+      pagination: {
+        hasNext: rawResult.length == limit,
+        lastItem: rawResult.length != 0 ? rawResult[rawResult.length - 1].rel.createdAt.getTime() : null,
+      }
+    }
+  }
+
+  countTotalFollowing = async (viewerId: string, userId: string) => {
+    // check user exist
+    const foundUser = await userService.getUserById(userId);
+    if(!foundUser){
+      throw new NotFoundRequestError("Not found user");
+    }
+    // sau nếu muốn người bị block ko xem được thì code thêm
+    // if(viewerId != userId){}
+    return await userNodeRepository.countRequestFriend(userId);
+  }
+  countTotalFollower = async (viewerId: string, userId: string) => {
+    // check user exist
+    const foundUser = await userService.getUserById(userId);
+    if(!foundUser){
+      throw new NotFoundRequestError("Not found user");
+    }
+    // sau nếu muốn người bị block ko xem được thì code thêm
+    // if(viewerId != userId){}
+    return await userNodeRepository.countReceivedRequestFriend(userId);
+  }
+
+  getFollowingUserList = async (curUserId: string, userId: string, query: QueryGetFollowingList): Promise<{
+    userList: StandardFriendResponse[],
+    pagination: LazyPagination,
+  }> => {
+    const filter: any = {};
+    const limit = 12;
+    // check userId exist
+    if(!(await userService.getUserById(userId))){
+      throw new NotFoundRequestError("User not found");
+    }
+    filter.userId = userId;
+    // block logic (nếu có)
+    // if(curUserId != userId) { //check block or not }
+
+    // handle query
+    if(query.lastItem){
+      filter.lastItem = query.lastItem;
+    }
+    // end handle query
+
+    // get list from db
+    const rawList = await userNodeRepository.getRequestFriendList({
+      ...filter,
+      limit,
+    });
+    const userResponse = rawList.map(item => {
+      return friendConverter.toStandardFriend(item);
+    });
+    return {
+      userList: userResponse,
+      pagination: {
+        hasNext: limit == rawList.length,
+        lastItem: rawList.length != 0 ? rawList[rawList.length - 1].rel.createdAt.getTime() : null,
+      }
+    }
+  }
+
+  getFollowerList = async (curUserId: string, userId: string, query: QueryGetFollowerList): Promise<{
+    userList: StandardFriendResponse[],
+    pagination: LazyPagination,
+  }> => {
+    const filter: any = {};
+    const limit = 12;
+    // check userId exist
+    if(!(await userService.getUserById(userId))){
+      throw new NotFoundRequestError("User not found");
+    }
+    filter.userId = userId;
+    // block logic (nếu có)
+    // if(curUserId != userId) { //check block or not }
+
+    // handle query
+    if(query.lastItem){
+      filter.lastItem = query.lastItem;
+    }
+    // end handle query
+
+    // get list from db
+    const rawList = await userNodeRepository.getReceivedRequestedFriendList({
+      ...filter,
+      limit,
+    });
+    const userResponse = rawList.map(item => {
+      return friendConverter.toStandardFriend(item);
+    });
+    return {
+      userList: userResponse,
+      pagination: {
+        hasNext: limit == rawList.length,
+        lastItem: rawList.length != 0 ? rawList[rawList.length - 1].rel.createdAt.getTime() : null,
+      }
+    }
   }
 }
 export default new FriendService();

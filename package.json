@@ -17,5 +17,8 @@
     "typescript"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "framer-motion": "^12.23.26"
+  }
 }

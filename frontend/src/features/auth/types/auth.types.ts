@@ -11,6 +11,14 @@ export interface RegisterRequest {
     phone: string;
 }
 
+export interface RegisterFormData {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    username: string;
+    phone: string;
+}
+
 // Response types
 export interface ApiResponse<T> {
     success: boolean;
