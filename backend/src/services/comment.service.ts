@@ -14,6 +14,7 @@ import { FullComment } from '../types/comments/comment';
 import userService from './user.service';
 import postRepository from '../repositories/post/post.repository';
 import {
+    CountTotalReactNameQuery,
     GetCommentListQuery,
     GetReplyCommentListQuery,
 } from '../types/comments/comment.query';
@@ -339,7 +340,7 @@ class CommentService {
     };
     /**
      * Hàm xử lí logic feature user xóa tương tác tới comment
-     * @param data 
+     * @param data
      */
     unReactToComment = async (data: {
         curUserId: string;
@@ -365,11 +366,41 @@ class CommentService {
             // decrease in react in mongo
             commentRepository.modifyReact(commentId, reactRelation.name, -1),
             // delete relation in neo4j
-            commentNodeRepository.deleteSendReact(
-                curUserId,
-                commentId
-            ),
+            commentNodeRepository.deleteSendReact(curUserId, commentId),
         ]);
+    };
+    /**
+     * Hàm xử lí logic feature đếm tổng lượng tương tác của bài viết
+     * @param data 
+     * @returns 
+     */
+    countTotalReactOfComment = async (data: {
+        curUserId: string;
+        postId: string;
+        commentId: string;
+        query: CountTotalReactNameQuery;
+    }) => {
+        const { curUserId, postId, commentId, query } = data;
+        // check comment exist
+        const foundComment = await commentRepository.findOneByNormalFilter(
+            {
+                _id: commentId,
+                postId,
+                deletedAt: null,
+            },
+            ['_id', 'totalReact']
+        );
+        if (!foundComment) {
+            throw new NotFoundRequestError('Not found comment');
+        }
+        console.log(query.reactName);
+
+        const total = !query.reactName
+            ? foundComment.totalReact.reduce((acc, item) => acc + item.total, 0)
+            : foundComment.totalReact.find(
+                  item => item.name == query.reactName
+              )!.total;
+        return total;
     };
 }
 

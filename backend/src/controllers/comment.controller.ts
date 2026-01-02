@@ -9,6 +9,7 @@ import { ApiResponse } from '../utils/api-response.util';
 import commentService from '../services/comment.service';
 import { CommentDetailParams } from '../types/comments/comment.params';
 import {
+    CountTotalReactNameQuery,
     GetCommentListQuery,
     GetReplyCommentListQuery,
 } from '../types/comments/comment.query';
@@ -164,6 +165,32 @@ class CommentController {
             });
             res.json(
                 ApiResponse.success('Delete react to comment successfully', null)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    // [GET] /:postId/comments/:commentId/reacts/total
+    countTotalReact = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as CommentDetailParams;
+            const query = req.query as CountTotalReactNameQuery;
+            const total = await commentService.countTotalReactOfComment({
+                commentId: params.commentId,
+                curUserId: curUserId,
+                postId: params.postId,
+                query: query
+            });
+            res.json(
+                ApiResponse.success('Delete react to comment successfully', {
+                    total: total
+                })
             );
         } catch (error) {
             next(error);

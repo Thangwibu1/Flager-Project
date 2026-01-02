@@ -8,7 +8,7 @@ import { queryCountReactOfPostSchema } from '../types/post/post.query';
 import { createCommentToPostBodySchema, replyCommentBodySchema, sendReactToCommentBodySchema } from '../types/comments/comment.request';
 import commentController from '../controllers/comment.controller';
 import { commentDetailParams } from '../types/comments/comment.params';
-import { getCommentListSchema, getReplyCommentListSchema } from '../types/comments/comment.query';
+import { countTotalCommentReactQuery, getCommentListSchema, getReplyCommentListSchema } from '../types/comments/comment.query';
 const router = Router();
 // post section
 router.post('/', validateBody(postCreate), authenticateUserMiddleware, postController.createPost);
@@ -27,6 +27,6 @@ router.get('/:postId/comments/:commentId/replies', validateParams(commentDetailP
 router.post('/:postId/comments/:commentId/replies', validateParams(commentDetailParams), validateBody(replyCommentBodySchema), authenticateUserMiddleware, commentController.replyToComment);
 // comment's react section
 router.post('/:postId/comments/:commentId/reacts/', validateParams(commentDetailParams), validateBody(sendReactToCommentBodySchema), authenticateUserMiddleware, commentController.sendReactToComment);
-// router.get('/:postId/comments/:commentId/reacts/total', validateParams(commentDetailParams), );
+router.get('/:postId/comments/:commentId/reacts/total', validateParams(commentDetailParams), validateQuery(countTotalCommentReactQuery), authenticateUserMiddleware, commentController.countTotalReact);
 router.delete('/:postId/comments/:commentId/reacts', validateParams(commentDetailParams), authenticateUserMiddleware, commentController.unReactToComment);
 export default router;
