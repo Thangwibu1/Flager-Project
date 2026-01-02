@@ -1,5 +1,5 @@
 import { SortOrder, Types } from 'mongoose';
-import { Comment, ICommentDocument } from '../../models/comment/comment.model.mongo';
+import { Comment } from '../../models/comment/comment.model.mongo';
 import { FullComment } from '../../types/comments/comment';
 import { parseKeyStringValueToObject } from '../../utils/parser.util';
 import { ReactName } from '../../config/enum/post.enum';

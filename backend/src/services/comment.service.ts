@@ -1,4 +1,7 @@
-import { NotFoundRequestError } from '../errors/api/ApiError';
+import {
+    ConflictRequestError,
+    NotFoundRequestError,
+} from '../errors/api/ApiError';
 import commentRepository from '../repositories/comment/comment.repository';
 import {
     CreateCommentToPostBodyDTO,
@@ -24,33 +27,36 @@ import {
 class CommentService {
     /**
      * Hàm giúp kiểm tra trong post có chứa cmt cần kiểm tra không
-     * @param postId 
-     * @param commentId 
-     * @returns 
+     * @param postId
+     * @param commentId
+     * @returns
      */
     isCommentOfPostExist = async (postId: string, commentId: string) => {
-        const isTrue = await commentRepository.findOneByNormalFilter({
-            _id: commentId,
-            postId,
-            deletedAt: null,
-        }, ['_id']);
+        const isTrue = await commentRepository.findOneByNormalFilter(
+            {
+                _id: commentId,
+                postId,
+                deletedAt: null,
+            },
+            ['_id']
+        );
         return isTrue;
     };
     /**
      * Hàm giúp tìm cmt theo id
-     * @param id 
-     * @param select 
-     * @returns 
+     * @param id
+     * @param select
+     * @returns
      */
     getCommentById = async (id: string, select: (keyof FullComment)[] = []) => {
         return await commentRepository.findOneById(id, select);
     };
     /**
      * Hàm xử lí feature cho user cmt vào 1 post(reply sẽ ở 1 hàm khác)
-     * @param curUserId 
-     * @param postId 
-     * @param body 
-     * @returns 
+     * @param curUserId
+     * @param postId
+     * @param body
+     * @returns
      */
     createCommentToPost = async (
         curUserId: string,
@@ -77,8 +83,8 @@ class CommentService {
     };
     /**
      * Hàm xử lí logic feature user phản hồi 1 comment
-     * @param param0 
-     * @returns 
+     * @param param0
+     * @returns
      */
     replyToComment = async ({
         userId,
@@ -131,9 +137,9 @@ class CommentService {
     };
     /**
      * Hàm xử lí nghiệp vụ user xóa comment
-     * @param userId 
-     * @param postId 
-     * @param commentId 
+     * @param userId
+     * @param postId
+     * @param commentId
      */
     deleteComment = async (
         userId: string,
@@ -172,10 +178,10 @@ class CommentService {
     };
     /**
      * Hàm xử lí logic feature lấy danh sách comment của post
-     * @param curUserId 
-     * @param postId 
-     * @param query 
-     * @returns 
+     * @param curUserId
+     * @param postId
+     * @param query
+     * @returns
      */
     getCommentListOfPost = async (
         curUserId: string,
@@ -221,8 +227,8 @@ class CommentService {
     };
     /**
      * Hàm xử lí feature lấy phản hồi của comment
-     * @param param0 
-     * @returns 
+     * @param param0
+     * @returns
      */
     getReplyListOfComment = async ({
         curUserId,
@@ -283,7 +289,7 @@ class CommentService {
     };
     /**
      * Hàm xử lí feature cho user gửi tương tác đến cmt
-     * @param data 
+     * @param data
      */
     sendReactToComment = async (data: {
         curUserId: string;
@@ -311,8 +317,8 @@ class CommentService {
                 ),
                 // increase new react in mongo
                 commentRepository.modifyReact(commentId, body.reactName, 1),
-                // create relation in neo4j
-                commentNodeRepository.createSendReactToComment(
+                // update relation in neo4j
+                commentNodeRepository.updateSendReactToComment(
                     curUserId,
                     commentId,
                     { reactName: body.reactName }
@@ -330,6 +336,40 @@ class CommentService {
                 ),
             ]);
         }
+    };
+    /**
+     * Hàm xử lí logic feature user xóa tương tác tới comment
+     * @param data 
+     */
+    unReactToComment = async (data: {
+        curUserId: string;
+        postId: string;
+        commentId: string;
+    }) => {
+        const { curUserId, postId, commentId } = data;
+        const [foundComment, reactRelation] = await Promise.all([
+            // check post exist
+            this.isCommentOfPostExist(postId, commentId),
+            // check người này có tương tác với post trước đó chưa
+            commentNodeRepository.findSendReactRelation(curUserId, commentId),
+        ]);
+        if (!foundComment) {
+            throw new NotFoundRequestError('Not found comment');
+        }
+        if (!reactRelation) {
+            throw new ConflictRequestError(
+                'You have not sent a react to this comment before'
+            );
+        }
+        await Promise.all([
+            // decrease in react in mongo
+            commentRepository.modifyReact(commentId, reactRelation.name, -1),
+            // delete relation in neo4j
+            commentNodeRepository.deleteSendReact(
+                curUserId,
+                commentId
+            ),
+        ]);
     };
 }
 

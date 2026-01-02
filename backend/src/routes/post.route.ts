@@ -27,4 +27,6 @@ router.get('/:postId/comments/:commentId/replies', validateParams(commentDetailP
 router.post('/:postId/comments/:commentId/replies', validateParams(commentDetailParams), validateBody(replyCommentBodySchema), authenticateUserMiddleware, commentController.replyToComment);
 // comment's react section
 router.post('/:postId/comments/:commentId/reacts/', validateParams(commentDetailParams), validateBody(sendReactToCommentBodySchema), authenticateUserMiddleware, commentController.sendReactToComment);
+// router.get('/:postId/comments/:commentId/reacts/total', validateParams(commentDetailParams), );
+router.delete('/:postId/comments/:commentId/reacts', validateParams(commentDetailParams), authenticateUserMiddleware, commentController.unReactToComment);
 export default router;

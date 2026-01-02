@@ -148,6 +148,27 @@ class CommentController {
             next(error);
         }
     };
+    // [DELETE] /:postId/comments/:commentId/reacts
+    unReactToComment = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const curUserId = req.user!.id;
+            const params = req.params as CommentDetailParams;
+            await commentService.unReactToComment({
+                commentId: params.commentId,
+                postId: params.postId,
+                curUserId: curUserId,
+            });
+            res.json(
+                ApiResponse.success('Delete react to comment successfully', null)
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 export default new CommentController();
