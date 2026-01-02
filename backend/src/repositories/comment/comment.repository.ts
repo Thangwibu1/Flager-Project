@@ -2,6 +2,7 @@ import { SortOrder, Types } from 'mongoose';
 import { Comment, ICommentDocument } from '../../models/comment/comment.model.mongo';
 import { FullComment } from '../../types/comments/comment';
 import { parseKeyStringValueToObject } from '../../utils/parser.util';
+import { ReactName } from '../../config/enum/post.enum';
 
 class CommentRepository {
     createOne = async (data: {
@@ -49,6 +50,18 @@ class CommentRepository {
             }
         );
     };
+
+    modifyReact = async (commentId: string, reactName: ReactName, amount: number) => {
+        await Comment.updateOne({
+            _id: commentId,
+            "totalReact.name": reactName,
+            deletedAt: null
+        }, {
+            $inc: {
+                "totalReact.$.total": amount,
+            }
+        });
+    }
 
     deleteOneById = async (id: string) => {
         await Comment.updateOne(

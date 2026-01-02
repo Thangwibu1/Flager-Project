@@ -1,4 +1,8 @@
-import { ConflictRequestError, ForbiddenRequestError, NotFoundRequestError } from '../errors/api/ApiError';
+import {
+    ConflictRequestError,
+    ForbiddenRequestError,
+    NotFoundRequestError,
+} from '../errors/api/ApiError';
 import postRepository from '../repositories/post/post.repository';
 import postNodeRepository from '../repositories/post/post.repository.graph';
 import {
@@ -7,14 +11,15 @@ import {
     PostUpdateDTO,
     SendReactToPostDTO,
 } from '../types/post/post.request';
-import {
-    StandardPostResponse,
-} from '../types/post/post.response';
+import { StandardPostResponse } from '../types/post/post.response';
 import userService from './user.service';
 import * as postConverter from '../converters/post.converter';
 import { LazyPagination } from '../types/pagination/pagination.response';
 import { ReactName, ViewType } from '../config/enum/post.enum';
-import { QueryCountReactOfPost, QueryPostListOfUser } from '../types/post/post.query';
+import {
+    QueryCountReactOfPost,
+    QueryPostListOfUser,
+} from '../types/post/post.query';
 import userNodeRepository from '../repositories/user/user.repository.graph';
 import { UserNotFoundError } from '../errors/user/UserError';
 class PostService {
@@ -93,7 +98,7 @@ class PostService {
             limit,
         });
         // convert post response
-        const postListResponse = postList.map((item) =>
+        const postListResponse = postList.map(item =>
             postConverter.toStandardPost(item)
         );
         return {
@@ -114,10 +119,10 @@ class PostService {
      */
     sendReactToPost = async (
         currentUserId: string,
-        postId: string, 
-        body: SendReactToPostDTO,
+        postId: string,
+        body: SendReactToPostDTO
     ) => {
-        const {  reactName } = body;
+        const { reactName } = body;
         // check post exist
         const existPost = await this.getPostById(postId, ['_id']);
         if (!existPost) {
@@ -198,10 +203,14 @@ class PostService {
                 'You have not permission to update this post'
             );
         }
-        // update post
-        await postRepository.updatePostById(postId, {
-            deletedAt: new Date(),
-        });
+        await Promise.all([
+            // delete post
+            postRepository.updatePostById(postId, {
+                deletedAt: new Date(),
+            }),
+            // delete post node
+            postNodeRepository.deleteNodeById(postId),
+        ]);
     };
     /**
      * Hàm xử lí logic nghiệp vụ (đếm tổng tương tác của 1 bài viết)
@@ -224,15 +233,10 @@ class PostService {
             throw new NotFoundRequestError('Not found post');
         }
         // handle query
-        const total =
-            query.reactName == undefined
-                ? foundPost.totalReact.reduce(
-                      (acc, item) => item.total + acc,
-                      0
-                  )
-                : foundPost.totalReact.find(
-                      item => item.name == query.reactName
-                  )?.total;
+        const total = !query.reactName
+            ? foundPost.totalReact.reduce((acc, item) => item.total + acc, 0)
+            : foundPost.totalReact.find(item => item.name == query.reactName)
+                  ?.total;
         // end handle query
         return total;
     };

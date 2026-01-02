@@ -1,6 +1,5 @@
 import { Relationship } from "neo4j-driver";
 import { ReactName } from "../../config/enum/post.enum";
-import * as neo4jUtil from '../../utils/converters/neo4j.converter.util';
 export interface ISendReactRelation {
   name: ReactName;
 }
