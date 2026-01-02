@@ -15,9 +15,14 @@ export const apiClient: AxiosInstance = axios.create({
 // Request interceptor
 apiClient.interceptors.request.use(
     config => {
-        const deviceId = getOrCreateDeviceId();
-        const token = localStorage.getItem('accessToken');
+        //  const deviceId = getOrCreateDeviceId();
+        const deviceId = '123';
 
+        // const token = localStorage.getItem('accessToken');
+        const token =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTRhNzE5ZGQwZGMyZjUzZjUyNmY5NTMiLCJpYXQiOjE3NjczMjgwNTksImV4cCI6MTc2NzQxNDQ1OX0.cus1I88xwKT8KSWOghBndWaMJBMtEMAr_gR9un07d4k';
+
+            
         // Always add deviceId to all requests
         config.headers['x-device-id'] = deviceId;
 
