@@ -1,5 +1,8 @@
+import { GroupChatNotFoundError } from '../errors/group/GroupError';
+import { UserNotFoundError } from '../errors/user/UserError';
 import groupChatRepository from '../repositories/groupChat/group-chat.repository';
 import groupChatRepositoryGraph from '../repositories/groupChat/group-chat.repository.graph';
+import userRepository from '../repositories/user/user.repository';
 import { GroupChat } from '../types/group/GroupChat';
 
 class GroupChatService {
@@ -26,6 +29,11 @@ class GroupChatService {
         },
         friendId?: string
     ) => {
+        const creator = await userRepository.findById(creatorId);
+        if (!creator) {
+            throw new UserNotFoundError();
+        }
+
         // Nếu là groupChat thì cần có admin, nếu là privateChat thì không cần
         const groupChatData =
             data.type === 'groupChat' ? { ...data, admin: creatorId } : data;
@@ -49,7 +57,7 @@ class GroupChatService {
                     groupChat._id.toString()
                 );
             } catch (error) {
-                throw new Error("Can't add friend to private chat");
+                throw new UserNotFoundError("Can't add friend to private chat");
             }
         }
         return groupChat;
@@ -60,6 +68,14 @@ class GroupChatService {
         groupChatId: string,
         adderId?: string
     ) => {
+        const user = await userRepository.findById(userId);
+        if (!user) {
+            throw new UserNotFoundError();
+        }
+        const groupChatFound = await groupChatRepository.findById(groupChatId);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const groupChat = await groupChatRepositoryGraph.addMember(
             userId,
             groupChatId,
@@ -69,6 +85,10 @@ class GroupChatService {
     };
 
     updateName = async (id: string, name: string) => {
+        const groupChatFound = await groupChatRepository.findById(id);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const updatedGroupChat = await groupChatRepository.updateById(id, {
             name,
         });
@@ -76,8 +96,48 @@ class GroupChatService {
     };
 
     delete = async (id: string) => {
+        const groupChatFound = await groupChatRepository.findById(id);
+        if (!groupChatFound) {
+            throw new GroupChatNotFoundError();
+        }
         const deletedGroupChat = await groupChatRepository.deleteById(id);
         return deletedGroupChat;
+    };
+
+    /**
+     * Get all group chats for a user using Neo4j graph repository
+     */
+    getGroupChatsByUserId = async (userId: string) => {
+        // Get group chat nodes from Neo4j
+        const groupChatNodes = await groupChatRepositoryGraph.findByUserId(
+            userId
+        );
+
+        if (!groupChatNodes || groupChatNodes.length === 0) {
+            return [];
+        }
+
+        // Get full group chat details from MongoDB
+        const groupChatIds = groupChatNodes.map(node => node.id);
+        const groupChats = await Promise.all(
+            groupChatIds.map(id => groupChatRepository.findById(id))
+        );
+
+        // Filter out null values
+        return groupChats.filter(gc => gc !== null);
+    };
+
+    /**
+     * Get single group chat by ID
+     */
+    getGroupChatById = async (groupChatId: string) => {
+        const groupChat = await groupChatRepository.findById(groupChatId);
+
+        if (!groupChat) {
+            throw new GroupChatNotFoundError();
+        }
+
+        return groupChat;
     };
 }
 

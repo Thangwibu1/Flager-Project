@@ -1,4 +1,4 @@
-import { User } from '../../models/user/user.model.mongo'; 
+import { User } from '../../models/user/User.model.mongo';
 import { FullUser } from '../../types/user/user.request';
 
 class UserRepository {
@@ -24,10 +24,13 @@ class UserRepository {
     };
 
     updateByUserId = async (userId: string, data: any) => {
-        await User.updateOne({
-            _id: userId,
-            deletedAt: null,
-        }, data);
-    }
+        await User.updateOne(
+            {
+                _id: userId,
+                deletedAt: null,
+            },
+            data
+        );
+    };
 }
 export default new UserRepository();

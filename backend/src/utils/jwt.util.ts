@@ -8,10 +8,15 @@ import {
 import { JwtPayload } from '../types/jwt/Jwt';
 
 // generated access token
-export const generateAccessToken = (userId: string, email?: string): string => {
+export const generateAccessToken = (
+    userId: string,
+    email?: string,
+    username?: string
+): string => {
     const payload: JwtPayload = {
         userId,
         email,
+        username,
         // JWT tự động thêm iat và exp khi sign
     };
 

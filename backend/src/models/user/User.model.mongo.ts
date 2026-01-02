@@ -9,6 +9,7 @@ const UserSchema = new Schema<IUserDocument>(
         email: { type: String, required: true, unique: true },
         username: { type: String },
         password: { type: String, required: true },
+        avatar: { type: String, required: false, default: '' },
         phone: { type: String, required: true },
         deletedAt: { type: Date, default: null },
     },

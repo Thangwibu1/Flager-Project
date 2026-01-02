@@ -1,0 +1,147 @@
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: white;
+}
+
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    background: #fafafa;
+    position: relative;
+}
+
+.messages-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.messages-list {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Load More Button */
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+}
+
+.load-more-button {
+    padding: 8px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    background: white;
+    color: #667eea;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.load-more-button:hover:not(:disabled) {
+    background: #f5f5f5;
+    border-color: #667eea;
+}
+
+.load-more-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.loading-spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading State */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #999;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-state p {
+    margin-top: 16px;
+    font-size: 14px;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 40px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 14px;
+    color: #999;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .messages-list {
+        padding: 16px;
+    }
+
+    .empty-icon {
+        font-size: 48px;
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+    }
+}

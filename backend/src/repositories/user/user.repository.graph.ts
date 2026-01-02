@@ -10,8 +10,8 @@ import * as neo4jConverter from '../../utils/converters/neo4j.converter.util';
 import { RequestFriendRelation } from '../../models/user/friend-request-relation.model.neo4j';
 import { IsFriendRelation } from '../../models/user/is-friend-relation.model.neo4j';
 import * as formatter from '../../utils/formatter.util';
+import { neo4jClient } from '../../config/database/neo4j.config';
 class UserNodeRepository extends BaseGraphRepo {
-
     // =========================================== CRUD USER ==========================================
 
     /**
@@ -33,7 +33,7 @@ class UserNodeRepository extends BaseGraphRepo {
             if (records.length == 0) return false;
             return true;
         });
-    }
+    };
     /**
      * Hàm giúp tìm user theo id và tự động map về đúng type định nghĩ trong User model
      * @param id
@@ -51,18 +51,21 @@ class UserNodeRepository extends BaseGraphRepo {
                 ? UserNode.formatRaw(records[0].get('u'))
                 : null;
         });
-    }
+    };
 
-    updateNodeById = async (id: string, data: {username: string}): Promise<void> => {
+    updateNodeById = async (
+        id: string,
+        data: { username: string }
+    ): Promise<void> => {
         const setter = formatter.formatObjectToNeo4jSetter('u', data);
         const cypher = `
             MATCH (u:${neo4jInfo.node.user} { id: $id })
             SET ${setter}
         `;
-        return this.write(async (tx) => {
+        return this.write(async tx => {
             await tx.run(cypher, { ...data, id });
         });
-    }
+    };
     // =========================================== END CRUD USER =========================================
 
     // =============================== USER _REQUEST_FRIEND_ USER ========================================
@@ -116,6 +119,38 @@ class UserNodeRepository extends BaseGraphRepo {
         });
     };
     /**
+     * Đếm số lượng người dùng mà user đã gửi lời mời cho
+     * @param userId
+     * @returns
+     */
+    countRequestFriend = (userId: string) => {
+        const cypher = `
+                MATCH (u:${neo4jInfo.node.user} {id: $userId})-[r:${neo4jInfo.rel.user.requestFriend}]->(u2:${neo4jInfo.node.user})
+                RETURN COUNT(r) as total_requests
+            `;
+        return this.read(async tx => {
+            const result = await tx.run(cypher, { userId });
+            const record = result.records[0];
+            return neo4jConverter.toPureNumber(record.get('total_requests'));
+        });
+    };
+    /**
+     * Đếm số lượng request mà user này nhận được
+     * @param userId 
+     * @returns 
+     */
+    countReceivedRequestFriend = (userId: string) => {
+        const cypher = `
+                MATCH (u2:${neo4jInfo.node.user} )-[r:${neo4jInfo.rel.user.requestFriend}]->(u:${neo4jInfo.node.user}  {id: $userId})
+                RETURN COUNT(r) as total_requests
+            `;
+        return this.read(async tx => {
+            const result = await tx.run(cypher, { userId });
+            const record = result.records[0];
+            return neo4jConverter.toPureNumber(record.get('total_requests'));
+        });
+    };
+    /**
      * Xóa cạnh request friend từ user1 -> user2
      * @param fromId
      * @param toId
@@ -135,6 +170,79 @@ class UserNodeRepository extends BaseGraphRepo {
             return cntDelete == 0 ? false : true;
         });
     };
+    getRequestFriendList = async ({
+        userId,
+        lastItem,
+        limit = 12,
+    }: {
+        userId: string,
+        lastItem?: number,
+        limit?: number,
+    }) => {
+        const filterParams : {[key: string]: any} = {};
+        filterParams.userId = userId;
+        let where = ` WHERE 1=1 `;
+        const orderBy = ` ORDER BY r.createdAt DESC `;
+        if(lastItem){
+            filterParams.createdAt = lastItem;
+            where += ` AND r.createdAt < $createdAt `;
+        }
+
+        const cypher = `
+            MATCH (u1:${neo4jInfo.node.user} { id: $userId }) -[r: ${neo4jInfo.rel.user.requestFriend}]-> (u2:${neo4jInfo.node.user} )
+            ${where}
+            ${orderBy}
+            LIMIT ${limit}
+            RETURN u2, r
+        `;
+        return this.read(async (tx) => {
+            const result = await tx.run(cypher, filterParams);
+            const records = result.records;
+            return records.map(item => {
+                return {
+                    node: UserNode.formatRaw(item.get('u2')),
+                    rel: RequestFriendRelation.formatRaw(item.get('r'))
+                }
+            });
+        })
+    }
+
+    getReceivedRequestedFriendList = async ({
+        userId,
+        lastItem,
+        limit = 12,
+    }: {
+        userId: string,
+        lastItem?: number,
+        limit?: number,
+    }) => {
+        const filterParams : {[key: string]: any} = {};
+        filterParams.userId = userId;
+        let where = ` WHERE 1=1 `;
+        const orderBy = ` ORDER BY r.createdAt DESC `;
+        if(lastItem){
+            filterParams.createdAt = lastItem;
+            where += ` AND r.createdAt < $createdAt `;
+        }
+
+        const cypher = `
+            MATCH (u1:${neo4jInfo.node.user} { id: $userId }) <-[r: ${neo4jInfo.rel.user.requestFriend}]- (u2:${neo4jInfo.node.user} )
+            ${where}
+            ${orderBy}
+            LIMIT ${limit}
+            RETURN u2, r
+        `;
+        return this.read(async (tx) => {
+            const result = await tx.run(cypher, filterParams);
+            const records = result.records;
+            return records.map(item => {
+                return {
+                    node: UserNode.formatRaw(item.get('u2')),
+                    rel: RequestFriendRelation.formatRaw(item.get('r'))
+                }
+            });
+        })
+    }
     // =============================== END USER _REQUEST_FRIEND_ USER =======================================
 
     // =============================== USER _IS_FRIEND_ USER ================================================
@@ -155,7 +263,7 @@ class UserNodeRepository extends BaseGraphRepo {
           MATCH (u2:User) WHERE u2.id = $toId
     
           MERGE (u1)-[r1:${neo4jInfo.rel.user.isFriend}]->(u2)
-          ON CREATE SET r.createdAt = $createdAt
+          ON CREATE SET r1.createdAt = $createdAt
           MERGE (u2)-[r2:${neo4jInfo.rel.user.isFriend}]->(u1)
           ON CREATE SET r2.createdAt = $createdAt
           RETURN r1, r2
@@ -202,15 +310,55 @@ class UserNodeRepository extends BaseGraphRepo {
             const result = await tx.run(cypher, { fromId, toId });
             const cntDelete =
                 result.summary.counters.updates().relationshipsDeleted;
-            console.log('>>>cntDelete', cntDelete);
             return cntDelete == 2 ? true : false;
         });
     };
 
+    getIsFriendList = async ({
+        userId,
+        keyword,
+        lastItem,
+        limit = 12,
+    }: {
+        userId: string;
+        keyword?: string;
+        lastItem?: number;
+        limit?: number;
+    }) => {
+        const filterParams: any = {};
+        filterParams.userId = userId;
+        let where = ' WHERE 1=1 ';
+        let orderBy = ' ORDER BY r.createdAt DESC';
+        if (lastItem) {
+            filterParams.createdAt = lastItem;
+            where += ' AND r.createdAt < $createdAt ';
+        }
+        if (keyword) {
+            filterParams.keyword = keyword;
+            where += ' AND apoc.text.clean(toLower(u2.username)) CONTAINS apoc.text.clean(toLower($keyword)) ';
+        }
+        const cypher = `
+            MATCH (u1: ${neo4jInfo.node.user} {id: $userId}) -[r: ${neo4jInfo.rel.user.isFriend}]-> (u2: ${neo4jInfo.node.user})
+            ${where}
+            ${orderBy}
+            LIMIT ${limit}
+            RETURN u2, r
+        `;
+        return this.read(async tx => {
+            const result = await tx.run(cypher, filterParams);
+            const records = result.records;
+            return records.map(record => {
+                return {
+                    node: UserNode.formatRaw(record.get('u2')),
+                    rel: IsFriendRelation.formatRaw(record.get('r')),
+                };
+            });
+        });
+    };
     /**
-     * Hàm giúp đếm số lượng bạn bè của user1 nếu theo mẫu user1->user2: tức count số lượng user2 
-     * @param userId 
-     * @returns 
+     * Hàm giúp đếm số lượng bạn bè của user1 nếu theo mẫu user1->user2: tức count số lượng user2
+     * @param userId
+     * @returns
      */
     countUserIsFriendOf = async (userId: string): Promise<number> => {
         const cypher = `
@@ -288,6 +436,18 @@ class UserNodeRepository extends BaseGraphRepo {
         });
     };
 
+    deleteSendReact = async (userId: string, postId: string) => {
+        const cypher = `
+            MATCH (u:${neo4jInfo.node.user} {id: $userId})-[r:${neo4jInfo.rel.post.react}]->(p:${neo4jInfo.node.post} {id: $postId})
+            DELETE r
+        `;
+        return this.write(async tx => {
+            const result = await tx.run(cypher, { userId, postId });
+            const cntDelete =
+                result.summary.counters.updates().relationshipsDeleted;
+            return cntDelete == 1 ? true : false;
+        });
+    };
     // =============================== END USER send react to POST =========================================
 }
 export default new UserNodeRepository();
