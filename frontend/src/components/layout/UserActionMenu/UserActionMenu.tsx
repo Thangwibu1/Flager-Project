@@ -46,9 +46,17 @@ export default function UserActionMenu({ start = 4, end = 7 }) {
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Node;
+            const dropdown = document.querySelector(
+                '.user-action-menu__dropdown'
+            );
+
+            // Don't close if clicking on avatar or dropdown
             if (
                 avatarRef.current &&
-                !avatarRef.current.contains(event.target as Node)
+                !avatarRef.current.contains(target) &&
+                dropdown &&
+                !dropdown.contains(target)
             ) {
                 setIsDropdownOpen(false);
             }
@@ -114,10 +122,16 @@ export default function UserActionMenu({ start = 4, end = 7 }) {
                         right: `${dropdownPosition.right}px`,
                     }}
                 >
-                    <div className="user-action-menu__dropdown-header">
+                    <button
+                        className="user-action-menu__dropdown-header user-action-menu__dropdown-header--clickable"
+                        onClick={() => {
+                            setIsDropdownOpen(false);
+                            navigate('/profile');
+                        }}
+                    >
                         <User size={16} />
                         <span>My Account</span>
-                    </div>
+                    </button>
                     <div className="user-action-menu__dropdown-divider"></div>
                     <button
                         className="user-action-menu__dropdown-item"

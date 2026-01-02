@@ -109,6 +109,21 @@
     font-size: 14px;
 }
 
+/* Clickable Dropdown Header */
+.user-action-menu__dropdown-header--clickable {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.user-action-menu__dropdown-header--clickable:hover {
+    background: rgba(84, 59, 59, 0.3);
+}
+
 /* Dropdown Divider */
 .user-action-menu__dropdown-divider {
     height: 1px;

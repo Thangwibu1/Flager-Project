@@ -1,17 +1,16 @@
-import IconBar from '@/components/Layout/IconBar/IconBar';
-import LogoBar from '@/components/Layout/LogoBar/LogoBar';
-import Header from '@/components/Layout/Header/Header';
-import ProfileCover from '@/components/Layout/ProfileCover/ProfileCover';
-import ProfileHeader from '@/components/Layout/ProfileHeader/ProfileHeader';
-import ProfileInfo from '@/components/Layout/ProfileInfo/ProfileInfo';
-import ProfileTabs from '@/components/Layout/ProfileTabs/ProfileTabs';
-import ProfileBody from '@/components/Layout/ProfileBody/ProfileBody';
-import LeftSidebar from '@/components/Layout/LeftSidebar/LeftSidebar';
+import IconBar from '@/components/layout/IconBar/IconBar';
+import LogoBar from '@/components/layout/LogoBar/LogoBar';
+import Header from '@/components/layout/Header/Header';
+import ProfileCover from '@/components/layout/ProfileCover/ProfileCover';
+import ProfileHeader from '@/components/layout/ProfileHeader/ProfileHeader';
+import ProfileInfo from '@/components/layout/ProfileInfo/ProfileInfo';
+import ProfileTabs from '@/components/layout/ProfileTabs/ProfileTabs';
+import ProfileBody from '@/components/layout/ProfileBody/ProfileBody';
+import LeftSidebar from '@/components/layout/LeftSidebar/LeftSidebar';
 import { MdWork, MdSchool, MdLocationOn, MdFavorite } from 'react-icons/md';
 import './ProfilePage.css';
 import UserActionMenu from '@/components/layout/UserActionMenu/UserActionMenu';
 import Navbar from '@/components/layout/Navbar/Navbar';
-import RightSideBarHomePost from '@/components/Layout/RightSideBarHomePost/RightSideBarHomePost';
 import RightSidebar from '@/components/layout/RightSidebar/RightSidebar';
 
 export function ProfilePage() {

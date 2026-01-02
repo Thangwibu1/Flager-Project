@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import HomePost from './pages/homepost/HomePost';
 import { AuthRoutes } from './routes/AuthRoutes';
 import { MessagePage } from './pages/messagepage/MessagePage';
+import { ProfilePage } from './pages/profilepage/ProfilePage';
 import { SocketProvider } from './contexts/SocketContext';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { useAuthStore } from './features/auth/store/auth.store';
@@ -64,6 +65,14 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <MessagePage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <ProtectedRoute>
+                                    <ProfilePage />
                                 </ProtectedRoute>
                             }
                         />

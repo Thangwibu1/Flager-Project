@@ -1,6 +1,6 @@
 import { TiHomeOutline } from 'react-icons/ti';
 import { MdOutlinePeopleAlt } from 'react-icons/md';
-import { TbShoppingBagSearch } from 'react-icons/tb';
+import { FaUserCircle } from 'react-icons/fa'; // Profile icon
 import { PiVideoBold } from 'react-icons/pi';
 import { PiDotsNineBold } from 'react-icons/pi';
 import { PiChatCircleDotsDuotone } from 'react-icons/pi';
@@ -24,7 +24,7 @@ import {
 export const NAV_ITEMS = [
     { id: 'home', icon: TiHomeOutline, label: 'Home' },
     { id: 'friends', icon: MdOutlinePeopleAlt, label: 'Friends' },
-    { id: 'store', icon: TbShoppingBagSearch, label: 'Store' },
+    { id: 'profile', icon: FaUserCircle, label: 'Profile' }, // Changed from store to profile
     { id: 'video', icon: PiVideoBold, label: 'Video' },
     { id: 'more', icon: PiDotsNineBold, label: 'More' },
     { id: 'chat', icon: PiChatCircleDotsDuotone, label: 'Chat' },
