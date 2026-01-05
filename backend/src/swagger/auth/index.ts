@@ -1,6 +1,6 @@
 /**
  * @openapi
- * '/api/v1/login':
+ * '/api/v1/auth/login':
  *   post:
  *     tags:
  *       - Auth
