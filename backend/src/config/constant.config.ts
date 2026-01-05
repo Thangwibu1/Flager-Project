@@ -24,7 +24,9 @@ const neo4jInfo = {
         post: {
             react: "REACT"
         },
-        comment: {}
+        comment: {
+            user_send_react: "SEND_REACT"
+        }
     },
 };
 export { redisPrefix, neo4jInfo };

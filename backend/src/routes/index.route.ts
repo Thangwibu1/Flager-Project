@@ -11,6 +11,8 @@ router.use('/auth', authRouter);
 router.use('/posts', postRouter);
 router.use('/users', userRouter);
 router.use('/friends', friendRouter);
+router.use('/me', meRouter);
+router.use('/group-chats', groupChatRouter);
 router.use('/group-chats', groupChatRouter);
 router.use('/messages', messageRouter);
 export default router;

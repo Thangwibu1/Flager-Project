@@ -86,7 +86,7 @@ class PostController {
             next(error);
         }
     }
-
+    // [GET] /:postId/reacts/total?reactName=
     countReactOfPost = async (
         req: Request,
         res: Response,
@@ -105,7 +105,7 @@ class PostController {
             next(error);
         }
     }
-
+    // [DELETE] /:postId/reacts/:reactName
     deleteReactOfPost = async (
         req: Request,
         res: Response,
@@ -119,7 +119,7 @@ class PostController {
         } catch (error) {
             next(error);
             
-        }   
+        } 
     }
 }
 export default new PostController();

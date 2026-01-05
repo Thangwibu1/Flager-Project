@@ -1,4 +1,8 @@
-import { ConflictRequestError, ForbiddenRequestError, NotFoundRequestError } from '../errors/api/ApiError';
+import {
+    ConflictRequestError,
+    ForbiddenRequestError,
+    NotFoundRequestError,
+} from '../errors/api/ApiError';
 import postRepository from '../repositories/post/post.repository';
 import postNodeRepository from '../repositories/post/post.repository.graph';
 import {
@@ -7,15 +11,15 @@ import {
     PostUpdateDTO,
     SendReactToPostDTO,
 } from '../types/post/post.request';
-import {
-    PostCreateResponse,
-    StandardPostResponse,
-} from '../types/post/post.response';
+import { StandardPostResponse } from '../types/post/post.response';
 import userService from './user.service';
 import * as postConverter from '../converters/post.converter';
 import { LazyPagination } from '../types/pagination/pagination.response';
 import { ReactName, ViewType } from '../config/enum/post.enum';
-import { QueryCountReactOfPost, QueryPostListOfUser } from '../types/post/post.query';
+import {
+    QueryCountReactOfPost,
+    QueryPostListOfUser,
+} from '../types/post/post.query';
 import userNodeRepository from '../repositories/user/user.repository.graph';
 import { UserNotFoundError } from '../errors/user/UserError';
 class PostService {
@@ -37,7 +41,7 @@ class PostService {
     createPostByUser = async (
         currentUserId: string,
         payload: PostCreateDTO
-    ): Promise<PostCreateResponse> => {
+    ): Promise<StandardPostResponse> => {
         // create post
         const createPayload = {
             ...payload,
@@ -48,7 +52,7 @@ class PostService {
             authorId: currentUserId,
             postId: newPost._id.toString(),
         });
-        return postConverter.toPostCreate(newPost);
+        return postConverter.toStandardPost(newPost);
     };
     /**
      * Hàm xử lí logic nghiệp vụ lấy post theo chủ sở hữu
@@ -94,7 +98,7 @@ class PostService {
             limit,
         });
         // convert post response
-        const postListResponse = postList.map((item: any) =>
+        const postListResponse = postList.map(item =>
             postConverter.toStandardPost(item)
         );
         return {
@@ -115,55 +119,66 @@ class PostService {
      */
     sendReactToPost = async (
         currentUserId: string,
-        postId: string, 
-        body: SendReactToPostDTO,
+        postId: string,
+        body: SendReactToPostDTO
     ) => {
-        const {  reactName } = body;
-        // check post exist
-        const existPost = await this.getPostById(postId, ['_id']);
+        const { reactName } = body;
+        const [existPost, foundPreviousReact] = await Promise.all([
+            // check post exist
+            this.getPostById(postId, ['_id']),
+            // check react này có được thả react bởi user hiện tại trước đó chưa
+            userNodeRepository.getSendReactToPostRelation(
+                currentUserId,
+                postId
+            ),
+        ]);
         if (!existPost) {
             throw new NotFoundRequestError('Not found post');
         }
-        // check react này có được thả react bởi user hiện tại trước đó chưa
-        const foundPreviousReact =
-            await userNodeRepository.getSendReactToPostRelation(
-                currentUserId,
-                postId
-            );
         if (foundPreviousReact) {
-            // nếu có trước đó thì trừ react trong mongo tương ứng
             const previousReactFilter = {
                 postId: foundPreviousReact.toPost.id,
                 reactName: foundPreviousReact.data.name,
             };
-            await postRepository.modifyReactByPostIdAndReactType(
-                previousReactFilter,
-                -1
-            );
-            // cập nhật react mới
-            await userNodeRepository.updateSendReactRelationByReactName(
-                currentUserId,
-                postId,
-                {
-                    reactName: reactName,
-                }
-            );
+            const reactFilter = {
+                postId: postId,
+                reactName: reactName,
+            };
+            await Promise.all([
+                // nếu có trước đó thì trừ react trong mongo tương ứng
+                postRepository.modifyReactByPostIdAndReactType(
+                    previousReactFilter,
+                    -1
+                ),
+                // cập nhật react mới
+                userNodeRepository.updateSendReactRelationByReactName(
+                    currentUserId,
+                    postId,
+                    {
+                        reactName: reactName,
+                    }
+                ),
+                // update total của react mới trong mongo
+                postRepository.modifyReactByPostIdAndReactType(reactFilter, 1),
+            ]);
         } else {
-            // cập nhật react
-            await userNodeRepository.createSendReactRelationToPost(
-                currentUserId,
-                postId,
-                {
-                    name: reactName,
-                }
-            );
+            const reactFilter = {
+                postId: postId,
+                reactName: reactName,
+            };
+            await Promise.all([
+                // cập nhật react
+                userNodeRepository.createSendReactRelationToPost(
+                    currentUserId,
+                    postId,
+                    {
+                        name: reactName,
+                    }
+                ),
+                // update total của react mới trong mongo
+                postRepository.modifyReactByPostIdAndReactType(reactFilter, 1),
+            ]);
         }
-        // update total của react mới trong mongo
-        const reactFilter = {
-            postId: postId,
-            reactName: reactName,
-        };
-        await postRepository.modifyReactByPostIdAndReactType(reactFilter, 1);
     };
     /**
      * Hàm xử lí logic user cập nhật post
@@ -199,10 +214,14 @@ class PostService {
                 'You have not permission to update this post'
             );
         }
-        // update post
-        await postRepository.updatePostById(postId, {
-            deletedAt: new Date(),
-        });
+        await Promise.all([
+            // delete post
+            postRepository.updatePostById(postId, {
+                deletedAt: new Date(),
+            }),
+            // delete post node
+            postNodeRepository.deleteNodeById(postId),
+        ]);
     };
     /**
      * Hàm xử lí logic nghiệp vụ (đếm tổng tương tác của 1 bài viết)
@@ -225,15 +244,10 @@ class PostService {
             throw new NotFoundRequestError('Not found post');
         }
         // handle query
-        const total =
-            query.reactName == undefined
-                ? foundPost.totalReact.reduce(
-                      (acc, item) => item.total + acc,
-                      0
-                  )
-                : foundPost.totalReact.find(
-                      item => item.name == query.reactName
-                  )?.total;
+        const total = !query.reactName
+            ? foundPost.totalReact.reduce((acc, item) => item.total + acc, 0)
+            : foundPost.totalReact.find(item => item.name == query.reactName)
+                  ?.total;
         // end handle query
         return total;
     };
@@ -248,27 +262,34 @@ class PostService {
         postId: string,
         reactName: ReactName
     ) => {
-        // check post exist
-        if (!(await this.getPostById(postId, ['_id']))) {
+        const [foundPost, foundReact] = await Promise.all([
+            // check post exist
+            this.getPostById(postId, ['_id']),
+            userNodeRepository.getSendReactToPostRelation(
+                currentUserId,
+                postId
+            ),
+        ]);
+        if (!foundPost) {
             throw new NotFoundRequestError('Not found post');
         }
         // check user từng thả tương tác tương ứng cho bài post này mới cho xóa
-        const foundReact = await userNodeRepository.getSendReactToPostRelation(
-            currentUserId,
-            postId
-        );
         if (!foundReact || !(foundReact.data.name == reactName)) {
             throw new ConflictRequestError(
                 `You has not sent ${reactName} react to this post`
             );
         }
         // xóa tương tác ở mongo và neo4j
-        await userNodeRepository.deleteSendReact(currentUserId, postId);
-        const filter = {
-            postId: postId,
-            reactName,
-        };
-        await postRepository.modifyReactByPostIdAndReactType(filter, -1);
+        await Promise.all([
+            userNodeRepository.deleteSendReact(currentUserId, postId),
+            postRepository.modifyReactByPostIdAndReactType(
+                {
+                    postId: postId,
+                    reactName,
+                },
+                -1
+            ),
+        ]);
     };
 }
 export default new PostService();

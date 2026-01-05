@@ -10,7 +10,8 @@ import * as neo4jConverter from '../../utils/converters/neo4j.converter.util';
 import { RequestFriendRelation } from '../../models/user/friend-request-relation.model.neo4j';
 import { IsFriendRelation } from '../../models/user/is-friend-relation.model.neo4j';
 import * as formatter from '../../utils/formatter.util';
-import { neo4jClient } from '../../config/database/neo4j.config';
+import { ReactName } from '../../config/enum/post.enum';
+import {SendReactRelation as CommentSendReactRelation} from '../../models/comment/send-react-relation.neo4j';
 class UserNodeRepository extends BaseGraphRepo {
     // =========================================== CRUD USER ==========================================
 
@@ -449,5 +450,6 @@ class UserNodeRepository extends BaseGraphRepo {
         });
     };
     // =============================== END USER send react to POST =========================================
+
 }
 export default new UserNodeRepository();

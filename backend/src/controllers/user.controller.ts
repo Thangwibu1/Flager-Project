@@ -158,7 +158,7 @@ class UserController {
             const query = req.query as QueryGetFollowerList;
             const {userList, pagination} = await friendService.getFollowerList(curUserId, params.userId, query);
             const dataFinal = {
-                followingList: userList,
+                userList: userList,
                 pagination,
             }
             return res.json(

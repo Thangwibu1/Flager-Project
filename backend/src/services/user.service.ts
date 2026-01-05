@@ -35,11 +35,11 @@ class UserService {
         // nếu sau này có phân biệt ai có thể xem thì bắt thêm
         // if(userId != currentUserId){}
 
-        return userConvertor.toUserProfile(foundUser as any);
+        return userConvertor.toUserProfile(foundUser);
     }
     getMyProfile = async (currentUserId: string) => {
-        const user = await this.getUserById(currentUserId);
-        return userConvertor.toMyProfile(user as any);
+        const user = (await this.getUserById(currentUserId))!;
+        return userConvertor.toMyProfile(user);
     }
     updateMyProfile = async (userId: string, payload: UpdateUserProfileDTO) => {
         // update ở mongo
