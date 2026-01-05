@@ -1,6 +1,5 @@
 import { Button } from '@/components/common/Button/Button';
 import Logo from '@/components/common/Logo/Logo';
-// import { Logo } from '@/components/common/Logo/Logo';
 import { RegisterForm } from '@/components/layout/Form/RegisterForm';
 
 export const RegisterPage = ({
@@ -16,7 +15,7 @@ export const RegisterPage = ({
                     {/* Logo */}
                     <div className="lg:hidden flex justify-center">
                         <div className="text-[#ec1313]">
-                            <Logo />
+                            <Logo widthLogo="60px" />
                         </div>
                     </div>
 
@@ -51,7 +50,7 @@ export const RegisterPage = ({
                     {/* Logo */}
                     <div className="flex items-center text-white">
                         <div className="text-[#ec1313]">
-                            <Logo />
+                            <Logo widthLogo="80px" />
                         </div>
                         <h2 className="text-2xl font-bold tracking-tight">
                             Flager

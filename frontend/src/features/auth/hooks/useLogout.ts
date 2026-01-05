@@ -25,7 +25,7 @@ export const useLogout = () => {
             queryClient.clear();
 
             // 3. Redirect to login page
-            navigate('/login');
+            navigate('/auth/login');
 
             console.log('✅ Logout successful');
         },
@@ -34,7 +34,7 @@ export const useLogout = () => {
             // Even if API fails, clear auth locally and redirect
             clearAuth();
             queryClient.clear();
-            navigate('/login');
+            navigate('/auth/login');
             console.error('❌ Logout error:', error);
         },
     });

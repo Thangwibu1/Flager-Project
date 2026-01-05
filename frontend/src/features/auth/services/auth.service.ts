@@ -17,11 +17,12 @@ export const authService = {
     login: async (credentials: LoginRequest): Promise<LoginResponse> => {
         const response = await apiClient.post<LoginResponse>(
             '/auth/login',
-            credentials
+            credentials //data Body
         );
 
         return response.data;
     },
+    //Mess Header Body Auth Status
 
     /**
      * Register new user
@@ -57,4 +58,7 @@ export const authService = {
 
         return response.data;
     },
+
+    
+
 };

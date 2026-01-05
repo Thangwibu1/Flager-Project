@@ -103,6 +103,42 @@ class GroupChatService {
         const deletedGroupChat = await groupChatRepository.deleteById(id);
         return deletedGroupChat;
     };
+
+    /**
+     * Get all group chats for a user using Neo4j graph repository
+     */
+    getGroupChatsByUserId = async (userId: string) => {
+        // Get group chat nodes from Neo4j
+        const groupChatNodes = await groupChatRepositoryGraph.findByUserId(
+            userId
+        );
+
+        if (!groupChatNodes || groupChatNodes.length === 0) {
+            return [];
+        }
+
+        // Get full group chat details from MongoDB
+        const groupChatIds = groupChatNodes.map(node => node.id);
+        const groupChats = await Promise.all(
+            groupChatIds.map(id => groupChatRepository.findById(id))
+        );
+
+        // Filter out null values
+        return groupChats.filter(gc => gc !== null);
+    };
+
+    /**
+     * Get single group chat by ID
+     */
+    getGroupChatById = async (groupChatId: string) => {
+        const groupChat = await groupChatRepository.findById(groupChatId);
+
+        if (!groupChat) {
+            throw new GroupChatNotFoundError();
+        }
+
+        return groupChat;
+    };
 }
 
 export default new GroupChatService();

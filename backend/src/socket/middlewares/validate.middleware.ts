@@ -29,24 +29,42 @@ export const validateSocketData = (schema: z.ZodSchema<any>) => {
  */
 export const withValidation = <T>(
     schema: z.ZodSchema<T>,
-    handler: (socket: Socket, data: T) => void | Promise<void>
+    handler: (socket: Socket, data: T, callback?: any) => void | Promise<void>
+    //                                  ↑ Thêm callback parameter
 ) => {
-    return async (socket: Socket, data: any) => {
+    return async (socket: Socket, data: any, callback?: any) => {
+        //                                    ↑ Nhận callback từ Socket.IO
         try {
             // Validate data
             const validatedData = schema.parse(data);
-            // Gọi handler với validated data
-            await handler(socket, validatedData);
+            // Gọi handler với validated data VÀ callback
+            await handler(socket, validatedData, callback);
+            //                                   ↑ Truyền callback vào handler
         } catch (error) {
             if (error instanceof ZodError) {
-                // Emit error về client
-                socket.emit('error', {
-                    message: `Validation error`,
-                });
+                // Nếu có callback, trả error qua callback
+                if (callback) {
+                    callback({
+                        success: false,
+                        error: 'Validation error',
+                    });
+                } else {
+                    // Nếu không có callback, emit error event
+                    socket.emit('error', {
+                        message: `Validation error`,
+                    });
+                }
             } else {
-                socket.emit('error', {
-                    message: 'An error occurred',
-                });
+                if (callback) {
+                    callback({
+                        success: false,
+                        error: 'An error occurred',
+                    });
+                } else {
+                    socket.emit('error', {
+                        message: 'An error occurred',
+                    });
+                }
             }
         }
     };
