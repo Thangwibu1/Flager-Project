@@ -57,7 +57,11 @@ app.use(compression());
  * - VD: GET /api/users 200 15.234 ms
  * - Giúp debug và monitor API
  */
-app.use(morgan('dev'));
+app.use(
+  morgan('dev', {
+    skip: (req) => req.url.startsWith('/docs'),
+  })
+);
 
 /**
  * Giúp lấy cookie từ client request
