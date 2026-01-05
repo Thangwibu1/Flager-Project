@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -10,9 +10,10 @@ import { errorHandler } from './middlewares/error.middleware';
 import { NotFoundRequestError } from './errors/api/ApiError';
 import clientRouter from './routes/index.route';
 import cookieParser from 'cookie-parser';
+import swaggerDocs from './config/swagger.config';
 
 // Tạo Express application
-const app: Application = express();
+const app = express();
 
 // Tạo HTTP server từ Express app (cần cho Socket.IO)
 const httpServer = createServer(app);
@@ -67,10 +68,14 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Flager API is running' });
 });
+
+/**
+ * Khỏi tạo docs
+ */
+swaggerDocs(app, config.port);
 
 app.use(`/api/${config.apiVersion}`, clientRouter);
 

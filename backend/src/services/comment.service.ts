@@ -393,7 +393,6 @@ class CommentService {
         if (!foundComment) {
             throw new NotFoundRequestError('Not found comment');
         }
-        console.log(query.reactName);
 
         const total = !query.reactName
             ? foundComment.totalReact.reduce((acc, item) => acc + item.total, 0)
