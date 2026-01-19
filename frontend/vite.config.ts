@@ -1,8 +1,10 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
 import svgr from 'vite-plugin-svgr';
+
 export default defineConfig({
     plugins: [react(), tailwindcss(), svgr()],
     resolve: {
@@ -35,5 +37,11 @@ export default defineConfig({
     build: {
         outDir: 'dist',
         sourcemap: true,
+    },
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './vitest.setup.ts',
+        css: true,
     },
 });
